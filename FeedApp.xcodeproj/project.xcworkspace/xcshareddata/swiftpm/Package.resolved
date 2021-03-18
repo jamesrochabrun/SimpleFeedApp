@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "MarvelClient",
+        "repositoryURL": "https://github.com/jamesrochabrun/MarvelClient",
+        "state": {
+          "branch": null,
+          "revision": "1a93d163eacbe82bc0d3d62dbec3e64ce036baf7",
+          "version": "1.0.3"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
