@@ -30,7 +30,6 @@ final class ImageViewLoader: BaseView {
         imageLoader.load(regularURL, lowResPath: lowResURL)
          imageLoader.$image.sink { [unowned self] image in
              imageView.image = image
-            dump(image)
          }.store(in: &cancellables)
     }
 }

@@ -14,15 +14,13 @@ final class SearchViewController: ViewController {
     
     // MARK:- Data
     private var cancellables: Set<AnyCancellable> = []
-    
-    private var cancellable: AnyCancellable?
-
     private var marvelProvider = MarvelProvider()
+    
     // MARK:- Concurrency
     private let operationQueue = OperationQueue()
     
     // MARK:- TypeAlias
-    typealias SearchFeedCollectionView = DiffableCollectionView<GenericSectionIdentifierViewModel<SectionIdentifierExample, ComicViewModel, ArtworkCell>>
+    typealias SearchFeedCollectionView = DiffableCollectionView<GenericSectionIdentifierViewModel<SectionIdentifierExample, CollectionReusableView, ComicViewModel, ArtworkCell>>
     
     // MARK:- UI
     private lazy var searchCollectionView: SearchFeedCollectionView = {
@@ -33,6 +31,7 @@ final class SearchViewController: ViewController {
     deinit {
         print("DEINIT \(String(describing: self))")
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -46,9 +45,7 @@ final class SearchViewController: ViewController {
     }
     
     private func performOperations() {
-        
-        marvelProvider.fetchComics()
-        
+        marvelProvider.fetchComics(for: .popular)
 //        let comicsOperation = BlockOperation { [unowned self] in
 //            marvelProvider.fetchComics()
 //        }
@@ -62,15 +59,20 @@ final class SearchViewController: ViewController {
     
     private func updateUI() {
         
-        cancellable = marvelProvider.$comics.sink { [unowned self] value in
-            searchCollectionView.applySnapshotWith(value)
-        }
+        marvelProvider.$comics.sink { [weak self] value in
+            self?.searchCollectionView.applyInitialSnapshotWith(value)
+        }.store(in: &cancellables)
+        
         searchCollectionView.assignHedearFooter { collectionView, model, kind, indexPath in
             switch model {
             case .popular:
                 let header: CollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 return header
-            default: return fatalError() as! CollectionReusableView // should not get executed
+            case .new:
+                let header: CollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
+                print("doing new")
+                return header
+            default: fatalError() // should not get executed
             }
         }
     }

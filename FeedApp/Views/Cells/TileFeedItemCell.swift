@@ -17,6 +17,7 @@ extension CharacterViewModel: Artwork {
 }
 
 
+
 public protocol CellViewModel: UICollectionViewCell {
     associatedtype ViewModel
     var viewModel: ViewModel? { get set }

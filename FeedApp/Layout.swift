@@ -140,9 +140,9 @@ extension UICollectionViewCompositionalLayout {
                 elementKind:  UICollectionView.elementKindSectionHeader, alignment: .top)
             
             /// we only want to add a header on the first section
-            if sectionIndex == 0 {
+           // if sectionIndex == 0 {
                 section.boundarySupplementaryItems = [sectionHeader]
-            }
+          //  }
             return section
         }
         return layout

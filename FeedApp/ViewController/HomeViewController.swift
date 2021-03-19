@@ -12,16 +12,11 @@ import MarvelClient
 
 final class HomeViewController: ViewController {
     
-    private let itunesRemote = ItunesRemote()
-    private let itunesModels = ItunesRemoteModels()
-    
     private var cancellables: Set<AnyCancellable> = []
     private var marvelProvider = MarvelProvider()
     let radQueue = OperationQueue()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        itunesRemote.$feedItems.sink { val in
-        }.store(in: &cancellables)
     }
 }

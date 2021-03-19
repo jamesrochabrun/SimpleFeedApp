@@ -18,11 +18,14 @@ class ViewController: UIViewController {
 }
 
 public protocol SectionIdentifierViewModel {
+    
     associatedtype SectionIdentifier: Hashable
+    associatedtype SectionIdentifierReusableView: UICollectionReusableView
     associatedtype CellIdentifier: Hashable
     associatedtype CellType: CellViewModel
     
     var sectionIdentifier: SectionIdentifier { get }
+    var sectionIdentifierReusableViewType: SectionIdentifierReusableView.Type { get }
     var cellIdentifiers: [CellIdentifier] { get }
     var cellIdentifierType: CellType.Type { get }
 }
@@ -34,9 +37,9 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
     var collectionView: UICollectionView!
 
     // MARK:- Type Aliases
-    public typealias CellViewModelIdentifier = ViewModel.CellIdentifier // represents an item in a section
     public typealias SectionViewModelIdentifier = ViewModel.SectionIdentifier
-    public typealias HeaderFooter = CollectionReusableView
+    public typealias HeaderFooter = ViewModel.SectionIdentifierReusableView
+    public typealias CellViewModelIdentifier = ViewModel.CellIdentifier // represents an item in a section
     public typealias CellType = ViewModel.CellType
   
     public typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> HeaderFooter
@@ -76,10 +79,18 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
     }
     
     // MARK:- 2: ViewModels injection and snapshot
-    public func applySnapshotWith(_ itemsPerSection: [ViewModel]) {
+    public func applyInitialSnapshotWith(_ itemsPerSection: [ViewModel]) {
         currentSnapshot = Snapshot()
         guard var currentSnapshot = currentSnapshot else { return }
         currentSnapshot.appendSections(itemsPerSection.map { $0.sectionIdentifier })
+        itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
+        dataSource?.apply(currentSnapshot)
+    }
+    
+    func updateSnapshot(_ itemsPerSection: [ViewModel], after section: ViewModel.SectionIdentifier) {
+        guard var currentSnapshot =  self.dataSource?.snapshot() else { return }
+        let newSec = itemsPerSection.map { $0.sectionIdentifier }
+        currentSnapshot.insertSections(newSec, afterSection: section)
         itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
         dataSource?.apply(currentSnapshot)
     }
@@ -98,9 +109,20 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
     }
 }
 
-public final class CollectionReusableView: UICollectionReusableView {
+extension NSDiffableDataSourceSnapshot {
     
-    public typealias SearchHeaderCollection = DiffableCollectionView<GenericSectionIdentifierViewModel<SectionIdentifierExample, CharacterViewModel, ArtworkCell>>
+    mutating func deleteItems(_ items: [ItemIdentifierType], at section: Int) {
+        deleteItems(items)
+        let sectionIdentifier = sectionIdentifiers[section]
+        guard numberOfItems(inSection: sectionIdentifier) == 0 else { return }
+        deleteSections([sectionIdentifier])
+    }
+}
+
+
+public final class CollectionReusableView: UICollectionReusableView, ReusableViewModel {
+    
+    public typealias SearchHeaderCollection = DiffableCollectionView<GenericSectionIdentifierViewModel<SectionIdentifierExample, CollectionReusableView, CharacterViewModel, ArtworkCell>>
     
     private lazy var searchHeaderCollectionView: SearchHeaderCollection = {
         SearchHeaderCollection(layout: HorizontalLayoutKind.horizontalStoryUserCoverLayout.layout, parent: nil)
@@ -126,7 +148,7 @@ public final class CollectionReusableView: UICollectionReusableView {
         marvelProvider.fetchCharacters()
         
         cancellable = marvelProvider.$characters.sink { [weak self] in
-            self?.searchHeaderCollectionView.applySnapshotWith($0)
+            self?.searchHeaderCollectionView.applyInitialSnapshotWith($0)
         }
     }
     public override func prepareForReuse() {

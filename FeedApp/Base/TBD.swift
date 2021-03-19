@@ -81,17 +81,6 @@ public final class DiffCollection<ViewModel: SectionIdentifierViewModel,
 
 @available(iOS 13.0, *)
 // MARK:- Helper
-extension NSDiffableDataSourceSnapshot {
-    
-    mutating func deleteItems(_ items: [ItemIdentifierType], at section: Int) {
-        
-        deleteItems(items)
-        let sectionIdentifier = sectionIdentifiers[section]
-        guard numberOfItems(inSection: sectionIdentifier) == 0 else { return }
-        deleteSections([sectionIdentifier])
-    }
-}
-
 
 final public class WrapperViewCell: BaseCollectionViewCell<UIView> {
     
@@ -392,3 +381,97 @@ open class BaseView: UIView {
         
     }
 }
+
+
+
+
+
+//
+//
+//
+//struct Section<U: Hashable, T: Hashable, C: UICollectionViewCell>: Hashable {
+//    let headerItem: U
+//    let items: T
+//    let cellType: C
+//}
+//
+//struct DataSource<T: Hashable> {
+//    let sections: [T]
+//}
+//
+//@available(iOS 13, *)
+//public final class DiffableSectionCollectionView<T: Hashable>: BaseView, UICollectionViewDelegate {
+//
+//    init(dataSource: DataSource<T>) {
+//        contentDataSource = dataSource
+//    }
+//
+//    var contentDataSource: DataSource<T>
+//
+//    // MARK:- UI
+//    var collectionView: UICollectionView!
+//
+//    // MARK:- Type Aliases
+//    public typealias CellViewModelIdentifier = ViewModel.CellIdentifier // represents an item in a section
+//    public typealias SectionViewModelIdentifier = ViewModel.SectionIdentifier
+//    public typealias HeaderFooter = CollectionReusableView
+//    public typealias CellType = ViewModel.CellType
+//
+//    public typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> HeaderFooter
+//    public typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
+//    public typealias Snapshot = NSDiffableDataSourceSnapshot<SectionViewModelIdentifier, CellViewModelIdentifier>
+//
+//    public typealias SelectedContentAtIndexPath = ((CellViewModelIdentifier, IndexPath) -> Void)
+//    var selectedContentAtIndexPath: SelectedContentAtIndexPath?
+//
+//    // MARK:- Diffable Data Source
+//    private var dataSource: DiffDataSource?
+//    private var currentSnapshot: Snapshot?
+//
+//    private weak var parent: UIViewController?
+//
+//    // MARK:- Life Cycle
+//    convenience public init(layout: UICollectionViewLayout, parent: UIViewController?) {
+//        self.init()
+//        collectionView = .init(frame: .zero, collectionViewLayout: layout)
+//        collectionView?.register(CellType.self)
+//        collectionView?.registerHeader(HeaderFooter.self, kind: UICollectionView.elementKindSectionHeader)
+//        collectionView?.registerHeader(HeaderFooter.self, kind: UICollectionView.elementKindSectionFooter)
+//        addSubview(collectionView)
+//        collectionView.fillSuperview()
+//        collectionView.collectionViewLayout = layout
+//        configureDataSource()
+//        self.parent = parent
+//    }
+//
+//    // MARK:- 1: DataSource Configuration
+//    private func configureDataSource() {
+//        dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
+//            let cell: CellType = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+//            cell.viewModel = model as? CellType.ViewModel
+//            return cell
+//        }
+//    }
+//
+//    // MARK:- 2: ViewModels injection and snapshot
+//    public func applySnapshotWith(_ itemsPerSection: [ViewModel]) {
+//        currentSnapshot = Snapshot()
+//        guard var currentSnapshot = currentSnapshot else { return }
+//        currentSnapshot.appendSections(itemsPerSection.map { $0.sectionIdentifier })
+//        itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
+//        dataSource?.apply(currentSnapshot)
+//    }
+//
+//    // MARK:- UICollectionViewDelegate
+//    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        guard let viewModel = dataSource?.itemIdentifier(for: indexPath) else { return }
+//        selectedContentAtIndexPath?(viewModel, indexPath)
+//    }
+//
+//    public func assignHedearFooter(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
+//        dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+//            let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section]
+//            return headerFooterProvider(collectionView, sectionIdentifier, kind, indexPath)
+//        }
+//    }
+//}
