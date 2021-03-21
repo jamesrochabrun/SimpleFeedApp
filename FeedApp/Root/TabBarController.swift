@@ -45,7 +45,12 @@ enum TabBarViewModel: String, CaseIterable {
     var masterViewController: UIViewController  {
         switch self {
         case .home: return HomeViewController.instantiate(from: "Main")
-        case .search: return DiscoverViewController.instantiate(from: "Main")
+        case .search: 
+            let goDiscover = Godiscover()
+            goDiscover.layout = GridLayoutKind.discover.layout
+            return goDiscover
+            
+           // DiscoverViewController.instantiate(from: "Main")
         case .camera: return HomeViewController.instantiate(from: "Main")
         case .notifications: return NotificationsViewController.instantiate(from: "Main")
         case .profile: return UserProfileViewController.instantiate(from: "Main")

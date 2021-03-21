@@ -34,7 +34,7 @@ final class StoriesSnippetWithAvatarCollectionReusableView: GenericCollectionReu
 }
 
 
-class GenericCollectionReusableView<DiffableContent: SectionIdentifierViewModel, Item: Hashable>: UICollectionReusableView, ViewModelReusableViewInjection {
+class GenericCollectionReusableView<Content: SectionIdentifierViewModel, Item: Hashable>: UICollectionReusableView, ViewModelReusableViewInjection {
        
     typealias ViewModel = Item
     var viewModel: ViewModel? {
@@ -51,7 +51,7 @@ class GenericCollectionReusableView<DiffableContent: SectionIdentifierViewModel,
         }
     }
     
-    typealias CollectionView = DiffableCollectionView<DiffableContent>
+    typealias CollectionView = DiffableCollectionView<Content>
     var collectionView: CollectionView! // document
 
     override init(frame: CGRect) {

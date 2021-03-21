@@ -10,13 +10,67 @@ import Combine
 import MarvelClient
 import UIKit
 
+class GenericViewController<Content: SectionIdentifierViewModel>: UIViewController {
+    
+    // MARK:- Data
+    var cancellables: Set<AnyCancellable> = []
+    let itunesRemote = ItunesRemote()
+    
+    // MARK:- TypeAlias
+    typealias CollectionView = DiffableCollectionView<Content>
+    var collectionView: CollectionView! // document
+    var layout: UICollectionViewLayout = UICollectionViewFlowLayout()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+    }
+    
+    private func setupViews() {
+        collectionView = CollectionView()
+        view.addSubview(collectionView)
+        collectionView.fillSuperview()
+        collectionView.layout = layout
+    }
+}
+
+
+final class Godiscover: GenericViewController<DiscoverFeedSectionModeling> {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        itunesRemote.fetch(.apps(feedType: .topFree(genre: .all), limit: 100))
+        collectionView.assignHedearFooter { collectionView, model, kind, indexPath in
+            switch model {
+            case .popular:
+                collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
+                let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
+                header.viewModel = .popular
+                header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 120.0).layout
+                return header
+            default: return StoriesWithAvatarCollectionReusableView() // Wont get executed
+            }
+        }
+        updateUI()
+    }
+    
+    private func updateUI() {
+        itunesRemote.$sectionFeedViewModels.sink { [weak self] in
+            let discoveryFeedSectionItems = [DiscoverFeedSectionModeling(sectionIdentifier: .popular, cellIdentifiers: $0)]
+            self?.collectionView.applyInitialSnapshotWith(discoveryFeedSectionItems)
+        }.store(in: &cancellables)
+    }
+}
+
+
+
 enum DiscoverFeedSectionIdentifier: String {
     case popular = "Popular"
 }
 
 // MARK:- Section ViewModel
 // document
-private typealias DiscoverFeedSectionModeling = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
+typealias DiscoverFeedSectionModeling = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
 
 final class DiscoverViewController: ViewController {
     
