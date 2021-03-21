@@ -59,6 +59,11 @@ public enum UserProfileFeedIdentifier: String, CaseIterable {
     case mainContent
 }
 
+// MARK:- Protocol
+protocol UserProfileViewControllerDelegate: AnyObject {
+    func postSelectedAt(_ indexPath: IndexPath)
+}
+
 private typealias UserProfileSectionModeling = GenericSectionIdentifierViewModel<UserProfileFeedIdentifier, FeedItemViewModel, ArtworkCell>
 
 final class UserProfileViewController: ViewController {
@@ -77,6 +82,15 @@ final class UserProfileViewController: ViewController {
         return userFeed
     }()
     
+    lazy private var detailFeedViewController: FeedViewController<UserProfileSectionModeling> = {
+        let detailFeedViewController = FeedViewController<UserProfileSectionModeling>()
+        detailFeedViewController.feed = userFeedCollectionView.dataSourceItems()
+        delegate = detailFeedViewController
+        return detailFeedViewController
+    }()
+    
+    weak var delegate: UserProfileViewControllerDelegate?
+    
     // MARK:- Life Cycle
     deinit {
         print("DEINIT \(String(describing: self))")
@@ -92,6 +106,18 @@ final class UserProfileViewController: ViewController {
     private func setupViews() {
         view.addSubview(userFeedCollectionView)
         userFeedCollectionView.fillSuperview()
+        userFeedCollectionView.selectedContentAtIndexPath = { [weak self] viewModel, indexPath in
+            guard let self = self else { return }
+            guard let secondaryContentNavigationController = self.splitViewController?.secondaryViewController as? NavigationController,
+                  let secondaryContentViewController = secondaryContentNavigationController.topViewController as? FeedViewController<UserProfileSectionModeling> else {
+                let detailNavigationController = NavigationController(rootViewController: self.detailFeedViewController)
+                self.splitViewController?.showDetailInNavigationControllerIfNeeded(detailNavigationController, sender: self)
+                self.delegate?.postSelectedAt(indexPath)
+                return
+            }
+            self.splitViewController?.showDetailInNavigationControllerIfNeeded(secondaryContentViewController, sender: self)
+            self.delegate?.postSelectedAt(indexPath)
+        }
         
         userFeedCollectionView.assignHedearFooter { collectionView, model, kind, indexPath -> UICollectionReusableView in
             switch model {
@@ -112,7 +138,7 @@ final class UserProfileViewController: ViewController {
     }
     
     private func performOperations() {
-        itunesRemote.fetch(.apps(feedType: .topFree(genre: .all), limit: 100))
+        itunesRemote.fetch(.podcast(feedType: .top(genre: .all), limit: 100))
     }
     
     private func updateUI() {

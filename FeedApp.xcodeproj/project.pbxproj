@@ -30,6 +30,11 @@
 		7B8CD4042605CE0D008BAEB9 /* StoryAvatarViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4032605CE0D008BAEB9 /* StoryAvatarViewCell.swift */; };
 		7B8CD4062606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4052606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift */; };
 		7B8CD40A2606B28E008BAEB9 /* StorySnippetWithAvatarViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4092606B28E008BAEB9 /* StorySnippetWithAvatarViewCell.swift */; };
+		7B8CD41B260713C7008BAEB9 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD41A260713C7008BAEB9 /* FeedViewController.swift */; };
+		7B8CD42226071490008BAEB9 /* FeedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD42126071490008BAEB9 /* FeedItemCell.swift */; };
+		7B8CD42826071CC1008BAEB9 /* FeedItemHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD42626071CC1008BAEB9 /* FeedItemHeaderView.swift */; };
+		7B8CD42926071CC1008BAEB9 /* FeedItemHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B8CD42726071CC1008BAEB9 /* FeedItemHeaderView.xib */; };
+		7B8CD42B26072D88008BAEB9 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD42A26072D88008BAEB9 /* Button.swift */; };
 		7B9223222605BB6A006B7C51 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9223212605BB6A006B7C51 /* AvatarView.swift */; };
 		7BA9BBB625FE760B006E1C4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9BBB525FE760B006E1C4F /* AppDelegate.swift */; };
 		7BA9BBB825FE760B006E1C4F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9BBB725FE760B006E1C4F /* SceneDelegate.swift */; };
@@ -95,6 +100,11 @@
 		7B8CD4032605CE0D008BAEB9 /* StoryAvatarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAvatarViewCell.swift; sourceTree = "<group>"; };
 		7B8CD4052606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesSnippetWithAvatarCollectionReusableView.swift; sourceTree = "<group>"; };
 		7B8CD4092606B28E008BAEB9 /* StorySnippetWithAvatarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorySnippetWithAvatarViewCell.swift; sourceTree = "<group>"; };
+		7B8CD41A260713C7008BAEB9 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		7B8CD42126071490008BAEB9 /* FeedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemCell.swift; sourceTree = "<group>"; };
+		7B8CD42626071CC1008BAEB9 /* FeedItemHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedItemHeaderView.swift; sourceTree = "<group>"; };
+		7B8CD42726071CC1008BAEB9 /* FeedItemHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedItemHeaderView.xib; sourceTree = "<group>"; };
+		7B8CD42A26072D88008BAEB9 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		7B9223212605BB6A006B7C51 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		7BA9BBB225FE760A006E1C4F /* FeedApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FeedApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BA9BBB525FE760B006E1C4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -164,6 +174,7 @@
 		7B1572EC2600641500FC138E /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				7B8CD42026071478008BAEB9 /* Feed */,
 				7B1572ED2600642200FC138E /* ArtworkCell.swift */,
 			);
 			path = Cells;
@@ -172,6 +183,7 @@
 		7B1572F52600644000FC138E /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				7B8CD40D2607126C008BAEB9 /* Feed */,
 				7B1573542605729400FC138E /* Profile */,
 				7B1573522605723100FC138E /* Story */,
 			);
@@ -280,6 +292,23 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		7B8CD40D2607126C008BAEB9 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				7B8CD42626071CC1008BAEB9 /* FeedItemHeaderView.swift */,
+				7B8CD42726071CC1008BAEB9 /* FeedItemHeaderView.xib */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		7B8CD42026071478008BAEB9 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				7B8CD42126071490008BAEB9 /* FeedItemCell.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
 		7BA9BBA925FE760A006E1C4F = {
 			isa = PBXGroup;
 			children = (
@@ -376,6 +405,7 @@
 				7BA9BC4D25FF0153006E1C4F /* ImageLoader.swift */,
 				7B1573182602958F00FC138E /* TBD.swift */,
 				7B1573772605743D00FC138E /* Label.swift */,
+				7B8CD42A26072D88008BAEB9 /* Button.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -389,6 +419,7 @@
 				7B15733526054B9400FC138E /* NotificationsViewController.swift */,
 				7B15733A26054BD000FC138E /* UserProfileViewController.swift */,
 				7BA9BC4325FE94A4006E1C4F /* EmptyDetailViewcontroller.swift */,
+				7B8CD41A260713C7008BAEB9 /* FeedViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -508,6 +539,7 @@
 				7BA9BBBF25FE760D006E1C4F /* Assets.xcassets in Resources */,
 				7B15735D2605729400FC138E /* VerticalLabelsStackView.xib in Resources */,
 				7BA9BBBD25FE760B006E1C4F /* Main.storyboard in Resources */,
+				7B8CD42926071CC1008BAEB9 /* FeedItemHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,8 +568,10 @@
 				7B15732E26054B1D00FC138E /* StoriesWithAvatarCollectionReusableView.swift in Sources */,
 				7B15735F2605729400FC138E /* VerticalLabelsStackView.swift in Sources */,
 				7B15733B26054BD000FC138E /* UserProfileViewController.swift in Sources */,
+				7B8CD41B260713C7008BAEB9 /* FeedViewController.swift in Sources */,
 				7BA9BC2025FE9193006E1C4F /* NavigationController.swift in Sources */,
 				7B9223222605BB6A006B7C51 /* AvatarView.swift in Sources */,
+				7B8CD42B26072D88008BAEB9 /* Button.swift in Sources */,
 				7BA9BC3B25FE9381006E1C4F /* SplitViewController.swift in Sources */,
 				7BA9BC0325FE816C006E1C4F /* ItunesClient.swift in Sources */,
 				7BA9BC2625FE91CF006E1C4F /* UIStoryboard+Extension.swift in Sources */,
@@ -549,11 +583,13 @@
 				7B8CD4022605C0A7008BAEB9 /* UISplitViewController+Extension.swift in Sources */,
 				7B8CD4042605CE0D008BAEB9 /* StoryAvatarViewCell.swift in Sources */,
 				7B1573192602958F00FC138E /* TBD.swift in Sources */,
+				7B8CD42826071CC1008BAEB9 /* FeedItemHeaderView.swift in Sources */,
 				7BA9BC1825FE917B006E1C4F /* TabBarController.swift in Sources */,
 				7BA9BC0825FE818B006E1C4F /* ItunesRemote.swift in Sources */,
 				7BA9BC4425FE94A4006E1C4F /* EmptyDetailViewcontroller.swift in Sources */,
 				7B1573142601BC8000FC138E /* DiscoverViewController.swift in Sources */,
 				7B1573782605743D00FC138E /* Label.swift in Sources */,
+				7B8CD42226071490008BAEB9 /* FeedItemCell.swift in Sources */,
 				7BA9BBBA25FE760B006E1C4F /* ViewController.swift in Sources */,
 				7B1573702605738D00FC138E /* UIView+Extension.swift in Sources */,
 				7B1573602605729400FC138E /* ProfileDataView.swift in Sources */,

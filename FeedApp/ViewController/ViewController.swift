@@ -61,7 +61,7 @@ public struct GenericSectionIdentifierViewModel<SectionIdentifier: Hashable,
 public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseView, UICollectionViewDelegate {
     
     // MARK:- UI
-    var collectionView: UICollectionView! // intentionally force unwrapped, we need this else is dev error.
+    private var collectionView: UICollectionView! // intentionally force unwrapped, we need this else is dev error.
 
     // MARK:- Type Aliases
     public typealias SectionViewModelIdentifier = ViewModel.SectionIdentifier
@@ -78,11 +78,13 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
     // MARK:- Diffable Data Source
     private var dataSource: DiffDataSource?
     private var currentSnapshot: Snapshot?
+    private var sectionItems: [ViewModel] = []
         
     // MARK:- Life Cycle
     override func setupViews() {
         collectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView?.register(CellType.self)
+        collectionView.delegate = self
         addSubview(collectionView)
         collectionView.fillSuperview()
         configureDataSource()
@@ -104,11 +106,12 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
     }
     
     // MARK:- 2: ViewModels injection and snapshot
-    public func applyInitialSnapshotWith(_ itemsPerSection: [ViewModel]) {
+    public func applyInitialSnapshotWith(_ sectionItems: [ViewModel]) {
+        self.sectionItems = sectionItems
         currentSnapshot = Snapshot()
         guard var currentSnapshot = currentSnapshot else { return }
-        currentSnapshot.appendSections(itemsPerSection.map { $0.sectionIdentifier })
-        itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
+        currentSnapshot.appendSections(sectionItems.map { $0.sectionIdentifier })
+        sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
         dataSource?.apply(currentSnapshot)
     }
     
@@ -123,6 +126,14 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
             let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section]
             return headerFooterProvider(collectionView, sectionIdentifier, kind, indexPath)
         }
+    }
+    
+    public func dataSourceItems() -> [ViewModel] {
+        sectionItems
+    }
+    
+    public func scrollTo(_ indexPath: IndexPath) {
+        collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
     }
 }
 

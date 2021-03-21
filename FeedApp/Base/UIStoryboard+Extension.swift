@@ -75,25 +75,6 @@ extension UIButton {
     }
 }
 
-
-final class Button: UIButton {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        initialize()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        initialize()
-    }
-    
-    private func initialize() {
-        //tintColor = Theme.buttonTint.color
-    }
-}
-
-
 enum Theme: String {
     
     case primaryText

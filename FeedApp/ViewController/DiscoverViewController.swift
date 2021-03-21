@@ -10,7 +10,7 @@ import Combine
 import MarvelClient
 import UIKit
 
-enum DiscoverFeedSectionIdentifier: String, CaseIterable {
+enum DiscoverFeedSectionIdentifier: String {
     case popular = "Popular"
 }
 
@@ -64,7 +64,7 @@ final class DiscoverViewController: ViewController {
     }
     
     private func performOperations() {
-        itunesRemote.fetch(.appleMusic(feedType: .comingSoon(genre: .all), limit: 100))
+        itunesRemote.fetch(.apps(feedType: .topFree(genre: .all), limit: 100))
     }
     
     private func updateUI() {
