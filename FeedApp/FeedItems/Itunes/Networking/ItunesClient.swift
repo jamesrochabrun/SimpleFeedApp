@@ -28,7 +28,6 @@ final class ItunesClient: CombineAPI {
         
         let itunes = Itunes(mediaTypePath: mediaType)
         print("PATH: \(String(describing: itunes.request.url?.absoluteString))")
-
         return execute(itunes.request, decodingType: feed)
     }
 }

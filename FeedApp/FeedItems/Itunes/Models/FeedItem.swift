@@ -82,3 +82,9 @@ public extension IdentifiableHashable {
         hasher.combine(id)
     }
 }
+
+extension FeedItemViewModel: Artwork {
+    
+    public var imageURL: String? { artworkUrl100 }
+    public var thumbnailURL: String? { artworkUrl100 }
+}

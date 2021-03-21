@@ -10,39 +10,65 @@ import MarvelClient
 import Combine
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
 }
 
+public protocol ViewModelViewInjection: UIView {
+    associatedtype ViewModel
+    var viewModel: ViewModel? { get set }
+}
+
+public protocol ViewModelCellInjection: UICollectionViewCell {
+    associatedtype ViewModel
+    var viewModel: ViewModel? { get set }
+}
+
+public protocol ViewModelReusableViewInjection: UICollectionReusableView {
+    associatedtype ViewModel
+    var viewModel: ViewModel? { get set }
+}
+
 public protocol SectionIdentifierViewModel {
     
     associatedtype SectionIdentifier: Hashable
-    associatedtype SectionIdentifierReusableView: UICollectionReusableView
+  //  associatedtype SectionIdentifierReusableView: ViewModelReusableViewInjection
     associatedtype CellIdentifier: Hashable
-    associatedtype CellType: CellViewModel
+    associatedtype CellType: ViewModelCellInjection
     
     var sectionIdentifier: SectionIdentifier { get }
-    var sectionIdentifierReusableViewType: SectionIdentifierReusableView.Type { get }
+ //   var sectionIdentifierReusableViewType: SectionIdentifierReusableView.Type { get }
     var cellIdentifiers: [CellIdentifier] { get }
     var cellIdentifierType: CellType.Type { get }
 }
+
+public struct GenericSectionIdentifierViewModel<SectionIdentifier: Hashable,
+                                             //   ReusableView: ViewModelReusableViewInjection,
+                                                CellIdentifier: Hashable,
+                                                Cell: ViewModelCellInjection>: SectionIdentifierViewModel {
+    
+    public var sectionIdentifier: SectionIdentifier
+   // public var sectionIdentifierReusableViewType: ReusableView.Type { ReusableView.self }
+    public var cellIdentifiers: [CellIdentifier]
+    public var cellIdentifierType: Cell.Type { Cell.self }
+}
+
 
 @available(iOS 13, *)
 public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseView, UICollectionViewDelegate {
     
     // MARK:- UI
-    var collectionView: UICollectionView!
+    var collectionView: UICollectionView! // intentionally force unwrapped, we need this else is dev error.
 
     // MARK:- Type Aliases
     public typealias SectionViewModelIdentifier = ViewModel.SectionIdentifier
-    public typealias HeaderFooter = ViewModel.SectionIdentifierReusableView
     public typealias CellViewModelIdentifier = ViewModel.CellIdentifier // represents an item in a section
     public typealias CellType = ViewModel.CellType
   
-    public typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> HeaderFooter
+    public typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> UICollectionReusableView
     public typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
     public typealias Snapshot = NSDiffableDataSourceSnapshot<SectionViewModelIdentifier, CellViewModelIdentifier>
     
@@ -52,21 +78,20 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
     // MARK:- Diffable Data Source
     private var dataSource: DiffDataSource?
     private var currentSnapshot: Snapshot?
-    
-    private weak var parent: UIViewController?
-    
+        
     // MARK:- Life Cycle
-    convenience public init(layout: UICollectionViewLayout, parent: UIViewController?) {
-        self.init()
-        collectionView = .init(frame: .zero, collectionViewLayout: layout)
+    override func setupViews() {
+        collectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView?.register(CellType.self)
-        collectionView?.registerHeader(HeaderFooter.self, kind: UICollectionView.elementKindSectionHeader)
-        collectionView?.registerHeader(HeaderFooter.self, kind: UICollectionView.elementKindSectionFooter)
         addSubview(collectionView)
         collectionView.fillSuperview()
-        collectionView.collectionViewLayout = layout
         configureDataSource()
-        self.parent = parent
+    }
+    
+    var layout: UICollectionViewLayout = UICollectionViewFlowLayout() {
+        didSet {
+            collectionView.collectionViewLayout = layout
+        }
     }
     
     // MARK:- 1: DataSource Configuration
@@ -83,14 +108,6 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
         currentSnapshot = Snapshot()
         guard var currentSnapshot = currentSnapshot else { return }
         currentSnapshot.appendSections(itemsPerSection.map { $0.sectionIdentifier })
-        itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
-        dataSource?.apply(currentSnapshot)
-    }
-    
-    func updateSnapshot(_ itemsPerSection: [ViewModel], after section: ViewModel.SectionIdentifier) {
-        guard var currentSnapshot =  self.dataSource?.snapshot() else { return }
-        let newSec = itemsPerSection.map { $0.sectionIdentifier }
-        currentSnapshot.insertSections(newSec, afterSection: section)
         itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
         dataSource?.apply(currentSnapshot)
     }
@@ -118,68 +135,3 @@ extension NSDiffableDataSourceSnapshot {
         deleteSections([sectionIdentifier])
     }
 }
-
-
-public final class CollectionReusableView: UICollectionReusableView, ReusableViewModel {
-    
-    public typealias SearchHeaderCollection = DiffableCollectionView<GenericSectionIdentifierViewModel<SectionIdentifierExample, CollectionReusableView, CharacterViewModel, ArtworkCell>>
-    
-    private lazy var searchHeaderCollectionView: SearchHeaderCollection = {
-        SearchHeaderCollection(layout: HorizontalLayoutKind.horizontalStoryUserCoverLayout.layout, parent: nil)
-    }()
-    
-    private var marvelProvider = MarvelProvider()
-    
-    private var cancellable: AnyCancellable?
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        initialize()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        initialize()
-    }
-    
-    func initialize() {
-        addSubview(searchHeaderCollectionView)
-        searchHeaderCollectionView.fillSuperview()
-        marvelProvider.fetchCharacters()
-        
-        cancellable = marvelProvider.$characters.sink { [weak self] in
-            self?.searchHeaderCollectionView.applyInitialSnapshotWith($0)
-        }
-    }
-    public override func prepareForReuse() {
-        super.prepareForReuse()
-    //    cancellables.forEach { $0.cancel() }
-    }
-}
-
-
-
-//public final class CollectionReusableView<T: UIView>: UICollectionReusableView {
-//
-//    typealias ContentConfiguration = (T) -> Void
-//
-//    private let content: T = {
-//        T()
-//    }()
-//
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        super.init(coder: coder)
-//    }
-//
-//    func initialize() {
-//        addSubview(content)
-//    }
-//
-//    func configureContent(_ configuration: ContentConfiguration) {
-//        configuration(content)
-//    }
-//}

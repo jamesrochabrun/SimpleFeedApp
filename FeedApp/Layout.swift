@@ -12,27 +12,17 @@ import UIKit
 enum GridLayoutKind {
     
     case home
-    case search
+    case discover
     case profile
     
     var layout: UICollectionViewLayout {
         switch self {
         case .home: return UICollectionViewCompositionalLayout.homeLayout()
-        case .search: return UICollectionViewCompositionalLayout.searchLayout()
+        case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
         case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
         }
     }
-    
-//    var horizontalStubContentForHeader: [HorizontalContent]? {
-//        switch self {
-//        case .home: return StoryVideoCoverViewModel.storyVideoCovers.map { HorizontalContent.storySnippet($0) }
-//        case .search: return UserStoryCoverViewModel.userProfileStoryCovers.map { HorizontalContent.userStoryCircularCover($0) }
-//        case .profile: return HilightViewModel.mockHilights.map { HorizontalContent.hilightsSnippet($0) }
-//        }
-//    }
 }
-
-
 
 enum ScrollAxis {
     case vertical
@@ -107,7 +97,7 @@ extension UICollectionViewCompositionalLayout {
     
     // MARK:- Search Master Layout
     
-    static func searchLayout() -> UICollectionViewLayout {
+    static func discoverLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout {
             (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
             
@@ -133,7 +123,7 @@ extension UICollectionViewCompositionalLayout {
             let section = isVertical ? NSCollectionLayoutSection(group: finalNestedGroup) : UICollectionViewCompositionalLayout.grid(3)
                         
             let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                          heightDimension: .estimated(180.0))
+                                                          heightDimension: .estimated(120.0))
             
             let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: headerFooterSize,
@@ -167,7 +157,7 @@ extension UICollectionViewCompositionalLayout {
             case .vertical: break
             }
             
-            let higlightsEstimatedHeight: CGFloat = 110.0
+            let higlightsEstimatedHeight: CGFloat = 100.0
             let estimatedHeight: CGFloat = sectionIndex == 0 ? 350.0 : higlightsEstimatedHeight
             let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                           heightDimension: .estimated(estimatedHeight))
@@ -607,7 +597,7 @@ enum HorizontalLayoutKind {
     case horizontalHilightsLayout
     case horizontalStorySnippetLayout
     case horizontalPostsLayout
-    case horizontalStoryUserCoverLayout
+    case horizontalStoryUserCoverLayout(itemWidth: CGFloat)
     
     var layout: UICollectionViewLayout {
         switch self {
@@ -619,10 +609,10 @@ enum HorizontalLayoutKind {
             return UICollectionViewCompositionalLayout.layoutWithDimension(dimension)
         case .horizontalPostsLayout:
             return UICollectionViewCompositionalLayout.gridLayout(1, scrollAxis: .horizontal(.paging))
-        case .horizontalStoryUserCoverLayout:
-            return UICollectionViewCompositionalLayout.layoutWith(width: 150.0,
-                                                                  itemInset: UIEdgeInsets(top: 10, left: 12.0, bottom: 10, right: 12.0),
-                                                                  sectionInset: .zero)
+        case let .horizontalStoryUserCoverLayout(itemWidth):
+            return UICollectionViewCompositionalLayout.layoutWith(width: itemWidth,
+                                                                  itemInset: .init(top: 10, left: 10.0, bottom: 10, right: 10.0),
+                                                                  sectionInset: .init(top: 0, left: 0, bottom: 0, right: 0))
         }
     }
 }

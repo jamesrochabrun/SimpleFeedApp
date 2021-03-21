@@ -8,28 +8,41 @@
 import UIKit
 import Combine
 
-final class ImageViewLoader: BaseView {
+final class ImageViewLoader: BaseView, ContentReusable {
     
     private lazy var imageLoader: ImageLoader = {
         ImageLoader()
     }()
-    private var cancellables: Set<AnyCancellable> = []
+    
+    var imageViewContentMode: UIView.ContentMode  = .scaleAspectFit {
+        didSet {
+            imageView.contentMode = imageViewContentMode
+        }
+    }
+    
+    private var cancellable: AnyCancellable?
+
+//    private var cancellables: Set<AnyCancellable> = []
 
     private lazy var imageView: UIImageView = {
         var imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
     override func setupViews() {
         addSubview(imageView)
         imageView.fillSuperview()
+        cancellable = imageLoader.$image.sink { [unowned self] image in
+            imageView.image = image
+        }
     }
     
     func load(regularURL: String, lowResURL: String) {
         imageLoader.load(regularURL, lowResPath: lowResURL)
-         imageLoader.$image.sink { [unowned self] image in
-             imageView.image = image
-         }.store(in: &cancellables)
+    }
+    
+    func cleanAndReuse() {
+//        cancellable?.cancel()
+        imageView.image = nil
     }
 }

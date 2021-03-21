@@ -39,19 +39,16 @@ enum TabBarViewModel: String, CaseIterable {
         }
     }
     /// Return:- the tab bar title
-    var title: String {
-        rawValue
-    }
+    var title: String { rawValue }
     
     /// Return:-  the master/primary `topViewController`,  it instantiates a view controller using a convenient method for `UIStoryboards`.
     var masterViewController: UIViewController  {
         switch self {
-        case .home: return SearchViewController.instantiate(from: "Main")
-        case .search: return SearchViewController.instantiate(from: "Main")
-//        case .camera: return HomeViewController.instantiate(from: "Main")
-//        case .notifications: return NotificationsViewController.instantiate(from: "Main")
-//        case .profile: return UserProfileViewController.instantiate(from: "Main")
-        default: return UIViewController()
+        case .home: return HomeViewController.instantiate(from: "Main")
+        case .search: return DiscoverViewController.instantiate(from: "Main")
+        case .camera: return HomeViewController.instantiate(from: "Main")
+        case .notifications: return NotificationsViewController.instantiate(from: "Main")
+        case .profile: return UserProfileViewController.instantiate(from: "Main")
 
         }
     }

@@ -49,27 +49,6 @@ final class ImageLoader: ObservableObject {
     
     
     private func loadImageFromURL(_ url: URL, lowResURL: URL) {
-        //        let request = URLRequest(url: url)
-        //
-        //         URLSession.shared.dataTaskPublisher(for: request)
-        //            .tryCatch { error -> URLSession.DataTaskPublisher in
-        //                guard
-        //                    error.networkUnavailableReason == .constrained else {
-        //                    throw error
-        //                }
-        //                return URLSession.shared.dataTaskPublisher(for: lowResURL)
-        //            }
-        //            .tryMap {
-        //                guard let response = $0.response as? HTTPURLResponse,
-        //                      response.statusCode == 200,
-        //                      let image = UIImage(data: $0.data)
-        //                else {
-        //                    throw APIError.requestFailed(description: "Error Response \($0.response)")
-        //                }
-        //                self.imageCache.setImageForKey(url.absoluteString, image: image)
-        //                return image
-        //            }
-        
         adaptiveLoader(regularURL: url, lowDataURL: lowResURL)
             .tryMap { data in
                 let image = UIImage(data: data)!

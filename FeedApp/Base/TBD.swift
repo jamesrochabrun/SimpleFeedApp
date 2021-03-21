@@ -9,75 +9,75 @@ import UIKit
 
 
 @available(iOS 13, *)
-public final class DiffCollection<ViewModel: SectionIdentifierViewModel,
-                                     HeaderFooter: UIView>: BaseView {
-   
-   // MARK:- Private
-   private (set)var collectionView: UICollectionView! // if not initilaized, lets crash. 🤷🏽‍♂️
-   private typealias DiffDataSource = UICollectionViewDiffableDataSource<ViewModel.SectionIdentifier, ViewModel.CellIdentifier>
-   private var dataSource: DiffDataSource?
-   private typealias Snapshot = NSDiffableDataSourceSnapshot<ViewModel.SectionIdentifier, ViewModel.CellIdentifier>
-   private var currentSnapshot: Snapshot?
-   
-   // MARK:- Public
-   public typealias CellProvider = (ViewModel.CellIdentifier, IndexPath) -> UIView
-   public typealias HeaderFooterProvider = (ViewModel.SectionIdentifier, String, IndexPath) -> HeaderFooter?
-   public typealias SelectedContentAtIndexPath = ((ViewModel.CellIdentifier, IndexPath) -> Void)
-   public var selectedContentAtIndexPath: SelectedContentAtIndexPath?
-   
-    // MARK:- Life Cycle
-    convenience init(layout: UICollectionViewLayout,
-                     collectionViewDelegate: UICollectionViewDelegate,
-                     cellProvider: @escaping CellProvider,
-                     _ headerFooterProvider: HeaderFooterProvider?) {
-        self.init()
-        collectionView = .init(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .clear
-        collectionView.register(WrapperViewCell.self)
-        collectionView.registerHeader(WrapperCollectionReusableView<HeaderFooter>.self, kind: UICollectionView.elementKindSectionHeader)
-        collectionView.registerHeader(WrapperCollectionReusableView<HeaderFooter>.self, kind: UICollectionView.elementKindSectionFooter)
-        collectionView.delegate = collectionViewDelegate
-        addSubview(collectionView)
-        collectionView.fillSuperview()
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        configureDataSource(cellProvider)
-        if let headerFooterProvider = headerFooterProvider {
-            assignHedearFooter(headerFooterProvider)
-        }
-    }
-   
-   // MARK:- DataSource Configuration
-   private func configureDataSource(_ cellProvider: @escaping CellProvider) {
-       
-       dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
-           let cell: WrapperViewCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-           let cellView = cellProvider(model, indexPath)
-           cell.setupWith(cellView)
-           return cell
-       }
-   }
-   
-   // MARK:- ViewModel injection and snapshot
-   public func applySnapshotWith(_ itemsPerSection: [ViewModel]) {
-       currentSnapshot = Snapshot()
-       guard var currentSnapshot = currentSnapshot else { return }
-       currentSnapshot.appendSections(itemsPerSection.map { $0.sectionIdentifier })
-       itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
-       dataSource?.apply(currentSnapshot)
-   }
-   
-   private func assignHedearFooter(_ headerFooterProvider: @escaping HeaderFooterProvider) {
-       
-       dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
-           let header: WrapperCollectionReusableView<HeaderFooter> = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
-           if let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section],
-              let view = headerFooterProvider(sectionIdentifier, kind, indexPath) {
-               header.setupWith(view)
-           }
-           return header
-       }
-   }
-}
+//public final class DiffCollection<ViewModel: SectionIdentifierViewModel,
+//                                     HeaderFooter: UIView>: BaseView {
+//   
+//   // MARK:- Private
+//   private (set)var collectionView: UICollectionView! // if not initilaized, lets crash. 🤷🏽‍♂️
+//   private typealias DiffDataSource = UICollectionViewDiffableDataSource<ViewModel.SectionIdentifier, ViewModel.CellIdentifier>
+//   private var dataSource: DiffDataSource?
+//   private typealias Snapshot = NSDiffableDataSourceSnapshot<ViewModel.SectionIdentifier, ViewModel.CellIdentifier>
+//   private var currentSnapshot: Snapshot?
+//   
+//   // MARK:- Public
+//   public typealias CellProvider = (ViewModel.CellIdentifier, IndexPath) -> UIView
+//   public typealias HeaderFooterProvider = (ViewModel.SectionIdentifier, String, IndexPath) -> HeaderFooter?
+//   public typealias SelectedContentAtIndexPath = ((ViewModel.CellIdentifier, IndexPath) -> Void)
+//   public var selectedContentAtIndexPath: SelectedContentAtIndexPath?
+//   
+//    // MARK:- Life Cycle
+//    convenience init(layout: UICollectionViewLayout,
+//                     collectionViewDelegate: UICollectionViewDelegate,
+//                     cellProvider: @escaping CellProvider,
+//                     _ headerFooterProvider: HeaderFooterProvider?) {
+//        self.init()
+//        collectionView = .init(frame: .zero, collectionViewLayout: layout)
+//        collectionView.backgroundColor = .clear
+//        collectionView.register(WrapperViewCell.self)
+//        collectionView.registerHeader(WrapperCollectionReusableView<HeaderFooter>.self, kind: UICollectionView.elementKindSectionHeader)
+//        collectionView.registerHeader(WrapperCollectionReusableView<HeaderFooter>.self, kind: UICollectionView.elementKindSectionFooter)
+//        collectionView.delegate = collectionViewDelegate
+//        addSubview(collectionView)
+//        collectionView.fillSuperview()
+//        collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        configureDataSource(cellProvider)
+//        if let headerFooterProvider = headerFooterProvider {
+//            assignHedearFooter(headerFooterProvider)
+//        }
+//    }
+//   
+//   // MARK:- DataSource Configuration
+//   private func configureDataSource(_ cellProvider: @escaping CellProvider) {
+//       
+//       dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
+//           let cell: WrapperViewCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+//           let cellView = cellProvider(model, indexPath)
+//           cell.setupWith(cellView)
+//           return cell
+//       }
+//   }
+//   
+//   // MARK:- ViewModel injection and snapshot
+//   public func applySnapshotWith(_ itemsPerSection: [ViewModel]) {
+//       currentSnapshot = Snapshot()
+//       guard var currentSnapshot = currentSnapshot else { return }
+//       currentSnapshot.appendSections(itemsPerSection.map { $0.sectionIdentifier })
+//       itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
+//       dataSource?.apply(currentSnapshot)
+//   }
+//   
+//   private func assignHedearFooter(_ headerFooterProvider: @escaping HeaderFooterProvider) {
+//       
+//       dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+//           let header: WrapperCollectionReusableView<HeaderFooter> = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
+//           if let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section],
+//              let view = headerFooterProvider(sectionIdentifier, kind, indexPath) {
+//               header.setupWith(view)
+//           }
+//           return header
+//       }
+//   }
+//}
 
 @available(iOS 13.0, *)
 // MARK:- Helper
@@ -116,9 +116,9 @@ final public class WrapperCollectionReusableView<Content: UIView>: UICollectionR
     }
 }
 
-open class BaseCollectionViewCell<V>: UICollectionViewCell {
-        
-    public var viewModel: V? {
+open class BaseCollectionReusableView<ViewModel>: UICollectionReusableView {
+    
+    public var viewModel: ViewModel? {
         didSet {
             guard let viewModel = viewModel else { return }
             setupWith(viewModel)
@@ -144,11 +144,43 @@ open class BaseCollectionViewCell<V>: UICollectionViewCell {
     }
     
     // To be overriden. Super does not need to be called.
-    open func setupWith(_ viewModel: V) {
+    open func setupWith(_ viewModel: ViewModel) {
+    }
+}
+
+open class BaseCollectionViewCell<ViewModel>: UICollectionViewCell {
+        
+    public var viewModel: ViewModel? {
+        didSet {
+            guard let viewModel = viewModel else { return }
+            setupWith(viewModel)
+        }
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupSubviews()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    public override func awakeFromNib() {
+        super.awakeFromNib()
+        self.setupSubviews()
+    }
+    
+    // To be overriden. Super does not need to be called.
+    open func setupSubviews() {
+    }
+    
+    // To be overriden. Super does not need to be called.
+    open func setupWith(_ viewModel: ViewModel) {
     }
     
     /// Swift UI
-    open func setupWith(_ viewModel: V, parent: UIViewController?) {
+    open func setupWith(_ viewModel: ViewModel, parent: UIViewController?) {
         
     }
 }
@@ -383,95 +415,94 @@ open class BaseView: UIView {
 }
 
 
+open class CollectionViewCell: UICollectionViewCell {
+        
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupSubviews()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    public override func awakeFromNib() {
+        super.awakeFromNib()
+        self.setupSubviews()
+    }
+    
+    // To be overriden. Super does not need to be called.
+    open func setupSubviews() {
+    }
+}
+
+open class CollectionViewReusableView: UICollectionReusableView {
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupSubviews()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    public override func awakeFromNib() {
+        super.awakeFromNib()
+        self.setupSubviews()
+    }
+    
+    // To be overriden. Super does not need to be called.
+    open func setupSubviews() {
+    }
+}
 
 
+class BaseXibView: UIView {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupXib()
+        setUpViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setupXib()
+        setUpViews()
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setUpViews()
+    }
+    
+    func setUpViews() {
+        //MARK: To be overriden
+    }
+}
 
-//
-//
-//
-//struct Section<U: Hashable, T: Hashable, C: UICollectionViewCell>: Hashable {
-//    let headerItem: U
-//    let items: T
-//    let cellType: C
-//}
-//
-//struct DataSource<T: Hashable> {
-//    let sections: [T]
-//}
-//
-//@available(iOS 13, *)
-//public final class DiffableSectionCollectionView<T: Hashable>: BaseView, UICollectionViewDelegate {
-//
-//    init(dataSource: DataSource<T>) {
-//        contentDataSource = dataSource
-//    }
-//
-//    var contentDataSource: DataSource<T>
-//
-//    // MARK:- UI
-//    var collectionView: UICollectionView!
-//
-//    // MARK:- Type Aliases
-//    public typealias CellViewModelIdentifier = ViewModel.CellIdentifier // represents an item in a section
-//    public typealias SectionViewModelIdentifier = ViewModel.SectionIdentifier
-//    public typealias HeaderFooter = CollectionReusableView
-//    public typealias CellType = ViewModel.CellType
-//
-//    public typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> HeaderFooter
-//    public typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
-//    public typealias Snapshot = NSDiffableDataSourceSnapshot<SectionViewModelIdentifier, CellViewModelIdentifier>
-//
-//    public typealias SelectedContentAtIndexPath = ((CellViewModelIdentifier, IndexPath) -> Void)
-//    var selectedContentAtIndexPath: SelectedContentAtIndexPath?
-//
-//    // MARK:- Diffable Data Source
-//    private var dataSource: DiffDataSource?
-//    private var currentSnapshot: Snapshot?
-//
-//    private weak var parent: UIViewController?
-//
-//    // MARK:- Life Cycle
-//    convenience public init(layout: UICollectionViewLayout, parent: UIViewController?) {
-//        self.init()
-//        collectionView = .init(frame: .zero, collectionViewLayout: layout)
-//        collectionView?.register(CellType.self)
-//        collectionView?.registerHeader(HeaderFooter.self, kind: UICollectionView.elementKindSectionHeader)
-//        collectionView?.registerHeader(HeaderFooter.self, kind: UICollectionView.elementKindSectionFooter)
-//        addSubview(collectionView)
-//        collectionView.fillSuperview()
-//        collectionView.collectionViewLayout = layout
-//        configureDataSource()
-//        self.parent = parent
-//    }
-//
-//    // MARK:- 1: DataSource Configuration
-//    private func configureDataSource() {
-//        dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
-//            let cell: CellType = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-//            cell.viewModel = model as? CellType.ViewModel
-//            return cell
-//        }
-//    }
-//
-//    // MARK:- 2: ViewModels injection and snapshot
-//    public func applySnapshotWith(_ itemsPerSection: [ViewModel]) {
-//        currentSnapshot = Snapshot()
-//        guard var currentSnapshot = currentSnapshot else { return }
-//        currentSnapshot.appendSections(itemsPerSection.map { $0.sectionIdentifier })
-//        itemsPerSection.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
-//        dataSource?.apply(currentSnapshot)
-//    }
-//
-//    // MARK:- UICollectionViewDelegate
-//    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        guard let viewModel = dataSource?.itemIdentifier(for: indexPath) else { return }
-//        selectedContentAtIndexPath?(viewModel, indexPath)
-//    }
-//
-//    public func assignHedearFooter(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
-//        dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
-//            let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section]
-//            return headerFooterProvider(collectionView, sectionIdentifier, kind, indexPath)
-//        }
-//    }
-//}
+
+extension UIView {
+    
+    fileprivate func setupXib() {
+        
+        guard let view = self.loadView() else {
+            return
+        }
+        view.frame = self.bounds
+        view.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleHeight]
+        self.addSubview(view)
+        
+    }
+    
+    private func loadView() -> UIView? {
+        guard let nibName =  NSStringFromClass(type(of: self)).components(separatedBy: ".").last else {
+            return nil
+        }
+        let bundle = Bundle(for: type(of: self))
+        let nib = UINib(nibName: nibName, bundle: bundle)
+        let view = nib.instantiate(withOwner: self, options: nil).first as? UIView
+        return view
+    }
+}
