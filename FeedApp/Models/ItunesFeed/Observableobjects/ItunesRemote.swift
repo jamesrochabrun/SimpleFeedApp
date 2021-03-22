@@ -8,11 +8,6 @@
 import Foundation
 import Combine
 
-
-public enum FeedSectionIdentifier: String, CaseIterable {
-    case popular = "Popular"
-}
-
 final class ItunesRemote: ObservableObject {
 
     private let service = ItunesClient()

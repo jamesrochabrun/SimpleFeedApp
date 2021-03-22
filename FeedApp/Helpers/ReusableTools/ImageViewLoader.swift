@@ -32,13 +32,13 @@ final class ImageViewLoader: BaseView, ContentReusable {
     override func setupViews() {
         addSubview(imageView)
         imageView.fillSuperview()
-        cancellable = imageLoader.$image.sink { [unowned self] image in
-            imageView.image = image
+        cancellable = imageLoader.$image.sink { [weak self] image in
+            self?.imageView.image = image
         }
     }
     
-    func load(regularURL: String, lowResURL: String) {
-        imageLoader.load(regularURL, lowResPath: lowResURL)
+    func load(regularURL: String, lowResURL: String, placeholder: UIImage? = UIImage(systemName: "photo")) {
+        imageLoader.load(regularURL, lowResPath: lowResURL, placeholder: placeholder)
     }
     
     func cleanAndReuse() {

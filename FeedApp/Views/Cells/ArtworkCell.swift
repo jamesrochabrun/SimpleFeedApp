@@ -9,9 +9,9 @@ import UIKit
 import Combine
 import MarvelClient
 
-open class ArtworkCell: CollectionViewCell, ViewModelCellInjection {
+final class ArtworkCell: CollectionViewCell, ViewModelCellInjection {
     
-    public var viewModel: Artwork? {
+    var viewModel: Artwork? {
         didSet {
             setUpWith(viewModel!)
         }
@@ -20,16 +20,16 @@ open class ArtworkCell: CollectionViewCell, ViewModelCellInjection {
         ImageViewLoader()
     }()
     
-    open override func setupSubviews() {
+    override func setupSubviews() {
         contentView.addSubview(imageViewLoader)
         imageViewLoader.fillSuperview()
     }
     
     private func setUpWith(_ artwork: Artwork) {
-        imageViewLoader.load(regularURL: artwork.imageURL!, lowResURL: artwork.thumbnailURL!)
+        imageViewLoader.load(regularURL: artwork.imageURL, lowResURL: artwork.thumbnailURL)
     }
     
-    open override func prepareForReuse() {
+    override func prepareForReuse() {
         super.prepareForReuse()
         imageViewLoader.cleanAndReuse()
     }

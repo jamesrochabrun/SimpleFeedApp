@@ -9,16 +9,17 @@ import UIKit
 import MarvelClient
 import Combine
 
+// MARK:- Stories Snippet Diffable Section Identifier
 enum StoriesSnippetSectionIdentifier {
     case recent
     case past
 }
 
 // MARK:- Section ViewModel
-// document
+/// - Typealias that describes the structure of a section in the Stories Snippet feed.
 typealias UserStoriesSnippetWithAvatarSectionModeling = GenericSectionIdentifierViewModel<StoriesSnippetSectionIdentifier, CharacterViewModel, StorySnippetWithAvatarViewCell>
 
-final class StoriesSnippetWithAvatarCollectionReusableView: GenericCollectionReusableView<UserStoriesSnippetWithAvatarSectionModeling, HomeFeedSectionIdentifier>  {
+final class StoriesSnippetWithAvatarCollectionReusableView: GenericMarvelItemsCollectionReusableView<UserStoriesSnippetWithAvatarSectionModeling, HomeFeedSectionIdentifier>  {
     
     override func initialize() {
         super.initialize()
@@ -26,6 +27,7 @@ final class StoriesSnippetWithAvatarCollectionReusableView: GenericCollectionReu
     }
     
     override func setupWith(_ viewModel: HomeFeedSectionIdentifier) {
+        // Note: Here we can also customize this collection view with headers, footer, accessories based on the `HomeFeedSectionIdentifier` case.
         cancellable = marvelProvider.$characterViewModels.sink { [weak self] in
             let homeFeedSectionItems = [UserStoriesSnippetWithAvatarSectionModeling(sectionIdentifier: .recent, cellIdentifiers: $0)]
            self?.collectionView?.applyInitialSnapshotWith(homeFeedSectionItems)
@@ -34,42 +36,3 @@ final class StoriesSnippetWithAvatarCollectionReusableView: GenericCollectionReu
 }
 
 
-class GenericCollectionReusableView<Content: SectionIdentifierViewModel, Item: Hashable>: UICollectionReusableView, ViewModelReusableViewInjection {
-       
-    typealias ViewModel = Item
-    var viewModel: ViewModel? {
-        didSet {
-            setupWith(viewModel!)
-        }
-    }
-    var marvelProvider = MarvelRemote()
-    var cancellable: AnyCancellable?
-    
-    var layout: UICollectionViewLayout = UICollectionViewFlowLayout() {
-        didSet {
-            collectionView.layout = layout
-        }
-    }
-    
-    typealias CollectionView = DiffableCollectionView<Content>
-    var collectionView: CollectionView! // document
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        initialize()
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        initialize()
-    }
-    
-    func initialize() {
-        collectionView = CollectionView()
-        addSubview(collectionView)
-        collectionView.fillSuperview()
-    }
-    
-    func setupWith(_ viewModel: ViewModel) {
-    }
-}

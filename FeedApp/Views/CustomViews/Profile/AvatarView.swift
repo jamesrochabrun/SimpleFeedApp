@@ -38,7 +38,7 @@ final class AvatarView: BaseView, ContentReusable {
     }
     
     func setUpWith(_ artwork: Artwork, border: BorderKind = .none) {
-        imageViewLoader.load(regularURL: artwork.imageURL!, lowResURL: artwork.thumbnailURL!)
+        imageViewLoader.load(regularURL: artwork.imageURL, lowResURL: artwork.thumbnailURL)
         updateBorderKind(border)
     }
     

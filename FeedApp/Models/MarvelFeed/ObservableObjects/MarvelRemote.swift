@@ -12,14 +12,14 @@ import MarvelClient
 // document
 
 extension ComicViewModel: Artwork {
-    public var imageURL: String? { artwork.imagePathFor(variant: .squareStandardLarge) }
-    public var thumbnailURL: String? { artwork.imagePathFor(variant: .squareStandardSmall) }
+    public var imageURL: String { artwork.imagePathFor(variant: .squareStandardLarge) }
+    public var thumbnailURL: String { artwork.imagePathFor(variant: .squareStandardSmall) }
 }
 
 extension CharacterViewModel: Artwork {
     
-    public var imageURL: String? { artwork?.imagePathFor(variant: .squareStandardLarge) }
-    public var thumbnailURL: String? { artwork?.imagePathFor(variant: .squareStandardSmall) }
+    public var imageURL: String { artwork?.imagePathFor(variant: .squareStandardLarge) ?? "" }
+    public var thumbnailURL: String { artwork?.imagePathFor(variant: .squareStandardSmall) ?? "" }
 }
 
 final class MarvelRemote: ObservableObject {

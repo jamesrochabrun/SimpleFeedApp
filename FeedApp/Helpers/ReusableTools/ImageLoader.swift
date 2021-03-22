@@ -2,7 +2,7 @@
 //  ImageLoader.swift
 //  FeedApp
 //
-//  Created by James Rochabrun on 3/14/21.
+//  Created by James Rochabrun on 3/21/21.
 //
 
 import UIKit
@@ -25,19 +25,25 @@ final class ImageLoader: ObservableObject {
         }
     }
     
+    private var placeholderImage: UIImage?
+    
     // MARK:- Publisher
     @Published var image: UIImage?
         
     // MARK:- Private Properties
     private let imageCache = ImageCache.shared
     
+    private var cancellables: Set<AnyCancellable> = []
+
     // MARK:- Private methods.
-    func load(_ path: String, lowResPath: String) {
+    func load(_ path: String, lowResPath: String, placeholder: UIImage?) {
+        placeholderImage = placeholder
         guard !loadImageFromCache(path) else { return }
-
-        guard let url = URL(string: path) else { return }
+        guard let url = URL(string: path) else {
+            image = placeholderImage
+            return
+        }
         guard let urlLowRes = URL(string: lowResPath) else { return }
-
         loadImageFromURL(url, lowResURL: urlLowRes)
     }
     
@@ -47,7 +53,6 @@ final class ImageLoader: ObservableObject {
         return true
     }
     
-    
     private func loadImageFromURL(_ url: URL, lowResURL: URL) {
         adaptiveLoader(regularURL: url, lowDataURL: lowResURL)
             .tryMap { data in
@@ -56,9 +61,10 @@ final class ImageLoader: ObservableObject {
                 return image
             }
             .retry(2)
-            .replaceError(with: UIImage(systemName: "photo"))
+            .replaceError(with: placeholderImage)
             .receive(on: DispatchQueue.main)
-            .assign(to: &$image)
+            .assign(to: \.image, on: self)
+            .store(in: &cancellables)
     }
     
     func adaptiveLoader(regularURL: URL, lowDataURL: URL) -> AnyPublisher<Data, Error> {

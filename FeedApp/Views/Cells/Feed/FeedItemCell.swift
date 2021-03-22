@@ -31,17 +31,23 @@ final class FeedItemCell: CollectionViewCell, ViewModelCellInjection {
     override func setupSubviews() {
         feedItemHeaderView.constrainHeight(constant: 80)
         imageViewLoader.heightAnchor.constraint(equalTo: imageViewLoader.widthAnchor, multiplier: 1).isActive = true
-//        feedItemActionsView.constrainHeight(constant: 80)
         let stackView = UIStackView(arrangedSubviews: [feedItemHeaderView, imageViewLoader])
         stackView.axis = .vertical
         stackView.distribution = .fill
         contentView.addSubview(stackView)
-        stackView.fillSuperview()
+        stackView.anchor(top: contentView.topAnchor,
+                         leading: contentView.leadingAnchor,
+                         trailing: contentView.trailingAnchor)
+        let bottomConstraint = stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+       // stackView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+      //  bottomConstraint.priority = UILayoutPriority(999.0)
+        bottomConstraint.isActive = true
+        
     }
     
     private func setUpWith(_ viewModel: FeedItemViewModel) {
         
-        feedItemHeaderView.setupWith(HeaderPostViewModel(user: UserProfileViewModel.stub, location: "Somewhere in the universe"))
-        imageViewLoader.load(regularURL: viewModel.imageURL ?? "", lowResURL: viewModel.thumbnailURL ?? "")
+        feedItemHeaderView.setupWith(HorizontalFeedItemViewModel(user: UserProfileViewModel.stub, location: "Somewhere in the universe", kind: .header))
+        imageViewLoader.load(regularURL: viewModel.imageURL, lowResURL: viewModel.thumbnailURL, placeholder: UIImage(named: "zizou"))
     }
 }

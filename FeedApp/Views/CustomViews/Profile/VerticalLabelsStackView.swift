@@ -8,8 +8,9 @@
 
 import UIKit
 
-final class VerticalLabelsStackView: BaseXibView {
+final class VerticalLabelsStackView: BaseXibView, ContentReusable {
     
+    // MARK:- UI
     @IBOutlet private var topLabel: Label! {
         didSet {
             topLabel.kind = .primary
@@ -20,9 +21,15 @@ final class VerticalLabelsStackView: BaseXibView {
             bottomLabel.kind = .secondary
         }
     }
-
+    
+    // MARK:- Configuration
     func setupWith(_ item: HeaderSubHeaderInfo) {
         topLabel?.text = item.header
         bottomLabel?.text = item.subHeader
+    }
+    
+    // MARK:- LifeCycle
+    func cleanAndReuse() {
+        [topLabel, bottomLabel].forEach { $0?.text = "" }
     }
 }

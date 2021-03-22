@@ -17,22 +17,22 @@ class ViewController: UIViewController {
     }
 }
 
-public protocol ViewModelViewInjection: UIView {
+protocol ViewModelViewInjection: UIView {
     associatedtype ViewModel
     var viewModel: ViewModel? { get set }
 }
 
-public protocol ViewModelCellInjection: UICollectionViewCell {
+protocol ViewModelCellInjection: UICollectionViewCell {
     associatedtype ViewModel
     var viewModel: ViewModel? { get set }
 }
 
-public protocol ViewModelReusableViewInjection: UICollectionReusableView {
+protocol ViewModelReusableViewInjection: UICollectionReusableView {
     associatedtype ViewModel
     var viewModel: ViewModel? { get set }
 }
 
-public protocol SectionIdentifierViewModel {
+protocol SectionIdentifierViewModel: AnyObject {
     
     associatedtype SectionIdentifier: Hashable
   //  associatedtype SectionIdentifierReusableView: ViewModelReusableViewInjection
@@ -45,34 +45,38 @@ public protocol SectionIdentifierViewModel {
     var cellIdentifierType: CellType.Type { get }
 }
 
-public struct GenericSectionIdentifierViewModel<SectionIdentifier: Hashable,
+class GenericSectionIdentifierViewModel<SectionIdentifier: Hashable,
                                              //   ReusableView: ViewModelReusableViewInjection,
                                                 CellIdentifier: Hashable,
                                                 Cell: ViewModelCellInjection>: SectionIdentifierViewModel {
     
     public var sectionIdentifier: SectionIdentifier
    // public var sectionIdentifierReusableViewType: ReusableView.Type { ReusableView.self }
-    public var cellIdentifiers: [CellIdentifier]
+    public var cellIdentifiers: [CellIdentifier] = []
     public var cellIdentifierType: Cell.Type { Cell.self }
+    
+    init(sectionIdentifier: SectionIdentifier, cellIdentifiers: [CellIdentifier] ) {
+        self.sectionIdentifier = sectionIdentifier
+        self.cellIdentifiers = cellIdentifiers
+    }
 }
 
-
 @available(iOS 13, *)
-public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseView, UICollectionViewDelegate {
+final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseView, UICollectionViewDelegate {
     
     // MARK:- UI
     private var collectionView: UICollectionView! // intentionally force unwrapped, we need this else is dev error.
 
     // MARK:- Type Aliases
-    public typealias SectionViewModelIdentifier = ViewModel.SectionIdentifier
-    public typealias CellViewModelIdentifier = ViewModel.CellIdentifier // represents an item in a section
-    public typealias CellType = ViewModel.CellType
+    typealias SectionViewModelIdentifier = ViewModel.SectionIdentifier
+    typealias CellViewModelIdentifier = ViewModel.CellIdentifier // represents an item in a section
+    typealias CellType = ViewModel.CellType
   
-    public typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> UICollectionReusableView
-    public typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
-    public typealias Snapshot = NSDiffableDataSourceSnapshot<SectionViewModelIdentifier, CellViewModelIdentifier>
+    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> UICollectionReusableView
+    typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<SectionViewModelIdentifier, CellViewModelIdentifier>
     
-    public typealias SelectedContentAtIndexPath = ((CellViewModelIdentifier, IndexPath) -> Void)
+    typealias SelectedContentAtIndexPath = ((CellViewModelIdentifier, IndexPath) -> Void)
     var selectedContentAtIndexPath: SelectedContentAtIndexPath?
     
     // MARK:- Diffable Data Source
@@ -106,7 +110,7 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
     }
     
     // MARK:- 2: ViewModels injection and snapshot
-    public func applyInitialSnapshotWith(_ sectionItems: [ViewModel]) {
+    func applyInitialSnapshotWith(_ sectionItems: [ViewModel]) {
         self.sectionItems = sectionItems
         currentSnapshot = Snapshot()
         guard var currentSnapshot = currentSnapshot else { return }
@@ -116,24 +120,30 @@ public final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>
     }
     
     // MARK:- UICollectionViewDelegate
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let viewModel = dataSource?.itemIdentifier(for: indexPath) else { return }
         selectedContentAtIndexPath?(viewModel, indexPath)
     }
     
-    public func assignHedearFooter(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
+    func assignHedearFooter(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
         dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
             let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section]
             return headerFooterProvider(collectionView, sectionIdentifier, kind, indexPath)
         }
     }
     
-    public func dataSourceItems() -> [ViewModel] {
+    func dataSourceItems() -> [ViewModel] {
         sectionItems
     }
     
-    public func scrollTo(_ indexPath: IndexPath) {
-        collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+    func scrollTo(_ indexPath: IndexPath) {
+        
+        UIView.transition(with: collectionView,
+                          duration: 0.4,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            self.collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+                          })
     }
 }
 

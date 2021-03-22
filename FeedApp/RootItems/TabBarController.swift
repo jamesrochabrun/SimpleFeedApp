@@ -23,7 +23,7 @@ final class TabBarController: UITabBarController {
 enum TabBarViewModel: String, CaseIterable {
     
     case home
-    case search
+    case discover
     case camera
     case notifications
     case profile
@@ -32,7 +32,7 @@ enum TabBarViewModel: String, CaseIterable {
     var icon: UIImage? {
         switch self {
         case .home: return UIImage(systemName: "house.fill")
-        case .search: return UIImage(systemName: "magnifyingglass")
+        case .discover: return UIImage(systemName: "magnifyingglass")
         case .camera: return UIImage(systemName: "plus.app")
         case .notifications: return UIImage(systemName: "suit.heart")
         case .profile: return UIImage(systemName: "person")
@@ -44,26 +44,37 @@ enum TabBarViewModel: String, CaseIterable {
     /// Return:-  the master/primary `topViewController`,  it instantiates a view controller using a convenient method for `UIStoryboards`.
     var masterViewController: UIViewController  {
         switch self {
-        case .home: return HomeViewController.instantiate(from: "Main")
-        case .search: 
-            let goDiscover = Godiscover()
-            goDiscover.layout = GridLayoutKind.discover.layout
-            return goDiscover
-            
-           // DiscoverViewController.instantiate(from: "Main")
+        case .home:
+            let homeViewController = HomeViewController.instantiate(from: "Main")
+            homeViewController.layout = layout
+            return homeViewController
+        case .discover:
+            let discoverViewController = DiscoverViewController.instantiate(from: "Main")
+            discoverViewController.layout = layout
+            return discoverViewController
         case .camera: return HomeViewController.instantiate(from: "Main")
         case .notifications: return NotificationsViewController.instantiate(from: "Main")
-        case .profile: return UserProfileViewController.instantiate(from: "Main")
-
+        case .profile:
+            let userProfileViewController = UserProfileViewController.instantiate(from: "Main")
+            userProfileViewController.layout = layout
+            return userProfileViewController
         }
     }
+    
+    var layout: UICollectionViewLayout {
+        switch self {
+        case .home: return UICollectionViewCompositionalLayout.homeLayout()
+        case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
+        case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
+        default: return UICollectionViewLayout()
+        }
+    }
+    
     /// Return:-  It defines if a tab should use a `UISplitViewController` as root or not.
     var inSplitViewController: Bool {
         switch self {
-        case .profile:
-            return true
-        default:
-            return false
+        case .profile: return true
+        default: return false
         }
     }
 }
@@ -76,7 +87,8 @@ extension UINavigationController {
     func inSplitViewControllerIfSupported(for viewModel: TabBarViewModel) -> UIViewController {
         guard viewModel.inSplitViewController else {
             self.tabBarItem.image = viewModel.icon
-            return self }
+            return self
+        }
         let splitViewController = SplitViewController(viewControllers: [self, EmptyDetailViewcontroller()])
         splitViewController.tabBarItem.image = viewModel.icon
         return splitViewController

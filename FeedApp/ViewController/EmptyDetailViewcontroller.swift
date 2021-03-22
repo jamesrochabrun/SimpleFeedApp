@@ -8,4 +8,5 @@
 import UIKit
 
 final class EmptyDetailViewcontroller: ViewController {
+    
 }

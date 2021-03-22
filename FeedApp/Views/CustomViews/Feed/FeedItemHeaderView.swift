@@ -8,26 +8,39 @@
 
 import UIKit
 
-struct HeaderPostViewModel {
-    let user: UserProfileViewModel
-    let location: String
+enum HorizontalFeedItemViewModelKind {
+    case list
+    case header
 }
 
-final class FeedItemHeaderView: BaseXibView {
-    
-    @IBOutlet private var profileImageView: UIImageView!
+struct HorizontalFeedItemViewModel: IdentifiableHashable {
+    let id = UUID()
+    let user: UserProfileViewModel
+    let location: String?
+    let kind: HorizontalFeedItemViewModelKind
+}
+
+extension HorizontalFeedItemViewModel: Artwork {
+    var imageURL: String { user.userAvatarURL ?? "" }
+    var thumbnailURL: String { "" }
+}
+
+final class FeedItemHeaderView: BaseXibView, ContentReusable {
+        
+    @IBOutlet private var profileImageView: ImageViewLoader!
     @IBOutlet private var usernameLabel: Label!
     @IBOutlet private var locationLabel: Label!
-    @IBOutlet private var actionButton: UIButton! {
+    @IBOutlet private var actionButton: Button! {
         didSet {
             actionButton.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         }
     }
 
-    func setupWith(_ viewModel: HeaderPostViewModel) {
+    func setupWith(_ viewModel: HorizontalFeedItemViewModel) {
         usernameLabel?.text = viewModel.user.profileDescription.userName
         locationLabel?.text = viewModel.location
-        profileImageView?.image = viewModel.user.userAvatar
+        profileImageView?.load(regularURL: viewModel.imageURL, lowResURL: viewModel.thumbnailURL, placeholder: viewModel.user.userAvatarPlaceholder)
+        actionButton?.isHidden = viewModel.kind == .list
     }
     
     @IBAction func actionButtonDidTapped(_ sender: UIButton) {
@@ -37,6 +50,9 @@ final class FeedItemHeaderView: BaseXibView {
         super.layoutSubviews()
         profileImageView?.circle()
         profileImageView?.setupGradient(cornerRadius: profileImageView?.layer.cornerRadius ?? 0, lineWidth: 1.5)
+    }
+    
+    func cleanAndReuse() {
     }
 }
 

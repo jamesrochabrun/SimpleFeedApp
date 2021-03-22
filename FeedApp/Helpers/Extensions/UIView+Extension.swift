@@ -7,9 +7,8 @@
 
 import UIKit
 
-struct Pinterest {
-    
-    static let gradientColors: [UIColor] = [#colorLiteral(red: 0.9607843137, green: 0.5215686275, blue: 0.1607843137, alpha: 1),#colorLiteral(red: 0.8666666667, green: 0.1647058824, blue: 0.4823529412, alpha: 1)]//[#colorLiteral(red: 0.9607843137, green: 0.5215686275, blue: 0.1607843137, alpha: 1), #colorLiteral(red: 0.9960784314, green: 0.8549019608, blue: 0.4666666667, alpha: 1), #colorLiteral(red: 0.8666666667, green: 0.1647058824, blue: 0.4823529412, alpha: 1), #colorLiteral(red: 0.5058823529, green: 0.2039215686, blue: 0.6862745098, alpha: 1), #colorLiteral(red: 0.3176470588, green: 0.3568627451, blue: 0.831372549, alpha: 1)]
+struct Airbnb {
+    static let gradientColors: [UIColor] = [#colorLiteral(red: 1, green: 0.3529411765, blue: 0.3725490196, alpha: 1),#colorLiteral(red: 0, green: 0.6509803922, blue: 0.6, alpha: 1)]
 }
 
 enum StrokeGradientDirection {
@@ -20,7 +19,7 @@ enum StrokeGradientDirection {
 
 extension UIView {
     
-    func setupGradient(cornerRadius: CGFloat, colors: [UIColor] = Pinterest.gradientColors, lineWidth: CGFloat = 5, direction: StrokeGradientDirection = .horizontal, frame: CGRect? = nil) {
+    func setupGradient(cornerRadius: CGFloat, colors: [UIColor] = Airbnb.gradientColors, lineWidth: CGFloat = 5, direction: StrokeGradientDirection = .horizontal, frame: CGRect? = nil) {
         
         self.layer.cornerRadius = cornerRadius
         self.layer.masksToBounds = true

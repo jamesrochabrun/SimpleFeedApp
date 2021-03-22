@@ -8,75 +8,9 @@
 
 import UIKit
 
-/**
-- Remark:- viewModel displayes a single category  followers, following, posts or  counts.
-*/
-struct UserDataViewModel {
-    
-    let numberInfo: String
-    let sectionInfoTitle: String
-}
-
-extension UserDataViewModel: HeaderSubHeaderInfo {
-    var header: String { numberInfo }
-    var subHeader: String { sectionInfoTitle }
-}
-
-/**
-- Remark:- viewModel displayes followers, following and posts in a stackview.
-*/
-struct UserDataStackViewModel {
-    
-    let photoDataInfo: UserDataViewModel
-    let followersDataInfo: UserDataViewModel
-    let followingDataInfo: UserDataViewModel
-}
-
-
-// MARK:- Protocol
-/**
-- Remark:- protocol that allows UI reusability.
-*/
-protocol HeaderSubHeaderInfo {
-    var header: String { get }
-    var subHeader: String { get }
-}
-
-/**
- - Remark:- viewModel displayed in the user profiles page.
- */
-struct UserProfileViewModel {
-    
-    var userAvatar: UIImage?
-    let userDataStackViewModel: UserDataStackViewModel
-    let profileDescription: UserProfileDescription
-    
-    static var stub: UserProfileViewModel {
-        UserProfileViewModel(userAvatar: UIImage(named: "zizou"),
-        userDataStackViewModel: UserDataStackViewModel(photoDataInfo: UserDataViewModel(numberInfo: "100", sectionInfoTitle: "Photos"),
-                                                       followersDataInfo: UserDataViewModel(numberInfo: "250", sectionInfoTitle: "Followers"),
-                                                       followingDataInfo: UserDataViewModel(numberInfo: "300", sectionInfoTitle: "Following")),
-        profileDescription: UserProfileDescription(userName: "Zizou", userPersonalDescription: "✈️🇲🇽🇨🇱🇯🇵🇪🇸🇻🇬"))
-    }
-}
-
-/**
-- Remark:- viewModel  user name and personal description
-*/
-struct UserProfileDescription {
-    let userName: String
-    let userPersonalDescription: String
-}
-
-extension UserProfileDescription: HeaderSubHeaderInfo {
-    
-    var header: String { userName }
-    var subHeader: String { userPersonalDescription }
-}
-
-
 final class ProfileInfoView: BaseXibView, ContentReusable {
     
+    // MARK:- UI
     @IBOutlet private var profileImageView: UIImageView! {
         didSet {
             profileImageView.contentMode = .scaleAspectFit
@@ -95,20 +29,18 @@ final class ProfileInfoView: BaseXibView, ContentReusable {
         }
     }
     
-    override func setUpViews() {
-        super.setUpViews()
-    }
-    
+    // MARK:- Configuration
     func setupWith(_ viewModel: UserProfileViewModel) {
-        profileImageView.image = viewModel.userAvatar
-        profileDataView.setupWith(viewModel.userDataStackViewModel)
-        profileDescriptionStackView.setupWith(viewModel.profileDescription)
+        profileImageView?.image = viewModel.userAvatarPlaceholder
+        profileDataView?.setupWith(viewModel.userDataStackViewModel)
+        profileDescriptionStackView?.setupWith(viewModel.profileDescription)
     }
     
+    // MARK:- Handlers
     @IBAction func editProfileTapped(_ sender: UIButton) {
-        print("profile edit tapped")
     }
     
+    // MARK:- LifeCycle
     override func layoutSubviews() {
         super.layoutSubviews()
         profileImageView?.circle()
@@ -116,5 +48,6 @@ final class ProfileInfoView: BaseXibView, ContentReusable {
     }
     
     func cleanAndReuse() {
+        profileImageView?.image = nil
     }
 }

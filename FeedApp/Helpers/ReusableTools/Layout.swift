@@ -8,27 +8,13 @@
 import UIKit
 
 
-// MARK:- Layout
-enum GridLayoutKind {
-    
-    case home
-    case discover
-    case profile
-    
-    var layout: UICollectionViewLayout {
-        switch self {
-        case .home: return UICollectionViewCompositionalLayout.homeLayout()
-        case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
-        case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
-        }
-    }
-}
-
+/// Defines the scroll Axis of a layout.
 enum ScrollAxis {
     case vertical
     case horizontal(UICollectionLayoutSectionOrthogonalScrollingBehavior)
 }
 
+/// Defines a position of a certain rectangle in a layout
 enum VerticalRectanglePosition: CaseIterable {
     case topLeading
     case topTrailing
@@ -36,17 +22,18 @@ enum VerticalRectanglePosition: CaseIterable {
     case bottomTrailing
 }
 
+/// Defines a dimension specific for custom layouts
 struct LayoutDimension {
     let itemWidth: (regularWidthHeight: CGFloat, compact: CGFloat)
     let itemInset: (regularWidthHeight: UIEdgeInsets, compact: UIEdgeInsets)
     let sectionInset: (regularWidthHeight: UIEdgeInsets, compact: UIEdgeInsets)
 }
 
-// MARK:- Master Layouts
+// MARK:- Feed Layouts
 extension UICollectionViewCompositionalLayout {
     
-    // MARK:- Home Master Layout
-    
+    // MARK:- Home
+
     static func homeLayout() -> UICollectionViewLayout {
         
         let layout = UICollectionViewCompositionalLayout {
@@ -95,7 +82,7 @@ extension UICollectionViewCompositionalLayout {
         return layout
     }
     
-    // MARK:- Search Master Layout
+    // MARK:- Discover
     
     static func discoverLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout {
@@ -138,7 +125,7 @@ extension UICollectionViewCompositionalLayout {
         return layout
     }
     
-    // MARK:- Profile Master Layout
+    // MARK:- Profile
     
     static func gridProfileLayout(_ columns: Int,
                                   contentInsets: UIEdgeInsets = .zero,
@@ -201,9 +188,9 @@ extension UICollectionViewCompositionalLayout {
     }
     
     /// Feed
-    static func feedLayout() -> UICollectionViewLayout {
+    static func feedLayout(header: Bool) -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            return .listWith(heightDimension: .estimated(535))
+            return .listWith(heightGroupDimension: .estimated(450), headerHeightDimension: .estimated(100), header: header)
         }
     }
 }
@@ -636,18 +623,18 @@ extension NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .estimated(300))
         let layoutItem = NSCollectionLayoutItem(layoutSize: itemSize)
-     //   layoutItem.contentInsets = NSDirectionalEdgeInsets(top: 5.0, leading: 5, bottom: 5, trailing: 5)
+        layoutItem.contentInsets = NSDirectionalEdgeInsets(top: 5.0, leading: 5, bottom: 5, trailing: 5)
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [layoutItem])
         let layoutSection: NSCollectionLayoutSection = .init(group: group)
-        //layoutSection.orthogonalScrollingBehavior = scrollingBehavior
+        layoutSection.orthogonalScrollingBehavior = scrollingBehavior
         layoutSection.contentInsets = .all(0)
-        layoutSection.boundarySupplementaryItems = supplementaryItems(header: header, footer: footer)
+        layoutSection.boundarySupplementaryItems = supplementaryItems(header: header, footer: footer, headerHeightDimension: .estimated(200))
         return layoutSection
     }
     
-    private static func supplementaryItems(header: Bool, footer: Bool) -> [NSCollectionLayoutBoundarySupplementaryItem] {
+    private static func supplementaryItems(header: Bool, footer: Bool, headerHeightDimension: NSCollectionLayoutDimension) -> [NSCollectionLayoutBoundarySupplementaryItem] {
         let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                      heightDimension: .estimated(200)) // <- estimated will dynamically adjust to less height if needed.
+                                                      heightDimension: headerHeightDimension) // <- estimated will dynamically adjust to less height if needed.
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerFooterSize,
             elementKind:  UICollectionView.elementKindSectionHeader, alignment: .top)
@@ -664,19 +651,20 @@ extension NSCollectionLayoutSection {
         return supplementaryItems
     }
     
-    static func listWith(heightDimension: NSCollectionLayoutDimension,
+    static func listWith(heightGroupDimension: NSCollectionLayoutDimension,
+                         headerHeightDimension: NSCollectionLayoutDimension,
                          header: Bool = false,
                          footer: Bool = false) -> NSCollectionLayoutSection {
         // 2
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: .fractionalHeight(1))
+                                              heightDimension: heightGroupDimension)
         // 3
         let layoutItem = NSCollectionLayoutItem(layoutSize: itemSize)
         layoutItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
             
         // 4
         let layoutGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                                     heightDimension: heightDimension)
+                                                     heightDimension: heightGroupDimension)
         // 5
         let layoutGroup = NSCollectionLayoutGroup.horizontal(layoutSize: layoutGroupSize,
                                                              subitems: [layoutItem])
@@ -684,7 +672,7 @@ extension NSCollectionLayoutSection {
         // 6
         let layoutSection = NSCollectionLayoutSection(group: layoutGroup)
         
-        layoutSection.boundarySupplementaryItems = supplementaryItems(header: header, footer: footer)
+        layoutSection.boundarySupplementaryItems = supplementaryItems(header: header, footer: footer, headerHeightDimension: headerHeightDimension)
 
         return layoutSection
     }
