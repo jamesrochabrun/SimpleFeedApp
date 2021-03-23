@@ -1,4 +1,4 @@
-# SimpleFeedApp 🤷🏽‍♂️
+# SimpleFeedApp 🤓
 [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Naereen/)
 
 SimpleFeed App is a simple app that uses the RSS Feed Itunes Generator API and Marvel API to display feeds with layouts that adapts to iPad and iPhone, taking advantage of generics, protocols, meta types and enums to create reusable components. 
@@ -29,6 +29,8 @@ Its main purpose is to build a project using some concepts from my personal
 - Combine
 - Diffable Data Source
 - Compositional Layout 
+- Swift Package.
+- (Disclaimer, this project uses SDWebImage framework for loading images, it was used for convenience and because the project is not intended to showcase best way to load images. 🤷🏽‍♂️
 
 # Architechture
 
