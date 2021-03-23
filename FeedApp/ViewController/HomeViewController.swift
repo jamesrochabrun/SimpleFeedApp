@@ -8,20 +8,47 @@
 import Foundation
 import Combine
 import UIKit
-import MarvelClient
 
-final class HomeViewController: ViewController {
-    
-    private let itunesRemote = ItunesRemote()
-    private let itunesModels = ItunesRemoteModels()
-    
-    private var cancellables: Set<AnyCancellable> = []
-    private var marvelProvider = MarvelProvider()
-    let radQueue = OperationQueue()
+// MARK:- Home Feed Diffable Section Identifier
+enum HomeFeedSectionIdentifier: String, CaseIterable {
+    case popular = "Popular"
+}
 
+// MARK:- Section ViewModel
+/// - Typealias that describes the structure of a section in the Home feed.
+typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
+
+final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, ItunesRemote> {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        itunesRemote.$feedItems.sink { val in
+    }
+    
+    override func fetchData() {
+        itunesRemote.fetch(.itunesMusic(feedType: .newMusic(genre: .all), limit: 100))
+    }
+    
+    override func setUpUI() {
+        collectionView.assignHedearFooter { collectionView, model, kind, indexPath in
+            switch model {
+            case .popular:
+                collectionView.registerHeader(StoriesSnippetWithAvatarCollectionReusableView.self, kind: kind)
+                let header: StoriesSnippetWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
+                header.viewModel = model
+                header.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
+                return header
+            default:
+                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
+                return UICollectionReusableView()
+            }
+        }
+    }
+    
+    override func updateUI() {
+        
+        itunesRemote.$sectionFeedViewModels.sink { [weak self] in
+            let homeFeedSectionItems = [HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: $0)]
+            self?.collectionView.applyInitialSnapshotWith(homeFeedSectionItems)
         }.store(in: &cancellables)
     }
 }
