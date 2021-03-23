@@ -16,7 +16,7 @@ enum FeedSectionIdentifier: String {
 
 final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewController {
     
-    // MARK:- Data
+    // MARK:- Data injection
     var feed: [ViewModel] = []
 
     // MARK:- Section ViewModel
@@ -28,11 +28,9 @@ final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewContr
     // MARK:- UI
     private lazy var collectionView: CollectionView = {
         let feed = CollectionView()
-        feed.layout = UICollectionViewCompositionalLayout.feedLayout(header: false)
+        feed.layout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(header: false, displayMode: splitViewController?.displayMode ?? .allVisible)
         return feed
     }()
-    private var collectionViewLeadingConstraint: NSLayoutConstraint?
-    private var collectionViewTrailingConstraint: NSLayoutConstraint?
     
     // MARK:- Life Cycle
     override func viewDidLoad() {
@@ -49,10 +47,7 @@ final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewContr
     
     private func setUpUI() {
         view.addSubview(collectionView)
-        collectionView.anchor(top: view.topAnchor, bottom: view.bottomAnchor)
-        collectionViewLeadingConstraint = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        collectionViewTrailingConstraint = view.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor)
-        [collectionViewLeadingConstraint, collectionViewTrailingConstraint].forEach { $0?.isActive = true }
+        collectionView.fillSuperview()
     }
     
     private func updateUI() {
@@ -90,13 +85,8 @@ extension FeedViewController: DisplayModeUpdatable {
     func displayModeDidChangeTo(_ displayMode: UISplitViewController.DisplayMode) {
         /// Just to Satisfy Protocol
     }
-
+    
     func displayModeWillChangeTo(_ displayMode: UISplitViewController.DisplayMode) {
-        let headerShow = displayMode != .allVisible
-        collectionView.layout = UICollectionViewCompositionalLayout.feedLayout(header: headerShow)
-        [collectionViewLeadingConstraint, collectionViewTrailingConstraint].forEach { $0?.constant = headerShow ? 100 : 0 }
-        UIView.animate(withDuration: 0.1) {
-            self.view.layoutIfNeeded()
-        }
+        collectionView.layout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(header: false, displayMode: displayMode)
     }
 }

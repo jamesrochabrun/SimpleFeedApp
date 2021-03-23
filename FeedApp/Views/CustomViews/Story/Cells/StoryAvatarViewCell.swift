@@ -15,7 +15,8 @@ final class StoryAvatarViewCell: CollectionViewCell, ViewModelCellInjection {
     
     var viewModel: Artwork? {
         didSet {
-            avatarView.setUpWith(viewModel!, border: .gradient(lineWidth: 4.0))
+            guard let viewModel = viewModel else { return }
+            avatarView.setUpWith(viewModel, border: .gradient(lineWidth: 4.0))
         }
     }
     

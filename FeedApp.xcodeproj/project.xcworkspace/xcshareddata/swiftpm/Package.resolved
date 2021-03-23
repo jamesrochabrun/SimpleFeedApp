@@ -2,21 +2,21 @@
   "object": {
     "pins": [
       {
-        "package": "CompositionalList",
-        "repositoryURL": "https://github.com/jamesrochabrun/CompositionalList",
-        "state": {
-          "branch": null,
-          "revision": "d0fd87583ad102169f9eeaa84fce22bb7adc6023",
-          "version": "1.0.4"
-        }
-      },
-      {
         "package": "MarvelClient",
         "repositoryURL": "https://github.com/jamesrochabrun/MarvelClient",
         "state": {
           "branch": null,
           "revision": "1a93d163eacbe82bc0d3d62dbec3e64ce036baf7",
           "version": "1.0.3"
+        }
+      },
+      {
+        "package": "SDWebImage",
+        "repositoryURL": "https://github.com/SDWebImage/SDWebImage",
+        "state": {
+          "branch": null,
+          "revision": "a6b6e44eadf0d39250c10a7cc0e3b91d0bdb0e94",
+          "version": "5.10.4"
         }
       }
     ]

@@ -24,7 +24,6 @@ enum TabBarViewModel: String, CaseIterable {
     
     case home
     case discover
-    case camera
     case notifications
     case profile
     
@@ -33,7 +32,6 @@ enum TabBarViewModel: String, CaseIterable {
         switch self {
         case .home: return UIImage(systemName: "house.fill")
         case .discover: return UIImage(systemName: "magnifyingglass")
-        case .camera: return UIImage(systemName: "plus.app")
         case .notifications: return UIImage(systemName: "suit.heart")
         case .profile: return UIImage(systemName: "person")
         }
@@ -52,8 +50,10 @@ enum TabBarViewModel: String, CaseIterable {
             let discoverViewController = DiscoverViewController.instantiate(from: "Main")
             discoverViewController.layout = layout
             return discoverViewController
-        case .camera: return HomeViewController.instantiate(from: "Main")
-        case .notifications: return NotificationsViewController.instantiate(from: "Main")
+        case .notifications:
+            let notificationsViewController = NotificationsViewController.instantiate(from: "Main")
+            notificationsViewController.layout = layout
+            return notificationsViewController
         case .profile:
             let userProfileViewController = UserProfileViewController.instantiate(from: "Main")
             userProfileViewController.layout = layout
@@ -66,11 +66,11 @@ enum TabBarViewModel: String, CaseIterable {
         case .home: return UICollectionViewCompositionalLayout.homeLayout()
         case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
         case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
-        default: return UICollectionViewLayout()
+        case .notifications: return UICollectionViewCompositionalLayout.notificationsList(header: false)
         }
     }
     
-    /// Return:-  It defines if a tab should use a `UISplitViewController` as root or not.
+    /// - Return:-  It defines if a tab should use a `UISplitViewController` as root or not.
     var inSplitViewController: Bool {
         switch self {
         case .profile: return true
@@ -85,11 +85,13 @@ extension UINavigationController {
        - viewModel: The `TabBarViewModel` element.
     */
     func inSplitViewControllerIfSupported(for viewModel: TabBarViewModel) -> UIViewController {
+        
+        /// Use this if a certain tab needs a split view, here you can also introduce A/B testing if display a feed as a split or full width of screen.
         guard viewModel.inSplitViewController else {
             self.tabBarItem.image = viewModel.icon
             return self
         }
-        let splitViewController = SplitViewController(viewControllers: [self, EmptyDetailViewcontroller()])
+        let splitViewController = SplitViewController(viewControllers: [self, EmptyDetailViewController()])
         splitViewController.tabBarItem.image = viewModel.icon
         return splitViewController
     }

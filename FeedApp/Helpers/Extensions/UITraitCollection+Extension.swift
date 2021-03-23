@@ -7,6 +7,8 @@
 
 import UIKit
 
+
+/// To be used for adaptive layouts.
 extension UITraitCollection {
     
     var isRegularWidth: Bool { horizontalSizeClass == .regular }

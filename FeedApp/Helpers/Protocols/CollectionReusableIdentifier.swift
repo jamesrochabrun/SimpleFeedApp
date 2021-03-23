@@ -7,9 +7,8 @@
 
 import UIKit
 
+/// Protocol that allows use the class as a string, use it to define identifiers
 protocol CollectionReusableIdentifier {}
-
-/// Disclaimer: From Apple UI engineer - its allow to force cast the cell in this method, if it fails its mostly another issue in the implementation.
 
 extension CollectionReusableIdentifier where Self: UICollectionViewCell {
     static var reuseIdentifier: String {

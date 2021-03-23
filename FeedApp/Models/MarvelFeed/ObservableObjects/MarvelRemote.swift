@@ -9,8 +9,6 @@ import Foundation
 import MarvelClient
 
 // MARK:- Artwork
-// document
-
 extension ComicViewModel: Artwork {
     public var imageURL: String { artwork.imagePathFor(variant: .squareStandardLarge) }
     public var thumbnailURL: String { artwork.imagePathFor(variant: .squareStandardSmall) }

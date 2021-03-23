@@ -9,6 +9,7 @@ import Foundation
 
 
 /// Protocol composition with an extension to provide `Hashable` conformance to an object.
+/// This is mostly for SwiftUI objects, but it can also be used in a DiffableCollection View 
 protocol IdentifiableHashable: Hashable & Identifiable {}
 extension IdentifiableHashable {
     

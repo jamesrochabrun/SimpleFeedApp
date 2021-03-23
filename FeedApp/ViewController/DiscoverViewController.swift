@@ -18,9 +18,9 @@ enum DiscoverFeedSectionIdentifier: String {
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the Discovery feed.
-typealias DiscoverFeedSectionModeling = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
+typealias DiscoverFeedSectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
 
-final class DiscoverViewController: GenericItunesFeedViewController<DiscoverFeedSectionModeling> {
+final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectionModel, ItunesRemote> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +48,7 @@ final class DiscoverViewController: GenericItunesFeedViewController<DiscoverFeed
     
     override func updateUI() {
         itunesRemote.$sectionFeedViewModels.sink { [weak self] in
-            let discoveryFeedSectionItems = [DiscoverFeedSectionModeling(sectionIdentifier: .popular, cellIdentifiers: $0)]
+            let discoveryFeedSectionItems = [DiscoverFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: $0)]
             self?.collectionView.applyInitialSnapshotWith(discoveryFeedSectionItems)
         }.store(in: &cancellables)
     }

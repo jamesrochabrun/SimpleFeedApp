@@ -7,6 +7,10 @@
 
 import UIKit
 
+/**
+ Simple layout extensions.
+ */
+
 extension UIView {
     
     func anchor(top: NSLayoutYAxisAnchor? = nil, leading: NSLayoutXAxisAnchor? = nil, bottom: NSLayoutYAxisAnchor? = nil, trailing: NSLayoutXAxisAnchor? = nil, padding: UIEdgeInsets = .zero, size: CGSize = .zero) {

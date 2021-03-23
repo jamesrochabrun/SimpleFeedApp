@@ -12,7 +12,8 @@ final class StorySnippetWithAvatarViewCell: CollectionViewCell, ViewModelCellInj
     
     var viewModel: CharacterViewModel? {
         didSet {
-            setUpWith(viewModel!)
+            guard let viewModel = viewModel else { return }
+            setUpWith(viewModel)
         }
     }
     
@@ -53,7 +54,7 @@ final class StorySnippetWithAvatarViewCell: CollectionViewCell, ViewModelCellInj
     }
     
     private func setUpWith(_ viewModel: CharacterViewModel) {
-        imageViewLoader.load(regularURL: viewModel.artwork?.imagePathFor(variant: .portraitIncredible) ?? "", lowResURL: viewModel.artwork?.imagePathFor(variant: .portraitMedium) ?? "")
+        imageViewLoader.load(regularURL: viewModel.artwork?.imagePathFor(variant: .portraitIncredible) ?? "", lowResURL: viewModel.artwork?.imagePathFor(variant: .portraitMedium) ?? "", placeholder: UIImage(named: "sparkles"))
         avatarView.setUpWith(viewModel, border: .gradient(lineWidth: 3))
     }
 }

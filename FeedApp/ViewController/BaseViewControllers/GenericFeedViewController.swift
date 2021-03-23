@@ -8,14 +8,16 @@
 import UIKit
 import Combine
 
-/// Generic View Controller that displays a feed from the `Itunes` RSS Feed Api.
+
+/// Generic View Controller that displays any kind of feed from a Remote Observable Object.
 /// It has a generic constraint of `SectionIdentifierViewModel`
+/// It has a generic Constraint of `RemoteObservableObject`
 /// Inherits from `ViewController`
-class GenericItunesFeedViewController<Content: SectionIdentifierViewModel>: ViewController {
+class GenericFeedViewController<Content: SectionIdentifierViewModel, Remote: RemoteObservableObject>: ViewController {
     
     // MARK:- Data
     var cancellables: Set<AnyCancellable> = []
-    let itunesRemote = ItunesRemote()
+    let itunesRemote = Remote()
     
     // MARK:- TypeAlias
     typealias CollectionView = DiffableCollectionView<Content>

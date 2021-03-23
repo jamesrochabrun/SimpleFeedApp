@@ -17,7 +17,6 @@ final class ItunesRemote: ObservableObject {
 
     func fetch(_ mediaType: MediaType) {
         cancellable = service.fetch(Feed<ItunesResources<FeedItem>>.self, mediaType: mediaType).sink(receiveCompletion: { value in
-            dump(value)
         }, receiveValue: { [weak self] resource in
             self?.sectionFeedViewModels = resource.feed?.results?.compactMap { FeedItemViewModel(model: $0) } ?? []
          })

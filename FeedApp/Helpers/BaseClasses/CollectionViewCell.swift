@@ -11,6 +11,7 @@ class CollectionViewCell: UICollectionViewCell {
         
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        initialize()
         setupSubviews()
     }
     
@@ -20,7 +21,12 @@ class CollectionViewCell: UICollectionViewCell {
     
     public override func awakeFromNib() {
         super.awakeFromNib()
-        self.setupSubviews()
+        initialize()
+        setupSubviews()
+    }
+    
+    private func initialize() {
+        backgroundColor = .clear
     }
     
     /// To be overriden. Super does not need to be called.

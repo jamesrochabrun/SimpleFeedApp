@@ -75,15 +75,3 @@ extension UIButton {
     }
 }
 
-enum Theme: String {
-    
-    case primaryText
-    case secondaryText
-    case mainBackground
-    case buttonTint
-    case circularBorder
-    
-    var color: UIColor? {
-        UIColor(named: self.rawValue)
-    }
-}

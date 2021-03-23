@@ -8,9 +8,8 @@
 import UIKit
 
 // used in:
-
-/// hilights
-/// Story covers with user avatar
+/// - Hilights
+/// - Story covers with user avatar
 enum BorderKind {
     case gradient(lineWidth: CGFloat)
     case none
@@ -38,7 +37,7 @@ final class AvatarView: BaseView, ContentReusable {
     }
     
     func setUpWith(_ artwork: Artwork, border: BorderKind = .none) {
-        imageViewLoader.load(regularURL: artwork.imageURL, lowResURL: artwork.thumbnailURL)
+        imageViewLoader.load(regularURL: artwork.imageURL, lowResURL: artwork.thumbnailURL, placeholder: UIImage(named: "person"))
         updateBorderKind(border)
     }
     

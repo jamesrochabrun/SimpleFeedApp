@@ -85,7 +85,7 @@ extension SplitViewController: UISplitViewControllerDelegate {
      - Remark: Called when App collapses from `RegularWidth` to `CompactWidth` in a mulittasking enviromment.
      */
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-        return secondaryViewController is EmptyDetailViewcontroller
+        return secondaryViewController is EmptyDetailViewController
         
     }
 }

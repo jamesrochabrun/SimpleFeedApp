@@ -7,6 +7,15 @@
 
 import Foundation
 
+/// Path generator for a https://rss.itunes.apple.com/en-us/?country=ca request
+/**
+ It allows use enums to construct the parameters for a request...e.g
+ ```
+    fetch(.itunesMusic(feedType: .newMusic(genre: .all), limit: 100)
+    fetch(.apps(feedType: .topFree(genre: .all), limit: 100))
+ ```
+ */
+
 enum MediaType {
     
     case appleMusic(feedType: AppleMusicFeedType, limit: Int)

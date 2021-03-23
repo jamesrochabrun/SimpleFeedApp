@@ -7,8 +7,8 @@
 
 import UIKit
 
-struct Airbnb {
-    static let gradientColors: [UIColor] = [#colorLiteral(red: 1, green: 0.3529411765, blue: 0.3725490196, alpha: 1),#colorLiteral(red: 0, green: 0.6509803922, blue: 0.6, alpha: 1)]
+struct GradientColors {
+    static let gradientColors: [UIColor] = [#colorLiteral(red: 0.9607843137, green: 0.5215686275, blue: 0.1607843137, alpha: 1),#colorLiteral(red: 0.8666666667, green: 0.1647058824, blue: 0.4823529412, alpha: 1)]
 }
 
 enum StrokeGradientDirection {
@@ -19,7 +19,7 @@ enum StrokeGradientDirection {
 
 extension UIView {
     
-    func setupGradient(cornerRadius: CGFloat, colors: [UIColor] = Airbnb.gradientColors, lineWidth: CGFloat = 5, direction: StrokeGradientDirection = .horizontal, frame: CGRect? = nil) {
+    func setupGradient(cornerRadius: CGFloat, colors: [UIColor] = GradientColors.gradientColors, lineWidth: CGFloat = 5, direction: StrokeGradientDirection = .horizontal, frame: CGRect? = nil) {
         
         self.layer.cornerRadius = cornerRadius
         self.layer.masksToBounds = true

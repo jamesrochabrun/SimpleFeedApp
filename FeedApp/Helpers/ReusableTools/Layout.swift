@@ -7,6 +7,9 @@
 
 import UIKit
 
+/**
+ A List of available custom compositional layouts for this app.
+ */
 
 /// Defines the scroll Axis of a layout.
 enum ScrollAxis {
@@ -50,7 +53,7 @@ extension UICollectionViewCompositionalLayout {
         
             let fourdGroup = NSCollectionLayoutGroup.mainContentBottomTrailingWith(insets, fraction: groupsFraction)
             
-            let fifthGroup = NSCollectionLayoutGroup.mainContentVerticalRectangle(insets, fraction: groupsFraction, rectanglePosition: .bottomLeading)
+            let fifthGroup = NSCollectionLayoutGroup.mainContentVerticalRectangle(insets, fraction: groupsFraction, rectanglePosition: VerticalRectanglePosition.bottomLeading)
             
             /// FINAL GROUP
             let nestedSubGroups = [firstGroup, secondGroup, thirdGroup, fourdGroup, fifthGroup]
@@ -148,6 +151,7 @@ extension UICollectionViewCompositionalLayout {
             let estimatedHeight: CGFloat = sectionIndex == 0 ? 350.0 : higlightsEstimatedHeight
             let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                           heightDimension: .estimated(estimatedHeight))
+            
             let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
                 layoutSize: headerFooterSize,
                 elementKind:  UICollectionView.elementKindSectionHeader, alignment: .top)
@@ -157,6 +161,7 @@ extension UICollectionViewCompositionalLayout {
             return gridSection
         }
     }
+    
     
     // MARK:- Horizontal hilights layout.
     
@@ -187,10 +192,19 @@ extension UICollectionViewCompositionalLayout {
         }
     }
     
-    /// Feed
-    static func feedLayout(header: Bool) -> UICollectionViewLayout {
+    /// Adap
+    static func adaptiveFeedLayout(header: Bool, displayMode:  UISplitViewController.DisplayMode) -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            guard displayMode == .allVisible else {
+                return .allVisibleDisplayModeLayout(4)
+            }
             return .listWith(heightGroupDimension: .estimated(450), headerHeightDimension: .estimated(100), header: header)
+        }
+    }
+    
+    static func notificationsList(header: Bool) -> UICollectionViewLayout {
+        UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            return .listWith(heightGroupDimension: .estimated(80), headerHeightDimension: .estimated(100), header: header)
         }
     }
 }
@@ -657,7 +671,7 @@ extension NSCollectionLayoutSection {
                          footer: Bool = false) -> NSCollectionLayoutSection {
         // 2
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                              heightDimension: heightGroupDimension)
+                                              heightDimension: heightGroupDimension) 
         // 3
         let layoutItem = NSCollectionLayoutItem(layoutSize: itemSize)
         layoutItem.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
@@ -675,5 +689,26 @@ extension NSCollectionLayoutSection {
         layoutSection.boundarySupplementaryItems = supplementaryItems(header: header, footer: footer, headerHeightDimension: headerHeightDimension)
 
         return layoutSection
+    }
+    
+    static func allVisibleDisplayModeLayout(_ columns: Int,
+                                            contentInsets: UIEdgeInsets = .zero,
+                                            sectionInset: UIEdgeInsets = .zero,
+                                            scrollAxis: ScrollAxis = .vertical) -> NSCollectionLayoutSection {
+        
+        let gridSection = UICollectionViewCompositionalLayout.grid(columns, contentInsets: contentInsets, sectionInset: sectionInset)
+        
+        switch scrollAxis {
+        case .horizontal(let scrollBehaviour):
+            gridSection.orthogonalScrollingBehavior = scrollBehaviour
+        case .vertical: break
+        }
+        let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(100.0))
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerFooterSize,
+            elementKind:  UICollectionView.elementKindSectionHeader, alignment: .top)
+        gridSection.boundarySupplementaryItems = [sectionHeader]
+        return gridSection
     }
 }

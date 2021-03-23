@@ -18,7 +18,7 @@ final class VerticalLabelsStackView: BaseXibView, ContentReusable {
     }
     @IBOutlet private var bottomLabel: Label! {
         didSet {
-            bottomLabel.kind = .secondary
+            bottomLabel.kind = .primary
         }
     }
     

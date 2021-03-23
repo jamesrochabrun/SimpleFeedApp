@@ -22,12 +22,12 @@ protocol UserProfileViewControllerDelegate: AnyObject {
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the User Profile  feed.
-typealias UserProfileSectionModeling = GenericSectionIdentifierViewModel<UserProfileFeedIdentifier, FeedItemViewModel, ArtworkCell>
+typealias UserProfileSectionModel = GenericSectionIdentifierViewModel<UserProfileFeedIdentifier, FeedItemViewModel, ArtworkCell>
 
-final class UserProfileViewController: GenericItunesFeedViewController<UserProfileSectionModeling> {
+final class UserProfileViewController: GenericFeedViewController<UserProfileSectionModel, ItunesRemote> {
     
-    lazy private var detailFeedViewController: FeedViewController<UserProfileSectionModeling> = {
-        let detailFeedViewController = FeedViewController<UserProfileSectionModeling>()
+    lazy private var detailFeedViewController: FeedViewController<UserProfileSectionModel> = {
+        let detailFeedViewController = FeedViewController<UserProfileSectionModel>()
         detailFeedViewController.feed = collectionView.dataSourceItems()
         delegate = detailFeedViewController
         return detailFeedViewController
@@ -68,19 +68,17 @@ final class UserProfileViewController: GenericItunesFeedViewController<UserProfi
         
         collectionView.selectedContentAtIndexPath = { [weak self] viewModel, indexPath in
             guard let self = self else { return }
-            
-            /// Prevents Recreate
             guard let secondaryContentNavigationController = self.splitViewController?.secondaryViewController as? NavigationController,
-                  let secondaryContentViewController = secondaryContentNavigationController.topViewController as? FeedViewController<UserProfileSectionModeling> else {
+                  let secondaryContentViewController = secondaryContentNavigationController.topViewController as? FeedViewController<UserProfileSectionModel> else {
                 /// Embeds a `FeedViewController` in a `NavigationController` and shows it if was not shown already.
                 let detailNavigationController = NavigationController(rootViewController: self.detailFeedViewController)
-                self.splitViewController?.showDetailInNavigationControllerIfNeeded(detailNavigationController, sender: self)
+                self.splitViewController!.showDetailInNavigationControllerIfNeeded(detailNavigationController, sender: self)
                 /// Scrolls the feed to the selected indexpath item.
                 self.delegate?.postSelectedAt(indexPath)
                 return
             }
             /// Optimization -> Shows the already instantiated `FeedViewController`
-            self.splitViewController?.showDetailInNavigationControllerIfNeeded(secondaryContentViewController, sender: self)
+            self.splitViewController!.showDetailInNavigationControllerIfNeeded(secondaryContentViewController, sender: self)
             self.delegate?.postSelectedAt(indexPath)
         }
     }
@@ -88,8 +86,8 @@ final class UserProfileViewController: GenericItunesFeedViewController<UserProfi
     override func updateUI() {
         
         itunesRemote.$sectionFeedViewModels.sink { [weak self] in
-            let profileContentSection = UserProfileSectionModeling(sectionIdentifier: .headerInfo, cellIdentifiers: [])
-            let homeFeedMainContentSection = UserProfileSectionModeling(sectionIdentifier: .mainContent, cellIdentifiers: $0)
+            let profileContentSection = UserProfileSectionModel(sectionIdentifier: .headerInfo, cellIdentifiers: [])
+            let homeFeedMainContentSection = UserProfileSectionModel(sectionIdentifier: .mainContent, cellIdentifiers: $0)
             self?.collectionView.applyInitialSnapshotWith([profileContentSection, homeFeedMainContentSection])
         }.store(in: &cancellables)
     }

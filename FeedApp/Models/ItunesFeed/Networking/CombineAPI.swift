@@ -9,6 +9,8 @@ import Foundation
 import Combine
 import UIKit
 
+/// Extraction from personal blog https://medium.com/if-let-swift-programming/generic-networking-layer-using-combine-in-swift-ui-d23574c20368
+
 protocol CombineAPI {
     var session: URLSession { get }
     func execute<T>(_ request: URLRequest, decodingType: T.Type, queue: DispatchQueue, retries: Int) -> AnyPublisher<T, Error> where T: Decodable

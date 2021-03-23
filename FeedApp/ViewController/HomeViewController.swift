@@ -16,9 +16,9 @@ enum HomeFeedSectionIdentifier: String, CaseIterable {
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the Home feed.
-typealias HomeFeedSectionModeling = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
+typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
 
-final class HomeViewController: GenericItunesFeedViewController<HomeFeedSectionModeling> {
+final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, ItunesRemote> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +47,7 @@ final class HomeViewController: GenericItunesFeedViewController<HomeFeedSectionM
     override func updateUI() {
         
         itunesRemote.$sectionFeedViewModels.sink { [weak self] in
-            let homeFeedSectionItems = [HomeFeedSectionModeling(sectionIdentifier: .popular, cellIdentifiers: $0)]
+            let homeFeedSectionItems = [HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: $0)]
             self?.collectionView.applyInitialSnapshotWith(homeFeedSectionItems)
         }.store(in: &cancellables)
     }

@@ -38,7 +38,7 @@ final class Label: UILabel {
     
     private func initialize() {
         textColor = kind.textColor
-        font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.light)
+        font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.light) // TODO Dynamic type
     }
 }
 

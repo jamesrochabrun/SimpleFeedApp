@@ -35,12 +35,18 @@ final class FeedItemHeaderView: BaseXibView, ContentReusable {
             actionButton.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         }
     }
+    
+    private var itemKind: HorizontalFeedItemViewModelKind = .list {
+        didSet {
+            actionButton?.isHidden = itemKind == .list
+        }
+    }
 
     func setupWith(_ viewModel: HorizontalFeedItemViewModel) {
         usernameLabel?.text = viewModel.user.profileDescription.userName
         locationLabel?.text = viewModel.location
         profileImageView?.load(regularURL: viewModel.imageURL, lowResURL: viewModel.thumbnailURL, placeholder: viewModel.user.userAvatarPlaceholder)
-        actionButton?.isHidden = viewModel.kind == .list
+        itemKind = viewModel.kind
     }
     
     @IBAction func actionButtonDidTapped(_ sender: UIButton) {
@@ -49,10 +55,16 @@ final class FeedItemHeaderView: BaseXibView, ContentReusable {
     override func layoutSubviews() {
         super.layoutSubviews()
         profileImageView?.circle()
-        profileImageView?.setupGradient(cornerRadius: profileImageView?.layer.cornerRadius ?? 0, lineWidth: 1.5)
+        switch itemKind {
+        case .header:
+            profileImageView.addBorder(Theme.circularBorder.color ?? .white, width: 2.0)
+        case .list:
+            profileImageView?.setupGradient(cornerRadius: profileImageView?.layer.cornerRadius ?? 0, lineWidth: 2.0)
+        }
     }
     
     func cleanAndReuse() {
+        [usernameLabel, locationLabel].forEach { $0?.text = "" }
     }
 }
 
