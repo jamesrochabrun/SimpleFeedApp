@@ -289,3 +289,6 @@ More on Building for iPad you can go:
 
 - [Building iPad apps, prototyping Instagram for iPad](https://medium.com/dev-genius/building-ipad-apps-prototyping-instagram-for-ipad-part-one-9ce4d03ec18a)
 - [Sidebar in iPad iOS 14, explained.](https://medium.com/dev-genius/sidebar-in-ipad-ios-14-explained-2617ffef09fa)
+
+### TODO
+- [] Fix Some layout bugs.
