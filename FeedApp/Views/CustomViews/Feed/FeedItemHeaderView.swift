@@ -27,9 +27,14 @@ extension HorizontalFeedItemViewModel: Artwork {
 
 final class FeedItemHeaderView: BaseXibView, ContentReusable {
         
+    @IBOutlet private var labelsStackView: UIStackView!
     @IBOutlet private var profileImageView: ImageViewLoader!
     @IBOutlet private var usernameLabel: Label!
-    @IBOutlet private var locationLabel: Label!
+    @IBOutlet private var locationLabel: Label! {
+        didSet {
+            locationLabel.numberOfLines = 0
+        }
+    }
     @IBOutlet private var actionButton: Button! {
         didSet {
             actionButton.setImage(UIImage(systemName: "ellipsis"), for: .normal)
@@ -38,7 +43,7 @@ final class FeedItemHeaderView: BaseXibView, ContentReusable {
     
     private var itemKind: HorizontalFeedItemViewModelKind = .list {
         didSet {
-            actionButton?.isHidden = itemKind == .list
+            actionButton?.alpha = itemKind == .list ? 0 : 1
         }
     }
 
@@ -65,6 +70,7 @@ final class FeedItemHeaderView: BaseXibView, ContentReusable {
     
     func cleanAndReuse() {
         [usernameLabel, locationLabel].forEach { $0?.text = "" }
+        actionButton?.alpha = 1
     }
 }
 

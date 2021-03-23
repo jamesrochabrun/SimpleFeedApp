@@ -25,7 +25,7 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
     }
     
     override func fetchData() {
-        itunesRemote.fetch(.itunesMusic(feedType: .newMusic(genre: .all), limit: 100))
+        remote.fetch(.itunesMusic(feedType: .recentReleases(genre: .all), limit: 100))
     }
     
     override func setUpUI() {
@@ -46,7 +46,7 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
     
     override func updateUI() {
         
-        itunesRemote.$sectionFeedViewModels.sink { [weak self] in
+        remote.$sectionFeedViewModels.sink { [weak self] in
             let homeFeedSectionItems = [HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: $0)]
             self?.collectionView.applyInitialSnapshotWith(homeFeedSectionItems)
         }.store(in: &cancellables)

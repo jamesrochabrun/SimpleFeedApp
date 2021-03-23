@@ -17,18 +17,18 @@ enum StoriesSnippetSectionIdentifier {
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the Stories Snippet feed.
-typealias UserStoriesSnippetWithAvatarSectionModeling = GenericSectionIdentifierViewModel<StoriesSnippetSectionIdentifier, CharacterViewModel, StorySnippetWithAvatarViewCell>
+typealias UserStoriesSnippetWithAvatarSectionModeling = GenericSectionIdentifierViewModel<StoriesSnippetSectionIdentifier, ComicViewModel, StorySnippeCell>
 
 final class StoriesSnippetWithAvatarCollectionReusableView: GenericMarvelItemsCollectionReusableView<UserStoriesSnippetWithAvatarSectionModeling, HomeFeedSectionIdentifier>  {
     
     override func initialize() {
         super.initialize()
-        marvelProvider.fetchCharacters()
+        marvelProvider.fetchComics()
     }
     
     override func setupWith(_ viewModel: HomeFeedSectionIdentifier) {
         // Note: Here we can also customize this collection view with headers, footer, accessories based on the `HomeFeedSectionIdentifier` case.
-        cancellable = marvelProvider.$characterViewModels.sink { [weak self] in
+        cancellable = marvelProvider.$comicViewModels.sink { [weak self] in
             let homeFeedSectionItems = [UserStoriesSnippetWithAvatarSectionModeling(sectionIdentifier: .recent, cellIdentifiers: $0)]
            self?.collectionView?.applyInitialSnapshotWith(homeFeedSectionItems)
         }

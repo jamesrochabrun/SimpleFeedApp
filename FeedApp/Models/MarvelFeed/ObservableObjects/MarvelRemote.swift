@@ -28,7 +28,7 @@ final class MarvelRemote: ObservableObject {
     @Published var characterViewModels: [CharacterViewModel] = []
     @Published var serieViewModels: [SerieViewModel] = []
     
-    func fetchComics(for section: FeedSectionIdentifier) {
+    func fetchComics() {
         service.fetch(MarvelData<Resources<Comic>>.self) { [weak self] in
             switch $0 {
             case let .success(results):

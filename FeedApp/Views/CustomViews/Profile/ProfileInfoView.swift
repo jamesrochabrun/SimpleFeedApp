@@ -44,7 +44,7 @@ final class ProfileInfoView: BaseXibView, ContentReusable {
     override func layoutSubviews() {
         super.layoutSubviews()
         profileImageView?.circle()
-        profileImageView?.setupGradient(cornerRadius: profileImageView?.layer.cornerRadius ?? 0)
+        profileImageView?.setupGradient(cornerRadius: profileImageView?.layer.cornerRadius ?? 0, lineWidth: 3.0)
     }
     
     func cleanAndReuse() {

@@ -7,6 +7,8 @@
 
 import UIKit
 
+// For full explanation of this implementation please go https://medium.com/dev-genius/building-ipad-apps-prototyping-instagram-for-ipad-part-one-9ce4d03ec18a
+
 protocol DisplayModeUpdatable {
     func displayModeWillChangeTo(_ displayMode: UISplitViewController.DisplayMode)
     func displayModeDidChangeTo(_ displayMode: UISplitViewController.DisplayMode)

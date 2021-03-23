@@ -6,22 +6,21 @@
 //
 
 import Foundation
-import Combine
 
-final class FeedItemViewModel: IdentifiableHashable, ObservableObject {
+final class FeedItemViewModel: IdentifiableHashable {
     
-    @Published var artistName: String?
-    @Published var id: String
-    @Published var releaseDate: String?
-    @Published var name: String
-    @Published var kind: String
-    @Published var copyright: String?
-    @Published var artistId: String?
-    @Published var artistUrl: String?
-    @Published var artworkUrl100: String
-    @Published var artworkUrlThumbnail: String
-    @Published var genres: [GenreViewModel]
-    @Published var url: URL
+    let artistName: String?
+    let id: String
+    let releaseDate: String?
+    let name: String
+    let kind: String
+    let copyright: String?
+    let artistId: String?
+    let artistURL: String?
+    let artworkURL: String
+    let artworkURLThumbnail: String
+    let genres: [GenreViewModel]
+    let url: URL
     
     init(model: FeedItem) {
         artistName = model.artistName
@@ -31,19 +30,19 @@ final class FeedItemViewModel: IdentifiableHashable, ObservableObject {
         kind = model.kind
         copyright = model.copyright
         artistId = model.artistId
-        artistUrl = model.artistUrl
-        artworkUrl100 = model.artworkUrl100
+        artistURL = model.artistUrl
+        artworkURL = model.artWorkURL
         genres = model.genres.map { GenreViewModel(model: $0) }
         url = URL(string: model.url)!
-        artworkUrlThumbnail = model.artworkUrl100.replacingOccurrences(of: "200x200bb.png", with: "100x100bb.png")
+        artworkURLThumbnail = model.artWorkURL.replacingOccurrences(of: "200x200bb.png", with: "100x100bb.png")
     }
 }
 
-final class GenreViewModel: ObservableObject {
+final class GenreViewModel {
     
-    @Published var genreId: String
-    @Published var name: String
-    @Published var url: String
+    let genreId: String
+    let name: String
+    let url: String
     
     init(model: Genre) {
         genreId = model.genreId
@@ -54,6 +53,6 @@ final class GenreViewModel: ObservableObject {
 
 extension FeedItemViewModel: Artwork {
     
-    public var imageURL: String { artworkUrl100 }
-    public var thumbnailURL: String { artworkUrlThumbnail }
+    public var imageURL: String { artworkURL }
+    public var thumbnailURL: String { artworkURLThumbnail }
 }

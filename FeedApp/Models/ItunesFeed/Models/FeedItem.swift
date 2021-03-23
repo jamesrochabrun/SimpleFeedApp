@@ -6,21 +6,25 @@
 //
 
 import Foundation
-import Combine
 
 struct FeedItem: Decodable {
     
-    public let artistName: String?
-    public let id: String
-    public let releaseDate: String?
-    public let name: String
-    public let kind: String
-    public var copyright: String?
-    public let artistId: String?
-    public let artistUrl: String?
-    public let artworkUrl100: String
-    public let genres: [Genre]
-    public let url: String
+    let artistName: String?
+    let id: String
+    let releaseDate: String?
+    let name: String
+    let kind: String
+    let copyright: String?
+    let artistId: String?
+    let artistUrl: String?
+    let artWorkURL: String
+    let genres: [Genre]
+    let url: String
+    
+    private enum CodingKeys: String, CodingKey {
+        case artistName, id, releaseDate, name, kind, copyright, artistId, artistUrl, genres, url
+        case artWorkURL = "artworkUrl100"
+    }
 }
 
 struct Genre: Decodable {

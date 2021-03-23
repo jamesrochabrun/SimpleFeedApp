@@ -25,7 +25,6 @@ final class AvatarView: BaseView, ContentReusable {
 
     private lazy var imageViewLoader: ImageViewLoader = {
         let imageViewLoader = ImageViewLoader()
-        imageViewLoader.imageViewContentMode = .scaleAspectFit
         return imageViewLoader
     }()
     
@@ -33,7 +32,11 @@ final class AvatarView: BaseView, ContentReusable {
         addSubview(borderContainer)
         borderContainer.fillSuperview()
         borderContainer.addSubview(imageViewLoader)
-        imageViewLoader.fillSuperview()
+        imageViewLoader.anchor(top: borderContainer.topAnchor,
+                               leading: borderContainer.leadingAnchor,
+                               bottom: borderContainer.bottomAnchor,
+                               trailing: borderContainer.trailingAnchor,
+                               padding: .init(top: 7, left: 7, bottom: 7, right: 7))
     }
     
     func setUpWith(_ artwork: Artwork, border: BorderKind = .none) {
@@ -42,15 +45,16 @@ final class AvatarView: BaseView, ContentReusable {
     }
     
     func updateBorderKind(_ kind: BorderKind) {
+        
         layoutIfNeeded()
+        borderContainer.circle()
+        imageViewLoader.circle()
         borderKind = kind
-        switch kind {
+        
+        switch borderKind {
         case let .gradient(lineWidth):
-            print(frame)
             borderContainer.setupGradient(cornerRadius: frame.size.width / 2.0, lineWidth: lineWidth, frame: frame)
-            borderContainer.circle()
         default:
-            borderContainer.circle(frame)
             borderContainer.addBorder(Theme.circularBorder.color ?? .clear, width: 2.0)
         }
     }
@@ -65,5 +69,6 @@ final class AvatarView: BaseView, ContentReusable {
     }
     
     func cleanAndReuse() {
+        // Perform any clean up for this view on cell reuse.
     }
 }

@@ -33,7 +33,7 @@
 		7B292AA626095EB30052BA22 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B292AA526095D760052BA22 /* Colors.xcassets */; };
 		7B292AA8260963270052BA22 /* RemoteObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AA7260963270052BA22 /* RemoteObservableObject.swift */; };
 		7B292AAA2609647E0052BA22 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AA92609647E0052BA22 /* ThemeColors.swift */; };
-		7B292AAD26096AF00052BA22 /* ShopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AAC26096AF00052BA22 /* ShopViewController.swift */; };
+		7B292AAF26099D7E0052BA22 /* PreviewLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AAE26099D7D0052BA22 /* PreviewLoaderView.swift */; };
 		7B5E6C3126083D4000C62974 /* FeedItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */; };
 		7B5E6C3626083D7F00C62974 /* IdentifiableHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */; };
 		7B5E6C4C26085E8A00C62974 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */; };
@@ -44,7 +44,7 @@
 		7B8CD4022605C0A7008BAEB9 /* UISplitViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */; };
 		7B8CD4042605CE0D008BAEB9 /* StoryAvatarViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4032605CE0D008BAEB9 /* StoryAvatarViewCell.swift */; };
 		7B8CD4062606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4052606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift */; };
-		7B8CD40A2606B28E008BAEB9 /* StorySnippetWithAvatarViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4092606B28E008BAEB9 /* StorySnippetWithAvatarViewCell.swift */; };
+		7B8CD40A2606B28E008BAEB9 /* StorySnippeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4092606B28E008BAEB9 /* StorySnippeCell.swift */; };
 		7B8CD41B260713C7008BAEB9 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD41A260713C7008BAEB9 /* FeedViewController.swift */; };
 		7B8CD42226071490008BAEB9 /* FeedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD42126071490008BAEB9 /* FeedItemCell.swift */; };
 		7B8CD42826071CC1008BAEB9 /* FeedItemHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD42626071CC1008BAEB9 /* FeedItemHeaderView.swift */; };
@@ -125,7 +125,7 @@
 		7B292AA526095D760052BA22 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = ../../InstagramIpad/SplitViewControllerTutorial/Colors.xcassets; sourceTree = "<group>"; };
 		7B292AA7260963270052BA22 /* RemoteObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteObservableObject.swift; sourceTree = "<group>"; };
 		7B292AA92609647E0052BA22 /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
-		7B292AAC26096AF00052BA22 /* ShopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopViewController.swift; sourceTree = "<group>"; };
+		7B292AAE26099D7D0052BA22 /* PreviewLoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewLoaderView.swift; sourceTree = "<group>"; };
 		7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemViewModel.swift; sourceTree = "<group>"; };
 		7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableHashable.swift; sourceTree = "<group>"; };
 		7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 		7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISplitViewController+Extension.swift"; sourceTree = "<group>"; };
 		7B8CD4032605CE0D008BAEB9 /* StoryAvatarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAvatarViewCell.swift; sourceTree = "<group>"; };
 		7B8CD4052606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesSnippetWithAvatarCollectionReusableView.swift; sourceTree = "<group>"; };
-		7B8CD4092606B28E008BAEB9 /* StorySnippetWithAvatarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorySnippetWithAvatarViewCell.swift; sourceTree = "<group>"; };
+		7B8CD4092606B28E008BAEB9 /* StorySnippeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorySnippeCell.swift; sourceTree = "<group>"; };
 		7B8CD41A260713C7008BAEB9 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		7B8CD42126071490008BAEB9 /* FeedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemCell.swift; sourceTree = "<group>"; };
 		7B8CD42626071CC1008BAEB9 /* FeedItemHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedItemHeaderView.swift; sourceTree = "<group>"; };
@@ -366,7 +366,7 @@
 			isa = PBXGroup;
 			children = (
 				7B8CD4032605CE0D008BAEB9 /* StoryAvatarViewCell.swift */,
-				7B8CD4092606B28E008BAEB9 /* StorySnippetWithAvatarViewCell.swift */,
+				7B8CD4092606B28E008BAEB9 /* StorySnippeCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -393,7 +393,6 @@
 			isa = PBXGroup;
 			children = (
 				7B8CD42D2607F239008BAEB9 /* GenericFeedViewController.swift */,
-				7B292AAC26096AF00052BA22 /* ShopViewController.swift */,
 			);
 			path = BaseViewControllers;
 			sourceTree = "<group>";
@@ -418,6 +417,7 @@
 				7B1572F62600649000FC138E /* ImageViewLoader.swift */,
 				7B292A9C260959C30052BA22 /* DiffableCollectionView.swift */,
 				7B292AA92609647E0052BA22 /* ThemeColors.swift */,
+				7B292AAE26099D7D0052BA22 /* PreviewLoaderView.swift */,
 			);
 			path = ReusableTools;
 			sourceTree = "<group>";
@@ -705,14 +705,14 @@
 				7B292AA226095AEB0052BA22 /* SectionIdentifierViewModel.swift in Sources */,
 				7B292AA426095CE60052BA22 /* ViewModelInjection.swift in Sources */,
 				7B8CD4412608129E008BAEB9 /* CollectionViewCell.swift in Sources */,
-				7B8CD40A2606B28E008BAEB9 /* StorySnippetWithAvatarViewCell.swift in Sources */,
+				7B8CD40A2606B28E008BAEB9 /* StorySnippeCell.swift in Sources */,
 				7BA9BC4925FE96EA006E1C4F /* Layout.swift in Sources */,
 				7B15733626054B9400FC138E /* NotificationsViewController.swift in Sources */,
 				7BA9BBFE25FE8156006E1C4F /* FeedGenerator.swift in Sources */,
 				7B8CD4022605C0A7008BAEB9 /* UISplitViewController+Extension.swift in Sources */,
+				7B292AAF26099D7E0052BA22 /* PreviewLoaderView.swift in Sources */,
 				7B8CD443260813DE008BAEB9 /* CollectionReusableViewContainer.swift in Sources */,
 				7B8CD4042605CE0D008BAEB9 /* StoryAvatarViewCell.swift in Sources */,
-				7B292AAD26096AF00052BA22 /* ShopViewController.swift in Sources */,
 				7B8CD43226080B15008BAEB9 /* ContentReusable.swift in Sources */,
 				7B8CD42826071CC1008BAEB9 /* FeedItemHeaderView.swift in Sources */,
 				7BA9BC1825FE917B006E1C4F /* TabBarController.swift in Sources */,

@@ -27,7 +27,7 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectio
     }
     
     override func fetchData() {
-        itunesRemote.fetch(.apps(feedType: .topFree(genre: .all), limit: 100))
+        remote.fetch(.tvShows(feedType: .topTVEpisodes(genre: .all), limit: 100))
     }
     
     override func setUpUI() {
@@ -47,7 +47,7 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectio
     }
     
     override func updateUI() {
-        itunesRemote.$sectionFeedViewModels.sink { [weak self] in
+        remote.$sectionFeedViewModels.sink { [weak self] in
             let discoveryFeedSectionItems = [DiscoverFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: $0)]
             self?.collectionView.applyInitialSnapshotWith(discoveryFeedSectionItems)
         }.store(in: &cancellables)

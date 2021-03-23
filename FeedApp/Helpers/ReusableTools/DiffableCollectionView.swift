@@ -90,7 +90,7 @@ final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseV
             return
         }
         UIView.transition(with: collectionView,
-                          duration: 0.4,
+                          duration: 0.2,
                           options: .transitionCrossDissolve,
                           animations: {
                             self.collectionView.scrollToItem(at: indexPath, at: .top, animated: true)

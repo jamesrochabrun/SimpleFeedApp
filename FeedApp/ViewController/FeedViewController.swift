@@ -74,9 +74,11 @@ final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewContr
 extension FeedViewController: UserProfileViewControllerDelegate {
     
     func postSelectedAt(_ indexPath: IndexPath) {
-        /// As result of flatting the array we need to 
+        /// As result of flatting the array we need to
         let normalizedIndexPath = IndexPath(row: indexPath.item, section: 0)
-        collectionView.scrollTo(normalizedIndexPath)
+        let animated = traitCollection.isRegularWidthRegularHeight
+        // TODO: fix bug on scrolling
+        collectionView.scrollTo(normalizedIndexPath, animated: animated)
     }
 }
 

@@ -24,7 +24,6 @@ enum TabBarViewModel: String, CaseIterable {
     
     case home
     case discover
-    case notifications
     case profile
     
     /// Return:- the tab bar icon
@@ -32,7 +31,6 @@ enum TabBarViewModel: String, CaseIterable {
         switch self {
         case .home: return UIImage(systemName: "house.fill")
         case .discover: return UIImage(systemName: "magnifyingglass")
-        case .notifications: return UIImage(systemName: "suit.heart")
         case .profile: return UIImage(systemName: "person")
         }
     }
@@ -50,10 +48,6 @@ enum TabBarViewModel: String, CaseIterable {
             let discoverViewController = DiscoverViewController.instantiate(from: "Main")
             discoverViewController.layout = layout
             return discoverViewController
-        case .notifications:
-            let notificationsViewController = NotificationsViewController.instantiate(from: "Main")
-            notificationsViewController.layout = layout
-            return notificationsViewController
         case .profile:
             let userProfileViewController = UserProfileViewController.instantiate(from: "Main")
             userProfileViewController.layout = layout
@@ -66,7 +60,6 @@ enum TabBarViewModel: String, CaseIterable {
         case .home: return UICollectionViewCompositionalLayout.homeLayout()
         case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
         case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
-        case .notifications: return UICollectionViewCompositionalLayout.notificationsList(header: false)
         }
     }
     

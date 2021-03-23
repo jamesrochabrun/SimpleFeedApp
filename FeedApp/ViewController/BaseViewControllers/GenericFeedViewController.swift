@@ -17,7 +17,7 @@ class GenericFeedViewController<Content: SectionIdentifierViewModel, Remote: Rem
     
     // MARK:- Data
     var cancellables: Set<AnyCancellable> = []
-    let itunesRemote = Remote()
+    let remote = Remote()
     
     // MARK:- TypeAlias
     typealias CollectionView = DiffableCollectionView<Content>

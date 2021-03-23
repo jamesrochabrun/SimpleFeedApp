@@ -37,10 +37,11 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = nil
     }
-    
+
     override func fetchData() {
-        itunesRemote.fetch(.podcast(feedType: .top(genre: .all), limit: 100))
+        remote.fetch(.tvShows(feedType: .topTVSeasons(genre: .all), limit: 100))
     }
     
     override func setUpUI() {
@@ -72,20 +73,20 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
                   let secondaryContentViewController = secondaryContentNavigationController.topViewController as? FeedViewController<UserProfileSectionModel> else {
                 /// Embeds a `FeedViewController` in a `NavigationController` and shows it if was not shown already.
                 let detailNavigationController = NavigationController(rootViewController: self.detailFeedViewController)
-                self.splitViewController!.showDetailInNavigationControllerIfNeeded(detailNavigationController, sender: self)
+                self.splitViewController?.showDetailInNavigationControllerIfNeeded(detailNavigationController, sender: self)
                 /// Scrolls the feed to the selected indexpath item.
                 self.delegate?.postSelectedAt(indexPath)
                 return
             }
             /// Optimization -> Shows the already instantiated `FeedViewController`
-            self.splitViewController!.showDetailInNavigationControllerIfNeeded(secondaryContentViewController, sender: self)
+            self.splitViewController?.showDetailInNavigationControllerIfNeeded(secondaryContentViewController, sender: self)
             self.delegate?.postSelectedAt(indexPath)
         }
     }
     
     override func updateUI() {
         
-        itunesRemote.$sectionFeedViewModels.sink { [weak self] in
+        remote.$sectionFeedViewModels.sink { [weak self] in
             let profileContentSection = UserProfileSectionModel(sectionIdentifier: .headerInfo, cellIdentifiers: [])
             let homeFeedMainContentSection = UserProfileSectionModel(sectionIdentifier: .mainContent, cellIdentifiers: $0)
             self?.collectionView.applyInitialSnapshotWith([profileContentSection, homeFeedMainContentSection])
