@@ -47,7 +47,7 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
     override func setUpUI() {
         collectionView.assignHedearFooter { collectionView, model, kind, indexPath -> UICollectionReusableView in
             switch model {
-            case .headerInfo:
+            case model as UserProfileSectionModel:
                 collectionView.registerHeader(CollectionReusableViewContainer<ProfileInfoView>.self, kind: kind)
                 let header: CollectionReusableViewContainer<ProfileInfoView> = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.configureContent {
@@ -55,7 +55,7 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
                     $0.setupWith(UserProfileViewModel.stub)
                 }
                 return header
-            case .mainContent:
+            case model as UserProfileSectionModel:
                 collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
                 let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.viewModel = .popular

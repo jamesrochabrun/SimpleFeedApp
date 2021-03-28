@@ -9,9 +9,14 @@ import Foundation
 
 /// Defines a Model for a Section in a Diffable DataSource, conforms to `SectionIdentifierViewModel`
 /// Use this generic class instead of creating a specific object for a section.
-final class GenericSectionIdentifierViewModel<SectionIdentifier: Hashable,
+struct GenericSectionIdentifierViewModel<SectionIdentifier: Hashable,
                                                 CellIdentifier: Hashable,
                                                 Cell: ViewModelCellInjection>: SectionIdentifierViewModel {
+    let id = UUID()
+//    static func == (lhs: GenericSectionIdentifierViewModel<SectionIdentifier, CellIdentifier, Cell>, rhs: GenericSectionIdentifierViewModel<SectionIdentifier, CellIdentifier, Cell>) -> Bool {
+//        lhs.id == rhs.id
+//    }
+//
     
     /// The Hashable Section identifier in a Diffable CollectionView
     public var sectionIdentifier: SectionIdentifier

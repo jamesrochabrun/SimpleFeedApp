@@ -53,16 +53,16 @@ final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewContr
     private func updateUI() {
         
         collectionView.assignHedearFooter { collectionView, model, kind, indexPath in
-            switch model {
-            case .recent:
+//            switch model {
+//            case .recent:
                 collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
                 let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.viewModel = .popular
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 100.0).layout
                 return header
-            default: return UICollectionReusableView()
+//            default: return UICollectionReusableView()
             }
-        }
+//        }
                 
         let flatCellidentifiers = feed.compactMap { $0.cellIdentifiers }.reduce([], +) /// Making it flat to display just a list of items without any kind of section separation.
         let feedSectionItems = FeedSectionModeling(sectionIdentifier: .recent, cellIdentifiers: flatCellidentifiers)

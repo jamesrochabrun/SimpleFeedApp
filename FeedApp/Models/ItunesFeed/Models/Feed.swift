@@ -113,12 +113,12 @@ import Foundation
 
 /// Idea from personal blog https://blog.usejournal.com/advanced-generics-and-protocols-in-swift-c30020fd5ded
 
-public struct Author: Decodable {
+struct Author: Decodable {
     let name: String
     let uri: String
 }
 
-public protocol ItunesResource: Decodable {
+protocol ItunesResource: Decodable {
     associatedtype Model
     var title: String? { get }
     var id: String? { get }
@@ -130,7 +130,7 @@ public protocol ItunesResource: Decodable {
     var results: [Model]? { get }
 }
 
-public struct ItunesResources<Model: Decodable>: ItunesResource {
+struct ItunesResources<Model: Decodable>: ItunesResource {
     
     public let title: String?
     public let id: String?
@@ -142,11 +142,11 @@ public struct ItunesResources<Model: Decodable>: ItunesResource {
     public let results: [Model]?
 }
 
-public protocol FeedProtocol: Decodable {
+protocol FeedProtocol: Decodable {
     associatedtype FeedResource: ItunesResource
     var feed: FeedResource? { get }
 }
 
-public struct Feed<FeedResource: ItunesResource>: FeedProtocol {
-    public let feed: FeedResource?
+struct Feed<FeedResource: ItunesResource>: FeedProtocol {
+    let feed: FeedResource?
 }

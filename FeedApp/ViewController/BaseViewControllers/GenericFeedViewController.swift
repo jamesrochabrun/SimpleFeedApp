@@ -9,6 +9,7 @@ import UIKit
 import Combine
 
 
+
 /// Generic View Controller that displays any kind of feed from a Remote Observable Object.
 /// It has a generic constraint of `SectionIdentifierViewModel`
 /// It has a generic Constraint of `RemoteObservableObject`
@@ -18,6 +19,8 @@ class GenericFeedViewController<Content: SectionIdentifierViewModel, Remote: Rem
     // MARK:- Data
     var cancellables: Set<AnyCancellable> = []
     let remote = Remote()
+    
+    var someRemote: some RemoteObservableObject { Remote() }
     
     // MARK:- TypeAlias
     typealias CollectionView = DiffableCollectionView<Content>
