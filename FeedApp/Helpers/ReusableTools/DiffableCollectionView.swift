@@ -7,57 +7,19 @@
 
 import UIKit
 
-protocol SectionIdentifier: AnyObject, IdentifiableHashable {
-    
- //   associatedtype SectionIdentifier: Hashable
-    associatedtype CellIdentifier: Hashable
-    associatedtype CellType: ViewModelCellInjection
-    
-  //  var sectionIdentifier: SectionIdentifier { get }
-    var cellIdentifiers: [CellIdentifier] { get }
-    var cellIdentifierType: CellType.Type { get }
-}
 
-
-protocol DataSource {
-    associatedtype Section: SectionIdentifier
-    associatedtype Collection: Swift.Collection where Collection.Element == Section
-    var sections: (Int) -> Collection { get set }
-}
-
-
-final class DiffCollection: BaseView, UICollectionViewDelegate {
-
-    
-    private var collectionView: UICollectionView! // intentionally force unwrapped, we need this else is dev error.
-    
-    override func setupViews() {
-        backgroundColor = .clear
-        collectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-
-        
-     //   collectionView?.register(CellType.self)
-        collectionView.backgroundColor = .clear
-        collectionView.delegate = self
-        addSubview(collectionView)
-        collectionView.fillSuperview()
-      //  configureDataSource()
-    }
-    
-}
-
-
-final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseView, UICollectionViewDelegate {
+final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierViewModel>: BaseView, UICollectionViewDelegate {
     
     // MARK:- UI
     private var collectionView: UICollectionView! // intentionally force unwrapped, we need this else is dev error.
 
     // MARK:- Type Aliases
-    typealias SectionViewModelIdentifier = ViewModel//.SectionIdentifier
-    typealias CellViewModelIdentifier = ViewModel.CellIdentifier // represents an item in a section
-    typealias CellType = ViewModel.CellType
+    typealias SectionViewModelIdentifier = SectionContentViewModel
+    typealias CellViewModelIdentifier = SectionContentViewModel.CellIdentifier // represents an item in a section
   
-    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> UICollectionReusableView
+    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier.SectionIdentifier?, String, IndexPath) -> UICollectionReusableView
+    typealias CellProvider = (UICollectionView, IndexPath, SectionViewModelIdentifier.CellIdentifier) -> UICollectionViewCell
+
     typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionViewModelIdentifier, CellViewModelIdentifier>
     
@@ -67,69 +29,38 @@ final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseV
     // MARK:- Diffable Data Source
     private var dataSource: DiffDataSource?
     private var currentSnapshot: Snapshot?
-    private var sectionItems: [ViewModel] = []
+    private var sectionItems: [SectionContentViewModel] = []
         
     // MARK:- Life Cycle
     override func setupViews() {
         backgroundColor = .clear
         collectionView = .init(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-       // collectionView?.register(CellType.self)
         collectionView.backgroundColor = .clear
         collectionView.delegate = self
         addSubview(collectionView)
         collectionView.fillSuperview()
-        configureDataSource()
     }
-    
-    var viewModels: [ViewModel] = []
-    
+        
     var layout: UICollectionViewLayout = UICollectionViewFlowLayout() {
         didSet {
             collectionView.collectionViewLayout = layout
         }
     }
-    
 
-
+//    // MARK:- 2: ViewModels injection and snapshot
+//    func applyInitialSnapshotWith(_ sectionItems: [SectionContentViewModel], animated: Bool = false) {
+//        
+//     //   sectionItems.forEach { collectionView.register($0.cellIdentifierType) }
+//        self.sectionItems = sectionItems
+//        currentSnapshot = Snapshot()
+//        guard var currentSnapshot = currentSnapshot else { return }
+//        currentSnapshot.appendSections(sectionItems)
+//        sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0) }
+//        dataSource?.apply(currentSnapshot, animatingDifferences: animated)
+//    }
     
-    // MARK:- 1: DataSource Configuration
-    private func configureDataSource() {
-        dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
-            
-//            if !self.sectionItems.isEmpty {
-//                let id = self.sectionItems[indexPath.section].cellIdentifierType
-//
-//                print("zizou cell \(String(describing: id))")
-//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: id), for: indexPath)
-//                cell.backgroundColor = .yellow
-//
-//             //   let cell: CellType = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-//              //  cell.viewModel = model as? CellType.ViewModel
-//                return cell
-//            }
-            
-               let cell: CellType = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-               cell.viewModel = model as? CellType.ViewModel
-            return cell
-          
-        }
-    }
-    
-    // MARK:- 2: ViewModels injection and snapshot
-    func applyInitialSnapshotWith(_ sectionItems: [ViewModel], animated: Bool = false) {
-        
-        sectionItems.forEach { collectionView.register($0.cellIdentifierType) }
-        self.sectionItems = sectionItems
-        currentSnapshot = Snapshot()
-        guard var currentSnapshot = currentSnapshot else { return }
-        currentSnapshot.appendSections(sectionItems)
-        sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0) }
-        dataSource?.apply(currentSnapshot, animatingDifferences: animated)
-    }
-    
-    func body(@DiffableDataSourceBuilder<ViewModel> _ content: () -> [ViewModel]) {
-        sectionItems = content()
-        sectionItems.forEach { collectionView.register($0.cellIdentifierType) }
+    func content(@DiffableDataSourceBuilder<SectionContentViewModel> _ content: () -> [SectionContentViewModel]) {
+        let sectionItems = content()
         currentSnapshot = Snapshot()
         guard var currentSnapshot = currentSnapshot else { return }
         currentSnapshot.appendSections(sectionItems)
@@ -144,16 +75,23 @@ final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseV
         selectedContentAtIndexPath?(viewModel, indexPath)
     }
     
-    func assignHedearFooter(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
+    func supplementaryViewProvider(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
         dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
             let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section]
-            return headerFooterProvider(collectionView, sectionIdentifier, kind, indexPath)
+            return headerFooterProvider(collectionView, sectionIdentifier?.sectionIdentifier, kind, indexPath)
         }
     }
     
-    func dataSourceItems() -> [ViewModel] {
-        sectionItems
+    
+    func cellProvider(_ cellProvider: @escaping CellProvider)  {
+        dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
+            let cell = cellProvider(collectionView, indexPath, model)
+            return cell
+        }
     }
+    
+    
+    var dataSourceSectionIdentifiers: [SectionContentViewModel] { dataSource?.snapshot().sectionIdentifiers ?? [] }
     
     func scrollTo(_ indexPath: IndexPath, animated: Bool = true) {
         guard animated else {
@@ -172,7 +110,7 @@ final class DiffableCollectionView<ViewModel: SectionIdentifierViewModel>: BaseV
 
 
 
-@_functionBuilder
+@resultBuilder
 struct DiffableDataSourceBuilder<Section: SectionIdentifierViewModel>   {
     static func buildBlock(_ sections: Section...) -> [Section] { sections }
 }

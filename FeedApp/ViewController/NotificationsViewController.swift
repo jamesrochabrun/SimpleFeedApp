@@ -17,13 +17,18 @@ enum NotificationsFeedIdentifier: String, CaseIterable {
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the User Profile  feed.
-typealias NotificationsSectionModel = GenericSectionIdentifierViewModel<NotificationsFeedIdentifier, HorizontalFeedItemViewModel, NotificationItemCell>
-
+typealias NotificationsSectionModel = GenericSectionIdentifierViewModel<NotificationsFeedIdentifier, HorizontalFeedItemViewModel>
 
 final class NotificationsViewController: GenericFeedViewController<NotificationsSectionModel, MarvelRemote>  {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        collectionView?.cellProvider { collectionView, indexPath, model in
+            let cell: NotificationItemCell = collectionView.configureCell(with: model, at: indexPath)
+            cell.viewModel = model
+            return cell
+        }
     }
     
     override func fetchData() {
@@ -32,9 +37,11 @@ final class NotificationsViewController: GenericFeedViewController<Notifications
     
     override func updateUI() {
         remote.$characterViewModels.sink { [weak self] characterViewModels in
-            let monsters = characterViewModels.map { HorizontalFeedItemViewModel(characterViewModel: $0) }
-            let importantNotificationsFeedSection = [NotificationsSectionModel(sectionIdentifier: .important, cellIdentifiers: monsters)]
-            self?.collectionView.applyInitialSnapshotWith(importantNotificationsFeedSection)
+            guard let self = self else { return }
+            let characters = characterViewModels.map { HorizontalFeedItemViewModel(characterViewModel: $0) }
+            self.collectionView?.content {
+                NotificationsSectionModel(sectionIdentifier: .important, cellIdentifiers: characters)
+            }
         }.store(in: &cancellables)
     }
 }

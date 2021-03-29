@@ -18,9 +18,7 @@ enum DiscoverFeedSectionIdentifier: String {
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the Discovery feed.
-typealias DiscoverFeedSectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
-
-typealias DiscoverFeedSectionModelTwo = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel, FeedItemCell>
+typealias DiscoverFeedSectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel>
 
 final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectionModel, ItunesRemote> {
     
@@ -33,26 +31,32 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectio
     }
     
     override func setUpUI() {
-        collectionView.assignHedearFooter { collectionView, model, kind, indexPath in
-//            switch model {
-//            case .popular:
+        
+        collectionView?.cellProvider { collectionView, indexPath, model in
+            let cell: ArtworkCell = collectionView.configureCell(with: model, at: indexPath)
+            return cell
+        }
+        
+        collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath in
+            switch model {
+            case .popular:
                 collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
                 let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.viewModel = .popular
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 120.0).layout
                 return header
-//            default:
-//                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
-//                return StoriesWithAvatarCollectionReusableView()
-//            }
+            default:
+                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
+                return StoriesWithAvatarCollectionReusableView()
+            }
         }
     }
     
     override func updateUI() {
-        remote.$sectionFeedViewModels.sink { [weak self] in
-            let items = $0.chunked(into: max($0.count / 2, 1))
-            self?.collectionView.body {
-                DiscoverFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: items.first ?? [])
+        remote.$sectionFeedViewModels.sink { [weak self] models in
+            guard let self = self else { return }
+            let items = models.chunked(into: max(models.count / 2, 1))
+            self.collectionView.content {
                 DiscoverFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: items.last ?? [])
             }
         }.store(in: &cancellables)

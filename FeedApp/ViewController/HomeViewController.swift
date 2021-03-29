@@ -17,7 +17,7 @@ enum HomeFeedSectionIdentifier: String, CaseIterable {
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the Home feed.
-typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
+typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel>
 
 final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, ItunesRemote> {
     
@@ -30,25 +30,35 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
     }
     
     override func setUpUI() {
-        collectionView.assignHedearFooter { collectionView, model, kind, indexPath in
-            //            switch model {
-            //            case .popular:
-            collectionView.registerHeader(StoriesSnippetWithAvatarCollectionReusableView.self, kind: kind)
-            let header: StoriesSnippetWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
-            header.viewModel = .popular
-            header.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
-            return header
-            //            default:
-            //                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
-            //                return UICollectionReusableView()
+        
+        collectionView?.cellProvider { collectionView, indexPath, model in
+            let cell: ArtworkCell = collectionView.configureCell(with: model, at: indexPath)
+            return cell
+        }
+        
+        collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath in
+            
+            switch model {
+            case .popular:
+                collectionView.registerHeader(StoriesSnippetWithAvatarCollectionReusableView.self, kind: kind)
+                let header: StoriesSnippetWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
+                header.viewModel = .popular
+                header.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
+                return header
+            default:
+                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
+                return UICollectionReusableView()
+            }
         }
     }
     
     override func updateUI() {
         
-        remote.$sectionFeedViewModels.sink { [weak self] in
-            let homeFeedSectionItems = [HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: $0)]
-            self?.collectionView.applyInitialSnapshotWith(homeFeedSectionItems)
+        remote.$sectionFeedViewModels.sink { [weak self] models in
+            guard let self = self else { return }
+            self.collectionView.content {
+                HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: models)
+            }
         }.store(in: &cancellables)
     }
 }
@@ -60,15 +70,22 @@ enum Marvel {
 
 class MarvelFeedViewController: GenericFeedViewController<MarvelFeedViewController.MarvelFeed, MarvelRemote>  {
     
-    typealias MarvelFeed = GenericSectionIdentifierViewModel<Marvel, ComicViewModel, ArtworkCell>
+    typealias MarvelFeed = GenericSectionIdentifierViewModel<Marvel, ComicViewModel>
     
     override func viewDidLoad() {
         super.viewDidLoad()
         remote.fetchComics()
-        remote.$comicViewModels.sink { [weak self] in
+        
+        collectionView?.cellProvider { collectionView, indexPath, model in
+            let cell: ArtworkCell = collectionView.configureCell(with: model, at: indexPath)
+            return cell
+        }
+        
+        remote.$comicViewModels.sink { [weak self] models in
             guard let self = self else { return }
-            let feedItems = MarvelFeed(sectionIdentifier: .one, cellIdentifiers: $0)
-            self.collectionView.applyInitialSnapshotWith([feedItems])
+            self.collectionView?.content {
+                MarvelFeed(sectionIdentifier: .one, cellIdentifiers: models)
+            }
         }.store(in: &cancellables)
     }
 }

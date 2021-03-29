@@ -22,6 +22,7 @@ extension UICollectionView {
     
     /// Dequeue a cell
     func dequeueReusableCell<T: UICollectionViewCell>(forIndexPath indexPath: IndexPath) -> T {
+      //  register(T.self)
         let cell = dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as! T
         return cell
     }
@@ -41,5 +42,13 @@ extension UICollectionView {
     func dequeueSuplementaryView<T: UICollectionReusableView>(of kind: String, at indexPath: IndexPath) -> T {
         let supplementaryView = dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: T.reuseIdentifier, for: indexPath) as! T
         return supplementaryView
+    }
+    
+    /// Dequeue a cell
+    func configureCell<T: ViewModelCellInjection>(with viewModel: T.ViewModel, at indexPath: IndexPath) -> T {
+        register(T.self)
+        let cell = dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as! T
+        cell.viewModel = viewModel
+        return cell
     }
 }

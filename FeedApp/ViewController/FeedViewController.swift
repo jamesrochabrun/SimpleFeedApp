@@ -20,7 +20,7 @@ final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewContr
     var feed: [ViewModel] = []
 
     // MARK:- Section ViewModel
-    private typealias FeedSectionModeling = GenericSectionIdentifierViewModel<FeedSectionIdentifier, ViewModel.CellIdentifier, FeedItemCell>
+    private typealias FeedSectionModeling = GenericSectionIdentifierViewModel<FeedSectionIdentifier, ViewModel.CellIdentifier>
     
     // MARK:- TypeAlias
     private typealias CollectionView = DiffableCollectionView<FeedSectionModeling>
@@ -48,25 +48,32 @@ final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewContr
     private func setUpUI() {
         view.addSubview(collectionView)
         collectionView.fillSuperview()
-    }
-    
-    private func updateUI() {
         
-        collectionView.assignHedearFooter { collectionView, model, kind, indexPath in
-//            switch model {
-//            case .recent:
+        collectionView.cellProvider { collectionView, indexPath, model in
+            // TODO avoid force casting
+            let cell: FeedItemCell = collectionView.configureCell(with: model as! FeedItemViewModel, at: indexPath)
+            return cell
+        }
+        
+        collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
+            switch model {
+            case .recent:
                 collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
                 let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.viewModel = .popular
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 100.0).layout
                 return header
-//            default: return UICollectionReusableView()
+            default: return UICollectionReusableView()
             }
-//        }
-                
+        }
+    }
+    
+    private func updateUI() {
+        
         let flatCellidentifiers = feed.compactMap { $0.cellIdentifiers }.reduce([], +) /// Making it flat to display just a list of items without any kind of section separation.
-        let feedSectionItems = FeedSectionModeling(sectionIdentifier: .recent, cellIdentifiers: flatCellidentifiers)
-        collectionView.applyInitialSnapshotWith([feedSectionItems])
+        collectionView.content {
+            FeedSectionModeling(sectionIdentifier: .recent, cellIdentifiers: flatCellidentifiers)
+        }
     }
 }
 

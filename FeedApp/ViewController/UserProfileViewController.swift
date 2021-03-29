@@ -22,13 +22,13 @@ protocol UserProfileViewControllerDelegate: AnyObject {
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the User Profile  feed.
-typealias UserProfileSectionModel = GenericSectionIdentifierViewModel<UserProfileFeedIdentifier, FeedItemViewModel, ArtworkCell>
+typealias UserProfileSectionModel = GenericSectionIdentifierViewModel<UserProfileFeedIdentifier, FeedItemViewModel>
 
 final class UserProfileViewController: GenericFeedViewController<UserProfileSectionModel, ItunesRemote> {
     
     lazy private var detailFeedViewController: FeedViewController<UserProfileSectionModel> = {
         let detailFeedViewController = FeedViewController<UserProfileSectionModel>()
-        detailFeedViewController.feed = collectionView.dataSourceItems()
+        detailFeedViewController.feed = collectionView.dataSourceSectionIdentifiers
         delegate = detailFeedViewController
         return detailFeedViewController
     }()
@@ -45,9 +45,15 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
     }
     
     override func setUpUI() {
-        collectionView.assignHedearFooter { collectionView, model, kind, indexPath -> UICollectionReusableView in
+        
+        collectionView?.cellProvider { collectionView, indexPath, model in
+            let cell: ArtworkCell = collectionView.configureCell(with: model, at: indexPath)
+            return cell
+        }
+        
+        collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath -> UICollectionReusableView in
             switch model {
-            case model as UserProfileSectionModel:
+            case .headerInfo:
                 collectionView.registerHeader(CollectionReusableViewContainer<ProfileInfoView>.self, kind: kind)
                 let header: CollectionReusableViewContainer<ProfileInfoView> = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.configureContent {
@@ -55,7 +61,7 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
                     $0.setupWith(UserProfileViewModel.stub)
                 }
                 return header
-            case model as UserProfileSectionModel:
+            case .mainContent:
                 collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
                 let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.viewModel = .popular
@@ -86,10 +92,12 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
     
     override func updateUI() {
         
-        remote.$sectionFeedViewModels.sink { [weak self] in
-            let profileContentSection = UserProfileSectionModel(sectionIdentifier: .headerInfo, cellIdentifiers: [])
-            let homeFeedMainContentSection = UserProfileSectionModel(sectionIdentifier: .mainContent, cellIdentifiers: $0)
-            self?.collectionView.applyInitialSnapshotWith([profileContentSection, homeFeedMainContentSection])
+        remote.$sectionFeedViewModels.sink { [weak self] models in
+            guard let self = self else { return }
+            self.collectionView?.content {
+                UserProfileSectionModel(sectionIdentifier: .headerInfo, cellIdentifiers: [])
+                UserProfileSectionModel(sectionIdentifier: .mainContent, cellIdentifiers: models)
+            }
         }.store(in: &cancellables)
     }
 }
