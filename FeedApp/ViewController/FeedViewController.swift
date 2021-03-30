@@ -14,25 +14,30 @@ enum FeedSectionIdentifier: String {
     case recent
 }
 
-final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewController {
+final class FeedViewController: ViewController {
     
     // MARK:- Data injection
-    var feed: [ViewModel] = []
+    private var feed: [[FeedItemViewModel]] = []
 
     // MARK:- Section ViewModel
-    private typealias FeedSectionModeling = GenericSectionIdentifierViewModel<FeedSectionIdentifier, ViewModel.CellIdentifier>
+    private typealias FeedSectionModel = GenericSectionIdentifierViewModel<FeedSectionIdentifier, FeedItemViewModel>
     
     // MARK:- TypeAlias
-    private typealias CollectionView = DiffableCollectionView<FeedSectionModeling>
+    private typealias CollectionView = DiffableCollectionView<FeedSectionModel>
     
     // MARK:- UI
     private lazy var collectionView: CollectionView = {
         let feed = CollectionView()
-        feed.layout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(header: false, displayMode: splitViewController?.displayMode ?? .allVisible)
+        feed.layout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: splitViewController?.displayMode ?? .allVisible)
         return feed
     }()
     
     // MARK:- Life Cycle
+    convenience init(feed: [[FeedItemViewModel]]) {
+        self.init()
+        self.feed = feed
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationItems()
@@ -50,18 +55,17 @@ final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewContr
         collectionView.fillSuperview()
         
         collectionView.cellProvider { collectionView, indexPath, model in
-            // TODO avoid force casting
-            let cell: FeedItemCell = collectionView.configureCell(with: model as! FeedItemViewModel, at: indexPath)
-            return cell
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as FeedItemCell
         }
         
         collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
             switch model {
             case .recent:
-                collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
-                let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
-                header.viewModel = .popular
+                /// Intentionally left for now,
+                collectionView.registerHeader(DiscoveryFeedSupplementaryView.self, kind: kind)
+                let header: DiscoveryFeedSupplementaryView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 100.0).layout
+                header.viewModel = .popular
                 return header
             default: return UICollectionReusableView()
             }
@@ -70,9 +74,9 @@ final class FeedViewController<ViewModel: SectionIdentifierViewModel>: ViewContr
     
     private func updateUI() {
         
-        let flatCellidentifiers = feed.compactMap { $0.cellIdentifiers }.reduce([], +) /// Making it flat to display just a list of items without any kind of section separation.
+        let flatCellidentifiers = feed.reduce([], +) /// Making it flat to display just a list of items without any kind of section separation.
         collectionView.content {
-            FeedSectionModeling(sectionIdentifier: .recent, cellIdentifiers: flatCellidentifiers)
+            FeedSectionModel(sectionIdentifier: .recent, cellIdentifiers: flatCellidentifiers)
         }
     }
 }
@@ -96,6 +100,6 @@ extension FeedViewController: DisplayModeUpdatable {
     }
     
     func displayModeWillChangeTo(_ displayMode: UISplitViewController.DisplayMode) {
-        collectionView.layout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(header: false, displayMode: displayMode)
+        collectionView.layout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: displayMode)
     }
 }

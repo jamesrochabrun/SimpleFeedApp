@@ -1,41 +1,39 @@
 //
-//  StoriesWithAvatarCollectionReusableView.swift
+//  UserProfileFeedSupplementaryView.swift
 //  FeedApp
 //
-//  Created by James Rochabrun on 3/19/21.
+//  Created by James Rochabrun on 3/29/21.
 //
 
-import UIKit
-import Combine
+import Foundation
 import MarvelClient
 
 // MARK:- User Stories Section Identifier
-enum UserStoriesSectionIdentifier {
-    case closeFriends
-    case everyone
+enum UserProfileHeaderSectionIdentifier {
+    case recent
 }
 
 // MARK:- Section ViewModel
 /// - Typealias that describes the structure of a section in the Stories feed.
-typealias UserStoriesWithAvatarSectionModeling = GenericSectionIdentifierViewModel<UserStoriesSectionIdentifier, CharacterViewModel>
+typealias UserProfileSupplementaryViewModel = GenericSectionIdentifierViewModel<UserProfileHeaderSectionIdentifier, CharacterViewModel>
 
-final class StoriesWithAvatarCollectionReusableView: GenericMarvelItemsCollectionReusableView<UserStoriesWithAvatarSectionModeling, DiscoverFeedSectionIdentifier>  {
+final class UserProfileFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<UserProfileSupplementaryViewModel, UserProfileFeedIdentifier>  {
     
     override func initialize() {
         super.initialize()
         marvelProvider.fetchCharacters()
         collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: StoryAvatarViewCell = collectionView.configureCell(with: model, at: indexPath)
+            let cell: StoryAvatarViewCell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath)
             return cell
         }
     }
     
-    override func setupWith(_ viewModel: DiscoverFeedSectionIdentifier) {
+    override func setupWith(_ viewModel: UserProfileFeedIdentifier) {
         // Note: Here we can also customize this collection view with headers, footer, accessories based on the `DiscoverFeedSectionIdentifier` case.
         cancellable = marvelProvider.$characterViewModels.sink { [weak self] models in
             guard let self = self else { return }
             self.collectionView?.content {
-                UserStoriesWithAvatarSectionModeling(sectionIdentifier: .everyone, cellIdentifiers: models)
+                UserProfileSupplementaryViewModel(sectionIdentifier: .recent, cellIdentifiers: models)
             }
         }
     }

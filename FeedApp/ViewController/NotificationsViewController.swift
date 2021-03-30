@@ -23,16 +23,16 @@ final class NotificationsViewController: GenericFeedViewController<Notifications
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: NotificationItemCell = collectionView.configureCell(with: model, at: indexPath)
-            cell.viewModel = model
-            return cell
-        }
     }
     
     override func fetchData() {
         remote.fetchCharacters()
+    }
+    
+    override func setUpUI() {
+        collectionView?.cellProvider { collectionView, indexPath, model in
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as NotificationItemCell
+        }
     }
     
     override func updateUI() {

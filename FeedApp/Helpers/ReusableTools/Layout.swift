@@ -191,12 +191,12 @@ extension UICollectionViewCompositionalLayout {
     }
     
     /// Adap
-    static func adaptiveFeedLayout(header: Bool, displayMode:  UISplitViewController.DisplayMode) -> UICollectionViewLayout {
+    static func adaptiveFeedLayout(displayMode:  UISplitViewController.DisplayMode) -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             guard displayMode == .allVisible else {
                 return .allVisibleDisplayModeLayout(4)
             }
-            return .listWith(heightGroupDimension: .estimated(450), headerHeightDimension: .estimated(100), header: header)
+            return .listWith(heightGroupDimension: .estimated(450), headerHeightDimension: .estimated(100), header: false)
         }
     }
     

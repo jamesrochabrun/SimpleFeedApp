@@ -1,5 +1,5 @@
 //
-//  StoriesSnippetWithAvatarCollectionReusableView.swift
+//  HomeFeedSupplementaryView.swift
 //  FeedApp
 //
 //  Created by James Rochabrun on 3/20/21.
@@ -19,14 +19,14 @@ enum StoriesSnippetSectionIdentifier {
 /// - Typealias that describes the structure of a section in the Stories Snippet feed.
 typealias UserStoriesSnippetWithAvatarSectionModeling = GenericSectionIdentifierViewModel<StoriesSnippetSectionIdentifier, ComicViewModel>
 
-final class StoriesSnippetWithAvatarCollectionReusableView: GenericMarvelItemsCollectionReusableView<UserStoriesSnippetWithAvatarSectionModeling, HomeFeedSectionIdentifier>  {
+final class HomeFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<UserStoriesSnippetWithAvatarSectionModeling, HomeFeedSectionIdentifier>  {
     
     override func initialize() {
         super.initialize()
         marvelProvider.fetchComics()
         
         collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: StorySnippeCell = collectionView.configureCell(with: model, at: indexPath)
+            let cell: StorySnippeCell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath)
             return cell
         }
     }

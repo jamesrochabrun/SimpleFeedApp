@@ -26,9 +26,9 @@ typealias UserProfileSectionModel = GenericSectionIdentifierViewModel<UserProfil
 
 final class UserProfileViewController: GenericFeedViewController<UserProfileSectionModel, ItunesRemote> {
     
-    lazy private var detailFeedViewController: FeedViewController<UserProfileSectionModel> = {
-        let detailFeedViewController = FeedViewController<UserProfileSectionModel>()
-        detailFeedViewController.feed = collectionView.dataSourceSectionIdentifiers
+    lazy private var detailFeedViewController: FeedViewController = {
+        let feedItems = collectionView.dataSourceSectionIdentifiers.map { $0.cellIdentifiers }
+        let detailFeedViewController = FeedViewController(feed: feedItems)
         delegate = detailFeedViewController
         return detailFeedViewController
     }()
@@ -47,11 +47,11 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
     override func setUpUI() {
         
         collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: ArtworkCell = collectionView.configureCell(with: model, at: indexPath)
-            return cell
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
         }
         
-        collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath -> UICollectionReusableView in
+        collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath in
+            guard let model = model else { return  nil }
             switch model {
             case .headerInfo:
                 collectionView.registerHeader(CollectionReusableViewContainer<ProfileInfoView>.self, kind: kind)
@@ -62,21 +62,16 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
                 }
                 return header
             case .mainContent:
-                collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
-                let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
-                header.viewModel = .popular
+                let header: UserProfileFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 100.0).layout
                 return header
-            default:
-                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
-                return UICollectionReusableView()
             }
         }
         
-        collectionView.selectedContentAtIndexPath = { [weak self] viewModel, indexPath in
+        collectionView?.selectedContentAtIndexPath = { [weak self] viewModel, indexPath in
             guard let self = self else { return }
             guard let secondaryContentNavigationController = self.splitViewController?.secondaryViewController as? NavigationController,
-                  let secondaryContentViewController = secondaryContentNavigationController.topViewController as? FeedViewController<UserProfileSectionModel> else {
+                  let secondaryContentViewController = secondaryContentNavigationController.topViewController as? FeedViewController else {
                 /// Embeds a `FeedViewController` in a `NavigationController` and shows it if was not shown already.
                 let detailNavigationController = NavigationController(rootViewController: self.detailFeedViewController)
                 self.splitViewController?.showDetailInNavigationControllerIfNeeded(detailNavigationController, sender: self)

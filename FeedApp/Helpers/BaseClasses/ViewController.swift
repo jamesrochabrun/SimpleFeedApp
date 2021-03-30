@@ -25,8 +25,7 @@ class ViewController: UIViewController {
     
     // MARK:- Actions
     @objc func displayNotifications() {
-        let notificationsViewController = NotificationsViewController.instantiate(from: "Main")
-        notificationsViewController.layout = UICollectionViewCompositionalLayout.notificationsList(header: false)
+        let notificationsViewController = NotificationsViewController(layout: UICollectionViewCompositionalLayout.notificationsList(header: false))
         navigationController?.present(notificationsViewController, animated: true)
     }
 }

@@ -43,21 +43,13 @@ enum TabBarViewModel: String, CaseIterable {
     var masterViewController: UIViewController  {
         switch self {
         case .home:
-            let homeViewController = HomeViewController.instantiate(from: "Main")
-            homeViewController.layout = layout
-            return homeViewController
+            return HomeViewController(layout: layout)
         case .discover:
-            let discoverViewController = DiscoverViewController.instantiate(from: "Main")
-            discoverViewController.layout = layout
-            return discoverViewController
+            return DiscoverViewController(layout: layout)
         case .profile:
-            let userProfileViewController = UserProfileViewController.instantiate(from: "Main")
-            userProfileViewController.layout = layout
-            return userProfileViewController
+            return UserProfileViewController(layout: layout)
         case .marvel:
-            let vc = MarvelFeedViewController()
-            vc.layout = layout
-            return vc
+            return MarvelFeedViewController(layout: layout)
         }
     }
     
@@ -93,5 +85,46 @@ extension UINavigationController {
         let splitViewController = SplitViewController(viewControllers: [self, EmptyDetailViewController()])
         splitViewController.tabBarItem.image = viewModel.icon
         return splitViewController
+    }
+}
+
+
+
+import MarvelClient
+
+///  Step 1 - define a section identifier
+enum Marvel {
+    case one
+}
+
+
+class MarvelFeedViewController: GenericFeedViewController<MarvelFeedViewController.MarvelFeed, MarvelRemote>  {
+    
+    // step 2 - Define a model for a section model
+    typealias MarvelFeed = GenericSectionIdentifierViewModel<Marvel, ComicViewModel>
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // step 3 - fetch the objects
+        remote.fetchComics()
+        
+        /// step 4 configure the cells
+        collectionView?.cellProvider { collectionView, indexPath, model in
+            let cell: ArtworkCell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath)
+            return cell
+        }
+        
+        
+        /// step 5 perform the update
+        remote.$comicViewModels.sink { [weak self] models in
+            guard let self = self else { return }
+            self.collectionView?.content {
+                MarvelFeed(sectionIdentifier: .one, cellIdentifiers: models)
+            }
+        }.store(in: &cancellables)
+        
+        // step 6
+        /// optional configutre a supplementary view.
     }
 }

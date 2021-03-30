@@ -43,12 +43,24 @@ extension UICollectionView {
         let supplementaryView = dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: T.reuseIdentifier, for: indexPath) as! T
         return supplementaryView
     }
+}
+
+extension UICollectionView {
     
-    /// Dequeue a cell
-    func configureCell<T: ViewModelCellInjection>(with viewModel: T.ViewModel, at indexPath: IndexPath) -> T {
+    /// ViewModelCellInjection
+    func dequeueAndConfigureReusableCell<T: ViewModelCellInjection>(with viewModel: T.ViewModel, at indexPath: IndexPath) -> T {
         register(T.self)
         let cell = dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as! T
         cell.viewModel = viewModel
         return cell
+    }
+    
+    
+    /// ViewModelReusableViewInjection
+    func dequeueAndConfigureSuplementaryView<T: ViewModelReusableViewInjection>(with viewModel: T.ViewModel, of kind: String, at indexPath: IndexPath) -> T {
+        registerHeader(T.self, kind: kind)
+        let supplementaryView = dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: T.reuseIdentifier, for: indexPath) as! T
+        supplementaryView.viewModel = viewModel
+        return supplementaryView
     }
 }

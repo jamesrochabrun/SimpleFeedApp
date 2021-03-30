@@ -12,14 +12,14 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
     
     // MARK:- UI
     private var collectionView: UICollectionView! // intentionally force unwrapped, we need this else is dev error.
-
+    
     // MARK:- Type Aliases
     typealias SectionViewModelIdentifier = SectionContentViewModel
     typealias CellViewModelIdentifier = SectionContentViewModel.CellIdentifier // represents an item in a section
-  
-    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier.SectionIdentifier?, String, IndexPath) -> UICollectionReusableView
+    
+    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier.SectionIdentifier?, String, IndexPath) -> UICollectionReusableView?
     typealias CellProvider = (UICollectionView, IndexPath, SectionViewModelIdentifier.CellIdentifier) -> UICollectionViewCell
-
+    
     typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionViewModelIdentifier, CellViewModelIdentifier>
     
@@ -29,8 +29,10 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
     // MARK:- Diffable Data Source
     private var dataSource: DiffDataSource?
     private var currentSnapshot: Snapshot?
-    private var sectionItems: [SectionContentViewModel] = []
-        
+    
+    // MARK:- Getters
+    var dataSourceSectionIdentifiers: [SectionContentViewModel] { dataSource?.snapshot().sectionIdentifiers ?? [] }
+    
     // MARK:- Life Cycle
     override func setupViews() {
         backgroundColor = .clear
@@ -40,24 +42,12 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         addSubview(collectionView)
         collectionView.fillSuperview()
     }
-        
+    
     var layout: UICollectionViewLayout = UICollectionViewFlowLayout() {
         didSet {
             collectionView.collectionViewLayout = layout
         }
     }
-
-//    // MARK:- 2: ViewModels injection and snapshot
-//    func applyInitialSnapshotWith(_ sectionItems: [SectionContentViewModel], animated: Bool = false) {
-//        
-//     //   sectionItems.forEach { collectionView.register($0.cellIdentifierType) }
-//        self.sectionItems = sectionItems
-//        currentSnapshot = Snapshot()
-//        guard var currentSnapshot = currentSnapshot else { return }
-//        currentSnapshot.appendSections(sectionItems)
-//        sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0) }
-//        dataSource?.apply(currentSnapshot, animatingDifferences: animated)
-//    }
     
     func content(@DiffableDataSourceBuilder<SectionContentViewModel> _ content: () -> [SectionContentViewModel]) {
         let sectionItems = content()
@@ -82,16 +72,12 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         }
     }
     
-    
     func cellProvider(_ cellProvider: @escaping CellProvider)  {
         dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
             let cell = cellProvider(collectionView, indexPath, model)
             return cell
         }
     }
-    
-    
-    var dataSourceSectionIdentifiers: [SectionContentViewModel] { dataSource?.snapshot().sectionIdentifiers ?? [] }
     
     func scrollTo(_ indexPath: IndexPath, animated: Bool = true) {
         guard animated else {
@@ -106,8 +92,6 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
                           })
     }
 }
-
-
 
 
 @resultBuilder

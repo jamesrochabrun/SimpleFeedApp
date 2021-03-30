@@ -32,22 +32,16 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
     override func setUpUI() {
         
         collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: ArtworkCell = collectionView.configureCell(with: model, at: indexPath)
-            return cell
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
         }
         
         collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath in
-            
+            guard let model = model else { return nil }
             switch model {
             case .popular:
-                collectionView.registerHeader(StoriesSnippetWithAvatarCollectionReusableView.self, kind: kind)
-                let header: StoriesSnippetWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
-                header.viewModel = .popular
-                header.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
-                return header
-            default:
-                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
-                return UICollectionReusableView()
+                let reusableView: HomeFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
+                reusableView.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
+                return reusableView
             }
         }
     }
@@ -56,62 +50,10 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
         
         remote.$sectionFeedViewModels.sink { [weak self] models in
             guard let self = self else { return }
-            self.collectionView.content {
+            self.collectionView?.content {
                 HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: models)
             }
         }.store(in: &cancellables)
     }
 }
 
-enum Marvel {
-    case one
-}
-
-
-class MarvelFeedViewController: GenericFeedViewController<MarvelFeedViewController.MarvelFeed, MarvelRemote>  {
-    
-    typealias MarvelFeed = GenericSectionIdentifierViewModel<Marvel, ComicViewModel>
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        remote.fetchComics()
-        
-        collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: ArtworkCell = collectionView.configureCell(with: model, at: indexPath)
-            return cell
-        }
-        
-        remote.$comicViewModels.sink { [weak self] models in
-            guard let self = self else { return }
-            self.collectionView?.content {
-                MarvelFeed(sectionIdentifier: .one, cellIdentifiers: models)
-            }
-        }.store(in: &cancellables)
-    }
-}
-
-
-//// TODO:
-//enum NewWay<Section: SectionIdentifierViewModel>: Hashable {
-//    
-//    static func == (lhs: NewWay<Section>, rhs: NewWay<Section>) -> Bool {
-//        
-//        switch (lhs, rhs) {
-//        case (lhs.identifier, rhs.identifier): return lhs.identifier == rhs.identifier
-//            
-//        }
-//    }
-//    
-//    
-//    case one(Section)
-//    case two(Section)
-//    case three(Section)
-//    
-//    var identifier: Section {
-//        switch self {
-//        case let .one(identifier): return identifier
-//        case let .two(identifier): return identifier
-//        case let .three(identifier): return identifier
-//        }
-//    }
-//}

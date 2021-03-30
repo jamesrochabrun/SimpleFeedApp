@@ -22,6 +22,7 @@ typealias DiscoverFeedSectionModel = GenericSectionIdentifierViewModel<DiscoverF
 
 final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectionModel, ItunesRemote> {
     
+    // MARK:- Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -33,21 +34,16 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectio
     override func setUpUI() {
         
         collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: ArtworkCell = collectionView.configureCell(with: model, at: indexPath)
-            return cell
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
         }
         
         collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath in
+            guard let model = model else { return nil }
             switch model {
             case .popular:
-                collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
-                let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
-                header.viewModel = .popular
+                let header: DiscoveryFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 120.0).layout
                 return header
-            default:
-                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
-                return StoriesWithAvatarCollectionReusableView()
             }
         }
     }
@@ -56,7 +52,7 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectio
         remote.$sectionFeedViewModels.sink { [weak self] models in
             guard let self = self else { return }
             let items = models.chunked(into: max(models.count / 2, 1))
-            self.collectionView.content {
+            self.collectionView?.content {
                 DiscoverFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: items.last ?? [])
             }
         }.store(in: &cancellables)

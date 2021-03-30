@@ -20,7 +20,14 @@ class GenericFeedViewController<Content: SectionIdentifierViewModel, Remote: Rem
     var cancellables: Set<AnyCancellable> = []
     let remote = Remote()
     
-    var someRemote: some RemoteObservableObject { Remote() }
+    // MARK:- LifeCycle
+    convenience init(layout: UICollectionViewLayout) {
+        self.init()
+        collectionView = CollectionView()
+        view.addSubview(collectionView)
+        collectionView.fillSuperview()
+        collectionView.layout = layout
+    }
     
     // MARK:- TypeAlias
     typealias CollectionView = DiffableCollectionView<Content>
@@ -29,17 +36,9 @@ class GenericFeedViewController<Content: SectionIdentifierViewModel, Remote: Rem
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpCollectionView()
         fetchData()
         setUpUI()
         updateUI()
-    }
-    
-    private func setUpCollectionView() {
-        collectionView = CollectionView()
-        view.addSubview(collectionView)
-        collectionView.fillSuperview()
-        collectionView.layout = layout
     }
     
     /// To be overriden. Super does not need to be called.
