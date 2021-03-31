@@ -9,33 +9,35 @@ import UIKit
 import Combine
 
 
-
 /// Generic View Controller that displays any kind of feed from a Remote Observable Object.
 /// It has a generic constraint of `SectionIdentifierViewModel`
 /// It has a generic Constraint of `RemoteObservableObject`
 /// Inherits from `ViewController`
 class GenericFeedViewController<Content: SectionIdentifierViewModel, Remote: RemoteObservableObject>: ViewController {
     
+    // MARK:- TypeAlias
+    typealias CollectionView = DiffableCollectionView<Content>
+    var collectionView: CollectionView 
+    
     // MARK:- Data
     var cancellables: Set<AnyCancellable> = []
     let remote = Remote()
     
     // MARK:- LifeCycle
-    convenience init(layout: UICollectionViewLayout) {
-        self.init()
-        collectionView = CollectionView()
-        view.addSubview(collectionView)
-        collectionView.fillSuperview()
-        collectionView.layout = layout
+    init(layout: UICollectionViewLayout) {
+        self.collectionView = CollectionView(layout: layout)
+        super.init(nibName: nil, bundle: nil)
     }
     
-    // MARK:- TypeAlias
-    typealias CollectionView = DiffableCollectionView<Content>
-    var collectionView: CollectionView! // document
-    var layout: UICollectionViewLayout = UICollectionViewFlowLayout()
+    required init?(coder: NSCoder) {
+        self.collectionView = CollectionView(layout:  UICollectionViewLayout())
+        super.init(coder: coder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(collectionView)
+        collectionView.fillSuperview()
         fetchData()
         setUpUI()
         updateUI()

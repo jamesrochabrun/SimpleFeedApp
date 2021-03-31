@@ -37,7 +37,7 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = nil
+        navigationItem.rightBarButtonItem = nil 
     }
 
     override func fetchData() {
@@ -46,11 +46,11 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
     
     override func setUpUI() {
         
-        collectionView?.cellProvider { collectionView, indexPath, model in
+        collectionView.cellProvider { collectionView, indexPath, model in
             collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
         }
         
-        collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath in
+        collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
             guard let model = model else { return  nil }
             switch model {
             case .headerInfo:
@@ -68,7 +68,7 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
             }
         }
         
-        collectionView?.selectedContentAtIndexPath = { [weak self] viewModel, indexPath in
+        collectionView.selectedContentAtIndexPath = { [weak self] viewModel, indexPath in
             guard let self = self else { return }
             guard let secondaryContentNavigationController = self.splitViewController?.secondaryViewController as? NavigationController,
                   let secondaryContentViewController = secondaryContentNavigationController.topViewController as? FeedViewController else {
@@ -89,7 +89,7 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
         
         remote.$sectionFeedViewModels.sink { [weak self] models in
             guard let self = self else { return }
-            self.collectionView?.content {
+            self.collectionView.content {
                 UserProfileSectionModel(sectionIdentifier: .headerInfo, cellIdentifiers: [])
                 UserProfileSectionModel(sectionIdentifier: .mainContent, cellIdentifiers: models)
             }

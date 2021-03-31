@@ -8,8 +8,7 @@
 import UIKit
 import MarvelClient
     
-final class StorySnippeCell: CollectionViewCell, ViewModelCellInjection {
-    
+final class StorySnippeCell: CollectionViewCell, ViewModelCellConfiguration {
     
     // MARK:- UI
     private lazy var imageViewLoader: ImageViewLoader = {
@@ -18,21 +17,17 @@ final class StorySnippeCell: CollectionViewCell, ViewModelCellInjection {
         return imageViewLoader
     }()
     
-    // MARK:- ViewModelCellInjection
-    var viewModel: ComicViewModel? {
-        didSet {
-            guard let viewModel = viewModel else { return }
-            setUpWith(viewModel)
-        }
-    }
-    
     // MARK:- LifeCycle
     override func setupSubviews() {
         contentView.addSubview(imageViewLoader)
         imageViewLoader.fillSuperview()
     }
     
-    private func setUpWith(_ viewModel: ComicViewModel) {
-        imageViewLoader.load(regularURL: viewModel.artwork.imagePathFor(variant: .portraitIncredible), lowResURL: viewModel.artwork.imagePathFor(variant: .portraitMedium), placeholder: UIImage(named: "sparkles"))
+    // MARK:- ViewModelCellConfiguration
+     func configureCell(with viewModel: ComicViewModel) {
+        let regularURL = viewModel.artwork.imagePathFor(variant: .portraitIncredible)
+        let lowResURL = viewModel.artwork.imagePathFor(variant: .portraitMedium)
+        let placeholder = UIImage(named: "sparkles")
+        imageViewLoader.load(regularURL: regularURL, lowResURL: lowResURL, placeholder: placeholder)
     }
 }

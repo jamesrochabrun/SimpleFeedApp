@@ -25,7 +25,6 @@ enum TabBarViewModel: String, CaseIterable {
     case home
     case discover
     case profile
-    case marvel
     
     /// Return:- the tab bar icon
     var icon: UIImage? {
@@ -33,7 +32,6 @@ enum TabBarViewModel: String, CaseIterable {
         case .home: return UIImage(systemName: "house.fill")
         case .discover: return UIImage(systemName: "magnifyingglass")
         case .profile: return UIImage(systemName: "person")
-        case .marvel: return UIImage(systemName: "magnifyingglass")
         }
     }
     /// Return:- the tab bar title
@@ -48,14 +46,12 @@ enum TabBarViewModel: String, CaseIterable {
             return DiscoverViewController(layout: layout)
         case .profile:
             return UserProfileViewController(layout: layout)
-        case .marvel:
-            return MarvelFeedViewController(layout: layout)
         }
     }
     
     var layout: UICollectionViewLayout {
         switch self {
-        case .home, .marvel: return UICollectionViewCompositionalLayout.homeLayout()
+        case .home: return UICollectionViewCompositionalLayout.homeLayout()
         case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
         case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
         }
@@ -71,10 +67,7 @@ enum TabBarViewModel: String, CaseIterable {
 }
 
 extension UINavigationController {
-    /**
-     - parameters:
-       - viewModel: The `TabBarViewModel` element.
-    */
+    /// - parameter viewModel: The `TabBarViewModel` element.
     func inSplitViewControllerIfSupported(for viewModel: TabBarViewModel) -> UIViewController {
         
         /// Use this if a certain tab needs a split view, here you can also introduce A/B testing if display a feed as a split or full width of screen.
@@ -98,33 +91,33 @@ enum Marvel {
 }
 
 
-class MarvelFeedViewController: GenericFeedViewController<MarvelFeedViewController.MarvelFeed, MarvelRemote>  {
-    
-    // step 2 - Define a model for a section model
-    typealias MarvelFeed = GenericSectionIdentifierViewModel<Marvel, ComicViewModel>
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // step 3 - fetch the objects
-        remote.fetchComics()
-        
-        /// step 4 configure the cells
-        collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: ArtworkCell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath)
-            return cell
-        }
-        
-        
-        /// step 5 perform the update
-        remote.$comicViewModels.sink { [weak self] models in
-            guard let self = self else { return }
-            self.collectionView?.content {
-                MarvelFeed(sectionIdentifier: .one, cellIdentifiers: models)
-            }
-        }.store(in: &cancellables)
-        
-        // step 6
-        /// optional configutre a supplementary view.
-    }
-}
+//class MarvelFeedViewController: GenericFeedViewController<MarvelFeedViewController.MarvelFeed, MarvelRemote>  {
+//
+//    // step 2 - Define a model for a section model
+//    typealias MarvelFeed = GenericSectionIdentifierViewModel<Marvel, ComicViewModel>
+//
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        // step 3 - fetch the objects
+//        remote.fetchComics()
+//
+//        /// step 4 configure the cells
+//        collectionView?.cellProvider { collectionView, indexPath, model in
+//            let cell: ArtworkCell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath)
+//            return cell
+//        }
+//
+//
+//        /// step 5 perform the update
+//        remote.$comicViewModels.sink { [weak self] models in
+//            guard let self = self else { return }
+//            self.collectionView?.content {
+//                MarvelFeed(sectionIdentifier: .one, cellIdentifiers: models)
+//            }
+//        }.store(in: &cancellables)
+//
+//        // step 6
+//        /// optional configutre a supplementary view.
+//    }
+//}

@@ -8,19 +8,11 @@
 import UIKit
 import Combine
 
-class GenericMarvelItemsCollectionReusableView<Content: SectionIdentifierViewModel, ViewModel: Hashable>: UICollectionReusableView, ViewModelReusableViewInjection {
+class GenericMarvelItemsCollectionReusableView<Content: SectionIdentifierViewModel, ViewModel: Hashable>: UICollectionReusableView, ViewModelReusableViewConfiguration {
        
     // MARK:- Typealias
     typealias CollectionView = DiffableCollectionView<Content>
 
-    // MARK:- Dependency
-    var viewModel: ViewModel? {
-        didSet {
-            guard let viewModel = viewModel else { return }
-            setupWith(viewModel)
-        }
-    }
-    
     // MARK:- Combine
     var marvelProvider = MarvelRemote()
     var cancellable: AnyCancellable?
@@ -28,12 +20,14 @@ class GenericMarvelItemsCollectionReusableView<Content: SectionIdentifierViewMod
     // MARK:- UI
     var layout: UICollectionViewLayout = UICollectionViewFlowLayout() {
         didSet {
-            collectionView?.layout = layout
+            collectionView.overrideLayout = layout
         }
     }
     
     // MARK:- Public
-    var collectionView: CollectionView?
+    lazy var collectionView: CollectionView = {
+        CollectionView(layout: UICollectionViewFlowLayout())
+    }()
     
     // MARK:- LifeCycle
     override init(frame: CGRect) {
@@ -47,13 +41,16 @@ class GenericMarvelItemsCollectionReusableView<Content: SectionIdentifierViewMod
     }
     
     func initialize() {
-        collectionView = CollectionView()
-        guard let collectionView = collectionView else { return }
         addSubview(collectionView)
         collectionView.fillSuperview()
     }
     
-    // MARK:- Configuration
+    // MARK:- ViewModelReusableViewConfiguration
+    func configureSupplementaryView(with viewModel: ViewModel) {
+        setupWith(viewModel)
+    }
+    
+    // MARK:- Public Configuration
     /// To be overriden. Super does not need to be called.
     func setupWith(_ viewModel: ViewModel) {
     }

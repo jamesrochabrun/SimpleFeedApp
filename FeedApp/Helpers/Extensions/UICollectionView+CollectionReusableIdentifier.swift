@@ -45,22 +45,22 @@ extension UICollectionView {
     }
 }
 
+
 extension UICollectionView {
     
-    /// ViewModelCellInjection
-    func dequeueAndConfigureReusableCell<T: ViewModelCellInjection>(with viewModel: T.ViewModel, at indexPath: IndexPath) -> T {
-        register(T.self)
-        let cell = dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as! T
-        cell.viewModel = viewModel
+    /// ViewModelCellConfiguration
+    func dequeueAndConfigureReusableCell<Cell: ViewModelCellConfiguration>(with viewModel: Cell.ViewModel, at indexPath: IndexPath) -> Cell {
+        register(Cell.self)
+        let cell = dequeueReusableCell(withReuseIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
+        cell.configureCell(with: viewModel)
         return cell
     }
     
-    
-    /// ViewModelReusableViewInjection
-    func dequeueAndConfigureSuplementaryView<T: ViewModelReusableViewInjection>(with viewModel: T.ViewModel, of kind: String, at indexPath: IndexPath) -> T {
-        registerHeader(T.self, kind: kind)
-        let supplementaryView = dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: T.reuseIdentifier, for: indexPath) as! T
-        supplementaryView.viewModel = viewModel
+    /// ViewModelReusableViewConfiguration
+    func dequeueAndConfigureSuplementaryView<SupplementaryView: ViewModelReusableViewConfiguration>(with viewModel: SupplementaryView.ViewModel, of kind: String, at indexPath: IndexPath) -> SupplementaryView {
+        registerHeader(SupplementaryView.self, kind: kind)
+        let supplementaryView = dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SupplementaryView.reuseIdentifier, for: indexPath) as! SupplementaryView
+        supplementaryView.configureSupplementaryView(with: viewModel)
         return supplementaryView
     }
 }

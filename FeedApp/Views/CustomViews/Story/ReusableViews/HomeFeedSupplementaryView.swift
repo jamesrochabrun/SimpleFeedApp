@@ -25,9 +25,8 @@ final class HomeFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<
         super.initialize()
         marvelProvider.fetchComics()
         
-        collectionView?.cellProvider { collectionView, indexPath, model in
-            let cell: StorySnippeCell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath)
-            return cell
+        collectionView.cellProvider { collectionView, indexPath, model in
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as StorySnippeCell
         }
     }
     
@@ -35,7 +34,7 @@ final class HomeFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<
         // Note: Here we can also customize this collection view with headers, footer, accessories based on the `HomeFeedSectionIdentifier` case.
         cancellable = marvelProvider.$comicViewModels.sink { [weak self] models in
             guard let self = self else { return }
-            self.collectionView?.content {
+            self.collectionView.content {
                 UserStoriesSnippetWithAvatarSectionModeling(sectionIdentifier: .recent, cellIdentifiers: models)
             }
         }

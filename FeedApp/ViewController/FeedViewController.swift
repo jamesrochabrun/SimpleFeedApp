@@ -18,6 +18,7 @@ final class FeedViewController: ViewController {
     
     // MARK:- Data injection
     private var feed: [[FeedItemViewModel]] = []
+    private var selectedIndexPath: IndexPath = IndexPath(item: 0, section: 0)
 
     // MARK:- Section ViewModel
     private typealias FeedSectionModel = GenericSectionIdentifierViewModel<FeedSectionIdentifier, FeedItemViewModel>
@@ -27,10 +28,11 @@ final class FeedViewController: ViewController {
     
     // MARK:- UI
     private lazy var collectionView: CollectionView = {
-        let feed = CollectionView()
-        feed.layout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: splitViewController?.displayMode ?? .allVisible)
+        let feed = CollectionView(layout: UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: splitViewController?.displayMode ?? .allVisible))
         return feed
     }()
+    
+    private var currentDisplayMode: UISplitViewController.DisplayMode = .allVisible
     
     // MARK:- Life Cycle
     convenience init(feed: [[FeedItemViewModel]]) {
@@ -55,7 +57,22 @@ final class FeedViewController: ViewController {
         collectionView.fillSuperview()
         
         collectionView.cellProvider { collectionView, indexPath, model in
-            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as FeedItemCell
+//
+//            print("zizou whats up \(self.currentDisplayMode.text)")
+//            if self.currentDisplayMode == .allVisible {
+//                let cell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as FeedItemCell
+//                cell.addBorder(.green, width: 5.0)
+//                return cell
+//            }
+//            let cell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
+//            cell.addBorder(#colorLiteral(red: 1, green: 0.02601638692, blue: 0.9704313794, alpha: 1), width: 5.0)
+//            return cell
+//
+            
+            let cell: FeedItemCell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as FeedItemCell
+            cell.addBorder(.orange, width: 2.0)
+            cell.displayMode = self.currentDisplayMode
+            return cell
         }
         
         collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
@@ -65,7 +82,7 @@ final class FeedViewController: ViewController {
                 collectionView.registerHeader(DiscoveryFeedSupplementaryView.self, kind: kind)
                 let header: DiscoveryFeedSupplementaryView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 100.0).layout
-                header.viewModel = .popular
+                header.configureSupplementaryView(with: .popular)
                 return header
             default: return UICollectionReusableView()
             }
@@ -79,6 +96,17 @@ final class FeedViewController: ViewController {
             FeedSectionModel(sectionIdentifier: .recent, cellIdentifiers: flatCellidentifiers)
         }
     }
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+   
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let animated = traitCollection.isRegularWidthRegularHeight
+        collectionView.scrollTo(selectedIndexPath, animated: animated)
+    }
 }
 
 // MARK:- UserProfileFeedSelectionDelegate Protocol conformance
@@ -86,20 +114,36 @@ extension FeedViewController: UserProfileViewControllerDelegate {
     
     func postSelectedAt(_ indexPath: IndexPath) {
         /// As result of flatting the array we need to
-        let normalizedIndexPath = IndexPath(row: indexPath.item, section: 0)
-        let animated = traitCollection.isRegularWidthRegularHeight
-        // TODO: fix bug on scrolling
-        collectionView.scrollTo(normalizedIndexPath, animated: animated)
+        selectedIndexPath = IndexPath(row: indexPath.item, section: 0)
     }
 }
 
 extension FeedViewController: DisplayModeUpdatable {
     
     func displayModeDidChangeTo(_ displayMode: UISplitViewController.DisplayMode) {
-        /// Just to Satisfy Protocol
+      //  collectionView.reloadData()
+
     }
     
     func displayModeWillChangeTo(_ displayMode: UISplitViewController.DisplayMode) {
-        collectionView.layout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: displayMode)
+        currentDisplayMode = displayMode
+        collectionView.overrideLayout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: displayMode)
+    }
+}
+
+extension UISplitViewController.DisplayMode {
+    
+    var text: String {
+        switch self {
+        case .allVisible: return "allVisible"
+        case .automatic: return "auto"
+        case .oneBesideSecondary: return "oneBesideSecondary"
+        case .oneOverSecondary: return "oneOverSecondary"
+        case .secondaryOnly: return "secondaryOnly"
+        case .twoBesideSecondary: return "twoBesideSecondary"
+        case .twoDisplaceSecondary: return "twoDisplaceSecondary"
+        case .twoOverSecondary: return "twoOverSecondary"
+        case .primaryHidden: return "primaryHidden"
+        }
     }
 }

@@ -11,16 +11,16 @@ import UIKit
 import MarvelClient
 
 // MARK:- Home Feed Diffable Section Identifier
-enum HomeFeedSectionIdentifier: String, CaseIterable {
-    case popular = "Popular"
+enum HomeFeedSectionIdentifier {
+    case popular
 }
 
-// MARK:- Section ViewModel
-/// - Typealias that describes the structure of a section in the Home feed.
-typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel>
-
-final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, ItunesRemote> {
+final class HomeViewController: GenericFeedViewController<HomeViewController.HomeFeedSectionModel, ItunesRemote> {
     
+    // MARK:- Section ViewModel
+    /// - Typealias that describes the structure of a section in the Home feed.
+    typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel>
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -31,11 +31,11 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
     
     override func setUpUI() {
         
-        collectionView?.cellProvider { collectionView, indexPath, model in
+        collectionView.cellProvider { collectionView, indexPath, model in
             collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
         }
         
-        collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath in
+        collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
             guard let model = model else { return nil }
             switch model {
             case .popular:
@@ -50,7 +50,7 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
         
         remote.$sectionFeedViewModels.sink { [weak self] models in
             guard let self = self else { return }
-            self.collectionView?.content {
+            self.collectionView.content {
                 HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: models)
             }
         }.store(in: &cancellables)

@@ -22,7 +22,7 @@ final class UserProfileFeedSupplementaryView: GenericMarvelItemsCollectionReusab
     override func initialize() {
         super.initialize()
         marvelProvider.fetchCharacters()
-        collectionView?.cellProvider { collectionView, indexPath, model in
+        collectionView.cellProvider { collectionView, indexPath, model in
             let cell: StoryAvatarViewCell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath)
             return cell
         }
@@ -32,7 +32,7 @@ final class UserProfileFeedSupplementaryView: GenericMarvelItemsCollectionReusab
         // Note: Here we can also customize this collection view with headers, footer, accessories based on the `DiscoverFeedSectionIdentifier` case.
         cancellable = marvelProvider.$characterViewModels.sink { [weak self] models in
             guard let self = self else { return }
-            self.collectionView?.content {
+            self.collectionView.content {
                 UserProfileSupplementaryViewModel(sectionIdentifier: .recent, cellIdentifiers: models)
             }
         }

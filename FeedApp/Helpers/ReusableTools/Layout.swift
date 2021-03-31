@@ -202,7 +202,7 @@ extension UICollectionViewCompositionalLayout {
     
     static func notificationsList(header: Bool) -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            return .listWith(heightGroupDimension: .estimated(80), headerHeightDimension: .estimated(100), header: header)
+            return .dummLayout(estimated: 100)//.listWith(heightGroupDimension: .estimated(80), headerHeightDimension: .estimated(100), header: header)
         }
     }
 }
@@ -661,6 +661,17 @@ extension NSCollectionLayoutSection {
             supplementaryItems.append(sectionFooter)
         }
         return supplementaryItems
+    }
+    
+    static func dummLayout(estimated: CGFloat) -> NSCollectionLayoutSection {
+        
+        let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(estimated))
+        let item = NSCollectionLayoutItem(layoutSize: size)
+      //  item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: NSCollectionLayoutSpacing.fixed(20), trailing: nil, bottom: NSCollectionLayoutSpacing.fixed(0))
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+        let section = NSCollectionLayoutSection(group: group)
+        return section
     }
     
     static func listWith(heightGroupDimension: NSCollectionLayoutDimension,

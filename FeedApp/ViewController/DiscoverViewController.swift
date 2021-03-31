@@ -12,16 +12,17 @@ import UIKit
 
 
 // MARK:- Discover Feed Diffable Section Identifier
-enum DiscoverFeedSectionIdentifier: String {
-    case popular = "Popular"
+enum DiscoverFeedSectionIdentifier {
+    case popular
+    case adds
 }
 
-// MARK:- Section ViewModel
-/// - Typealias that describes the structure of a section in the Discovery feed.
-typealias DiscoverFeedSectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel>
-
-final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectionModel, ItunesRemote> {
+final class DiscoverViewController: GenericFeedViewController<DiscoverViewController.DiscoverFeedSectionModel, ItunesRemote> {
     
+    // MARK:- Section ViewModel
+    /// - Typealias that describes the structure of a section in the Discovery feed.
+    typealias DiscoverFeedSectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel>
+
     // MARK:- Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,14 +34,18 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectio
     
     override func setUpUI() {
         
-        collectionView?.cellProvider { collectionView, indexPath, model in
+        collectionView.cellProvider { collectionView, indexPath, model in
             collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
         }
         
-        collectionView?.supplementaryViewProvider { collectionView, model, kind, indexPath in
+        collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
             guard let model = model else { return nil }
             switch model {
             case .popular:
+                let header: DiscoveryFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
+                header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 120.0).layout
+                return header
+            case .adds:
                 let header: DiscoveryFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 120.0).layout
                 return header
@@ -52,7 +57,7 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectio
         remote.$sectionFeedViewModels.sink { [weak self] models in
             guard let self = self else { return }
             let items = models.chunked(into: max(models.count / 2, 1))
-            self.collectionView?.content {
+            self.collectionView.content {
                 DiscoverFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: items.last ?? [])
             }
         }.store(in: &cancellables)
