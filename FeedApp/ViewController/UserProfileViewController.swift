@@ -18,6 +18,7 @@ enum UserProfileFeedIdentifier: String, CaseIterable {
 // MARK:- Protocol
 protocol UserProfileViewControllerDelegate: AnyObject {
     func postSelectedAt(_ indexPath: IndexPath)
+    func updateFeed(with feed: [[FeedItemViewModel]]) // updates the current instantiated controller. // TODO:- consider using combine.
 }
 
 // MARK:- Section ViewModel
@@ -27,11 +28,14 @@ typealias UserProfileSectionModel = GenericSectionIdentifierViewModel<UserProfil
 final class UserProfileViewController: GenericFeedViewController<UserProfileSectionModel, ItunesRemote> {
     
     lazy private var detailFeedViewController: FeedViewController = {
-        let feedItems = collectionView.dataSourceSectionIdentifiers.map { $0.cellIdentifiers }
+        let feedItems = userFeedItems
         let detailFeedViewController = FeedViewController(feed: feedItems)
         delegate = detailFeedViewController
         return detailFeedViewController
     }()
+    
+    /// - returns: an array of arrays of `FeedItemViewModel` objects
+    private var userFeedItems: [[FeedItemViewModel]] { collectionView.dataSourceSectionIdentifiers.map { $0.cellIdentifiers } }
     
     weak var delegate: UserProfileViewControllerDelegate?
     
@@ -81,6 +85,7 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
             }
             /// Optimization -> Shows the already instantiated `FeedViewController`
             self.splitViewController?.showDetailInNavigationControllerIfNeeded(secondaryContentViewController, sender: self)
+            self.delegate?.updateFeed(with: self.userFeedItems)
             self.delegate?.postSelectedAt(indexPath)
         }
     }

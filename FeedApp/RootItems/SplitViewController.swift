@@ -38,7 +38,8 @@ final class SplitViewController: UISplitViewController {
         UIView.animate(withDuration: 0.3, animations: {
             self.preferredDisplayMode = self.displayMode == .allVisible ? .primaryHidden : .allVisible
             self.displayModeCustomButton.setImage(SplitViewControllerViewModel.displayModeButtonImageFor(self.preferredDisplayMode), for: .normal)
-            
+            let accessibilityText = SplitViewControllerViewModel.displayModeButtonAccessibilityTextFor(self.preferredDisplayMode)
+            self.displayModeCustomButton.accessibilityLabel = accessibilityText
         }) { _ in
             guard let detailViewOnDisplayModeChange = self.secondaryViewController as? UINavigationController,
                 let displayModeUpdatable = detailViewOnDisplayModeChange.topViewController as? DisplayModeUpdatable
@@ -97,4 +98,9 @@ struct SplitViewControllerViewModel {
     static func displayModeButtonImageFor(_ displayMode: UISplitViewController.DisplayMode) -> UIImage? {
         displayMode == .allVisible ? UIImage(systemName: "arrow.up.left.and.arrow.down.right") : UIImage(systemName: "arrow.down.right.and.arrow.up.left")
     }
+    
+    static func displayModeButtonAccessibilityTextFor(_ displayMode: UISplitViewController.DisplayMode) -> String {
+        displayMode == .allVisible ? "Expand Detail Screen" : "Collapse Detail Screen"
+    }
+    
 }

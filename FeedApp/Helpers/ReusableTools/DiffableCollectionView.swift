@@ -64,6 +64,8 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         }
     }
     
+    /// Source of the content that will be injected in cells and supplementary views.
+    /// - parameter content: function builder that expects sections, for more go to `DiffableDataSourceBuilder` struct definition
     func content(@DiffableDataSourceBuilder<SectionContentViewModel> _ content: () -> [SectionContentViewModel]) {
         let sectionItems = content()
         currentSnapshot = Snapshot()
@@ -72,13 +74,9 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0) }
         dataSource?.apply(currentSnapshot, animatingDifferences: false) /// For a more responsive effect we set the `animatingDifferences` to false when app loads content 
     }
-        
-    // MARK:- UICollectionViewDelegate
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let viewModel = dataSource?.itemIdentifier(for: indexPath) else { return }
-        selectedContentAtIndexPath?(viewModel, indexPath)
-    }
     
+    /// Source of supplementary views that will be displayed in the `collectionView`
+    /// - parameter HeaderFooterProvider: closure of type `(UICollectionView, SectionViewModelIdentifier.SectionIdentifier?, String, IndexPath) -> UICollectionReusableView?`
     func supplementaryViewProvider(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
         dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
             let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section]
@@ -86,6 +84,8 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         }
     }
     
+    /// Source of cells that will be displayed in the `collectionView`
+    /// - parameter cellProvider: closure of type `(UICollectionView, IndexPath, SectionViewModelIdentifier.CellIdentifier) -> UICollectionViewCell`
     func cellProvider(_ cellProvider: @escaping CellProvider)  {
         dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
             let cell = cellProvider(collectionView, indexPath, model)
@@ -93,6 +93,17 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         }
     }
     
+    // MARK:- UICollectionViewDelegate
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let viewModel = dataSource?.itemIdentifier(for: indexPath) else { return }
+        selectedContentAtIndexPath?(viewModel, indexPath)
+    }
+    
+    // MARK:- Hellpers
+    
+    /// Scrolls to a certain   `IndexPath`
+    /// - parameter indexPath: The indexPath to scroll to.
+    /// - parameter animated: `Bool` if `true` the scrolling will be performed with `transitionCrossDissolve` animation with duration of `0.2`
     func scrollTo(_ indexPath: IndexPath, animated: Bool = true) {
         
         collectionView.layoutIfNeeded()
@@ -111,35 +122,6 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
 
 // MARK:- Data Source updates
 extension DiffableCollectionView {
-    
-    func reloadData() {
-//        guard var snapshot = dataSource?.snapshot() else { return }
-//        let sectionIdentifiers = snapshot.sectionIdentifiers
-//        snapshot.reloadSections(sectionIdentifiers)
-//        let cellIdentifiers = snapshot.itemIdentifiers
-//        snapshot.reloadItems(cellIdentifiers)
-//        print("ziozu \(snapshot.itemIdentifiers.count)")
-       // dataSource?.apply(snapshot, animatingDifferences: false)
-        
-       
-        guard var snapshot = dataSource?.snapshot() else { return }
-         dataSource?.apply(snapshot, animatingDifferences: false)
-//
-//        UIView.transition(with: collectionView,
-//                          duration: 0.1,
-//                          options: .transitionCrossDissolve,
-//                          animations: { [unowned self] in
-//
-////
-////                            let sectionItems = dataSourceSectionIdentifiers
-////                            currentSnapshot = Snapshot()
-////                            guard var currentSnapshot = currentSnapshot else { return }
-////                            currentSnapshot.appendSections(sectionItems)
-////                            sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0) }
-////                            dataSource?.apply(currentSnapshot, animatingDifferences: true)
-//                          })
-        
-    }
     
     /// Inserts sections in to the snapshot, after a defined section
     /// - parameter sections: The new sections to be inserted
@@ -180,6 +162,14 @@ extension DiffableCollectionView {
     func deleteItem(_ item: SectionContentViewModel.CellIdentifier) {
         guard var snapshot = dataSource?.snapshot() else { return }
         snapshot.deleteItems([item])
+        dataSource?.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func insertItem(_ item: SectionContentViewModel.CellIdentifier, at section: SectionContentViewModel.SectionIdentifier) {
+        guard var snapshot = dataSource?.snapshot(),
+              let sectionToInsert = snapshot.sectionIdentifiers.first(where: { $0.sectionIdentifier == section })
+        else { return }
+        snapshot.appendItems([item], toSection: sectionToInsert)
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
 }

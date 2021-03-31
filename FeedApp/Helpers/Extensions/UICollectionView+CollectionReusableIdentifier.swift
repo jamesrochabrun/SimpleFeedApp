@@ -48,9 +48,17 @@ extension UICollectionView {
 
 extension UICollectionView {
     
+    func dequeueAndConfigureReusableNibCell<Cell: ViewModelCellConfiguration>(with viewModel: Cell.ViewModel, at indexPath: IndexPath) -> Cell {
+        registerNib(Cell.self)
+        let cell = dequeueReusableCell(withReuseIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
+        cell.configureCell(with: viewModel)
+        return cell
+    }
+    
     /// ViewModelCellConfiguration
     func dequeueAndConfigureReusableCell<Cell: ViewModelCellConfiguration>(with viewModel: Cell.ViewModel, at indexPath: IndexPath) -> Cell {
         register(Cell.self)
+      //  registerNib(Cell.self)
         let cell = dequeueReusableCell(withReuseIdentifier: Cell.reuseIdentifier, for: indexPath) as! Cell
         cell.configureCell(with: viewModel)
         return cell
