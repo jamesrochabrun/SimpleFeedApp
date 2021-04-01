@@ -41,7 +41,6 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = nil 
     }
 
     override func fetchData() {
