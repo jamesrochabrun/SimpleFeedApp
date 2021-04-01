@@ -41,17 +41,11 @@ enum TabBarViewModel: String, CaseIterable {
     var masterViewController: UIViewController  {
         switch self {
         case .home:
-            let homeViewController = HomeViewController.instantiate(from: "Main")
-            homeViewController.layout = layout
-            return homeViewController
+            return HomeViewController(layout: layout)
         case .discover:
-            let discoverViewController = DiscoverViewController.instantiate(from: "Main")
-            discoverViewController.layout = layout
-            return discoverViewController
+            return DiscoverViewController(layout: layout)
         case .profile:
-            let userProfileViewController = UserProfileViewController.instantiate(from: "Main")
-            userProfileViewController.layout = layout
-            return userProfileViewController
+            return UserProfileViewController(layout: layout)
         }
     }
     
@@ -73,10 +67,7 @@ enum TabBarViewModel: String, CaseIterable {
 }
 
 extension UINavigationController {
-    /**
-     - parameters:
-       - viewModel: The `TabBarViewModel` element.
-    */
+    /// - parameter viewModel: The `TabBarViewModel` element.
     func inSplitViewControllerIfSupported(for viewModel: TabBarViewModel) -> UIViewController {
         
         /// Use this if a certain tab needs a split view, here you can also introduce A/B testing if display a feed as a split or full width of screen.

@@ -15,28 +15,32 @@ import Combine
 /// Inherits from `ViewController`
 class GenericFeedViewController<Content: SectionIdentifierViewModel, Remote: RemoteObservableObject>: ViewController {
     
+    // MARK:- TypeAlias
+    typealias CollectionView = DiffableCollectionView<Content>
+    var collectionView: CollectionView 
+    
     // MARK:- Data
     var cancellables: Set<AnyCancellable> = []
     let remote = Remote()
     
-    // MARK:- TypeAlias
-    typealias CollectionView = DiffableCollectionView<Content>
-    var collectionView: CollectionView! // document
-    var layout: UICollectionViewLayout = UICollectionViewFlowLayout()
+    // MARK:- LifeCycle
+    init(layout: UICollectionViewLayout) {
+        self.collectionView = CollectionView(layout: layout)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.collectionView = CollectionView(layout:  UICollectionViewLayout())
+        super.init(coder: coder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpCollectionView()
+        view.addSubview(collectionView)
+        collectionView.fillSuperview()
         fetchData()
         setUpUI()
         updateUI()
-    }
-    
-    private func setUpCollectionView() {
-        collectionView = CollectionView()
-        view.addSubview(collectionView)
-        collectionView.fillSuperview()
-        collectionView.layout = layout
     }
     
     /// To be overriden. Super does not need to be called.

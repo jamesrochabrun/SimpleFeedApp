@@ -14,14 +14,12 @@ enum NotificationsFeedIdentifier: String, CaseIterable {
     case important
 }
 
-
-// MARK:- Section ViewModel
-/// - Typealias that describes the structure of a section in the User Profile  feed.
-typealias NotificationsSectionModel = GenericSectionIdentifierViewModel<NotificationsFeedIdentifier, HorizontalFeedItemViewModel, NotificationItemCell>
-
-
-final class NotificationsViewController: GenericFeedViewController<NotificationsSectionModel, MarvelRemote>  {
+final class NotificationsViewController: GenericFeedViewController<NotificationsViewController.NotificationsSectionModel, MarvelRemote>  {
     
+    // MARK:- Section ViewModel
+    /// - Typealias that describes the structure of a section in the User Profile  feed.
+    typealias NotificationsSectionModel = GenericSectionIdentifierViewModel<NotificationsFeedIdentifier, HorizontalFeedItemViewModel>
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -30,11 +28,19 @@ final class NotificationsViewController: GenericFeedViewController<Notifications
         remote.fetchCharacters()
     }
     
+    override func setUpUI() {
+        collectionView.cellProvider { collectionView, indexPath, model in
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as NotificationItemCell
+        }
+    }
+    
     override func updateUI() {
         remote.$characterViewModels.sink { [weak self] characterViewModels in
-            let monsters = characterViewModels.map { HorizontalFeedItemViewModel(characterViewModel: $0) }
-            let importantNotificationsFeedSection = [NotificationsSectionModel(sectionIdentifier: .important, cellIdentifiers: monsters)]
-            self?.collectionView.applyInitialSnapshotWith(importantNotificationsFeedSection)
+            guard let self = self else { return }
+            let characters = characterViewModels.map { HorizontalFeedItemViewModel(characterViewModel: $0) }
+            self.collectionView.content {
+                NotificationsSectionModel(sectionIdentifier: .important, cellIdentifiers: characters)
+            }
         }.store(in: &cancellables)
     }
 }

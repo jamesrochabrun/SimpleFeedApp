@@ -8,53 +8,26 @@
 
 import UIKit
 
-final class FeedItemCell: CollectionViewCell, ViewModelCellInjection {
+final class FeedItemCell: CollectionViewCell, ViewModelCellConfiguration {
     
-    // MARK:- UI
-    lazy private var feedItemHeaderView: FeedItemHeaderView = {
-        FeedItemHeaderView()
-    }()
-    
-    lazy private var imageViewLoader: ImageViewLoader = {
-        let imageViewLoader = ImageViewLoader()
-        imageViewLoader.translatesAutoresizingMaskIntoConstraints = false
-        return imageViewLoader
-    }()
-    
-    // MARK:- ViewModelCellInjection
-    public var viewModel: FeedItemViewModel? {
-        didSet {
-            guard let viewModel = viewModel else { return }
-            setUpWith(viewModel)
-        }
+    @IBOutlet private var feedItemHeaderView: FeedItemHeaderView!
+    @IBOutlet private var imageViewLoader: ImageViewLoader!
+
+    // MARK:- ViewModelCellConfiguration
+    func configureCell(with viewModel: FeedItemViewModel) {
+        // Dummy User data
+        let userProfileDummyData = HorizontalFeedItemViewModel(user: UserProfileViewModel.stub, location: "Somewhere in the universe", kind: .header)
+        feedItemHeaderView.setupWith(userProfileDummyData)
+        imageViewLoader.load(regularURL: viewModel.imageURL, lowResURL: viewModel.thumbnailURL, placeholder: UIImage(named: "zizou"))
     }
     
     // MARK:- LifeCycle
     override func layoutSubviews() {
         super.layoutSubviews()
-        // TODO: Use split view controller is compact values perform this update.
-        let shouldHide = frame.width < 300
-        feedItemHeaderView.isHidden = shouldHide
     }
     
-    override func setupSubviews() {
-
-        let stackView = UIStackView(arrangedSubviews: [feedItemHeaderView, imageViewLoader])
-        stackView.axis = .vertical
-        stackView.distribution = .fill
-        contentView.addSubview(stackView)
-        stackView.fillSuperview()
-        
-        feedItemHeaderView.constrainHeight(constant: 80)
-        imageViewLoader.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
-        imageViewLoader.heightAnchor.constraint(equalTo: imageViewLoader.widthAnchor).isActive = true
-    }
-    
-    // MARK:- Configuration
-    private func setUpWith(_ viewModel: FeedItemViewModel) {
-        // Dummy data
-        let userProfileDummyData = HorizontalFeedItemViewModel(user: UserProfileViewModel.stub, location: "Somewhere in the universe", kind: .header)
-        feedItemHeaderView.setupWith(userProfileDummyData)
-        imageViewLoader.load(regularURL: viewModel.imageURL, lowResURL: viewModel.thumbnailURL, placeholder: UIImage(named: "zizou"))
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        feedItemHeaderView?.cleanAndReuse()
     }
 }

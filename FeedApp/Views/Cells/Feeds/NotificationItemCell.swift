@@ -7,27 +7,21 @@
 
 import UIKit
 
-final class NotificationItemCell: CollectionViewCell, ViewModelCellInjection {
+final class NotificationItemCell: CollectionViewCell, ViewModelCellConfiguration {
     
-    // MARK:- ViewModelCellInjection
-    var viewModel: HorizontalFeedItemViewModel? {
-        didSet {
-            guard let viewModel = viewModel else { return }
-            setupWith(viewModel)
-        }
-    }
     // MARK:- UI
     private lazy var feedItemHeaderView: FeedItemHeaderView = {
         FeedItemHeaderView()
     }()
     
+    // MARK:- Life Cycle
     override func setupSubviews() {
         contentView.addSubview(feedItemHeaderView)
         feedItemHeaderView.fillSuperview()
     }
-
-    // MARK:- Configuration
-    func setupWith(_ viewModel: HorizontalFeedItemViewModel) {
+    
+    // MARK:- ViewModelCellConfiguration
+    func configureCell(with viewModel: HorizontalFeedItemViewModel) {
         feedItemHeaderView.setupWith(viewModel)
     }
 }

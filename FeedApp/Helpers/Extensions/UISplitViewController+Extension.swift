@@ -22,3 +22,21 @@ extension UISplitViewController {
         showDetailViewController(detail, sender: sender)
     }
 }
+
+extension UISplitViewController.DisplayMode {
+    
+    var text: String {
+        switch self {
+        case .allVisible: return "allVisible"
+        case .automatic: return "auto"
+        case .oneBesideSecondary: return "oneBesideSecondary"
+        case .oneOverSecondary: return "oneOverSecondary"
+        case .secondaryOnly: return "secondaryOnly"
+        case .twoBesideSecondary: return "twoBesideSecondary"
+        case .twoDisplaceSecondary: return "twoDisplaceSecondary"
+        case .twoOverSecondary: return "twoOverSecondary"
+        case .primaryHidden: return "primaryHidden"
+        @unknown default: return "This is an unknown case"
+        }
+    }
+}

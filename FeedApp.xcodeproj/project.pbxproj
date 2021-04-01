@@ -12,7 +12,7 @@
 		7B15730F2601780300FC138E /* MarvelClient in Frameworks */ = {isa = PBXBuildFile; productRef = 7B15730E2601780300FC138E /* MarvelClient */; };
 		7B1573142601BC8000FC138E /* DiscoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1573132601BC8000FC138E /* DiscoverViewController.swift */; };
 		7B157320260541BF00FC138E /* MarvelRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15731F260541BF00FC138E /* MarvelRemote.swift */; };
-		7B15732E26054B1D00FC138E /* StoriesWithAvatarCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15732D26054B1D00FC138E /* StoriesWithAvatarCollectionReusableView.swift */; };
+		7B15732E26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15732D26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift */; };
 		7B15733626054B9400FC138E /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15733526054B9400FC138E /* NotificationsViewController.swift */; };
 		7B15733B26054BD000FC138E /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15733A26054BD000FC138E /* UserProfileViewController.swift */; };
 		7B15734826054D2900FC138E /* Artwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15734726054D2900FC138E /* Artwork.swift */; };
@@ -34,6 +34,8 @@
 		7B292AA8260963270052BA22 /* RemoteObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AA7260963270052BA22 /* RemoteObservableObject.swift */; };
 		7B292AAA2609647E0052BA22 /* ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AA92609647E0052BA22 /* ThemeColors.swift */; };
 		7B292AAF26099D7E0052BA22 /* PreviewLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AAE26099D7D0052BA22 /* PreviewLoaderView.swift */; };
+		7B292AB12612C3710052BA22 /* UserProfileFeedSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AB02612C3710052BA22 /* UserProfileFeedSupplementaryView.swift */; };
+		7B2ED9DE26145EB600EEE573 /* FeedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2ED9DD26145EB600EEE573 /* FeedItemCell.xib */; };
 		7B5E6C3126083D4000C62974 /* FeedItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */; };
 		7B5E6C3626083D7F00C62974 /* IdentifiableHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */; };
 		7B5E6C4C26085E8A00C62974 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */; };
@@ -43,7 +45,7 @@
 		7B8CD4002605C06E008BAEB9 /* UITraitCollection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD3FF2605C06E008BAEB9 /* UITraitCollection+Extension.swift */; };
 		7B8CD4022605C0A7008BAEB9 /* UISplitViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */; };
 		7B8CD4042605CE0D008BAEB9 /* StoryAvatarViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4032605CE0D008BAEB9 /* StoryAvatarViewCell.swift */; };
-		7B8CD4062606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4052606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift */; };
+		7B8CD4062606B132008BAEB9 /* HomeFeedSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4052606B132008BAEB9 /* HomeFeedSupplementaryView.swift */; };
 		7B8CD40A2606B28E008BAEB9 /* StorySnippeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4092606B28E008BAEB9 /* StorySnippeCell.swift */; };
 		7B8CD41B260713C7008BAEB9 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD41A260713C7008BAEB9 /* FeedViewController.swift */; };
 		7B8CD42226071490008BAEB9 /* FeedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD42126071490008BAEB9 /* FeedItemCell.swift */; };
@@ -104,7 +106,7 @@
 		7B1572F62600649000FC138E /* ImageViewLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewLoader.swift; sourceTree = "<group>"; };
 		7B1573132601BC8000FC138E /* DiscoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverViewController.swift; sourceTree = "<group>"; };
 		7B15731F260541BF00FC138E /* MarvelRemote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelRemote.swift; sourceTree = "<group>"; };
-		7B15732D26054B1D00FC138E /* StoriesWithAvatarCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesWithAvatarCollectionReusableView.swift; sourceTree = "<group>"; };
+		7B15732D26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryFeedSupplementaryView.swift; sourceTree = "<group>"; };
 		7B15733526054B9400FC138E /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		7B15733A26054BD000FC138E /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		7B15734726054D2900FC138E /* Artwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artwork.swift; sourceTree = "<group>"; };
@@ -126,6 +128,8 @@
 		7B292AA7260963270052BA22 /* RemoteObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteObservableObject.swift; sourceTree = "<group>"; };
 		7B292AA92609647E0052BA22 /* ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColors.swift; sourceTree = "<group>"; };
 		7B292AAE26099D7D0052BA22 /* PreviewLoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewLoaderView.swift; sourceTree = "<group>"; };
+		7B292AB02612C3710052BA22 /* UserProfileFeedSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileFeedSupplementaryView.swift; sourceTree = "<group>"; };
+		7B2ED9DD26145EB600EEE573 /* FeedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedItemCell.xib; sourceTree = "<group>"; };
 		7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemViewModel.swift; sourceTree = "<group>"; };
 		7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableHashable.swift; sourceTree = "<group>"; };
 		7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
@@ -133,7 +137,7 @@
 		7B8CD3FF2605C06E008BAEB9 /* UITraitCollection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+Extension.swift"; sourceTree = "<group>"; };
 		7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISplitViewController+Extension.swift"; sourceTree = "<group>"; };
 		7B8CD4032605CE0D008BAEB9 /* StoryAvatarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAvatarViewCell.swift; sourceTree = "<group>"; };
-		7B8CD4052606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesSnippetWithAvatarCollectionReusableView.swift; sourceTree = "<group>"; };
+		7B8CD4052606B132008BAEB9 /* HomeFeedSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedSupplementaryView.swift; sourceTree = "<group>"; };
 		7B8CD4092606B28E008BAEB9 /* StorySnippeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorySnippeCell.swift; sourceTree = "<group>"; };
 		7B8CD41A260713C7008BAEB9 /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		7B8CD42126071490008BAEB9 /* FeedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemCell.swift; sourceTree = "<group>"; };
@@ -356,8 +360,9 @@
 			isa = PBXGroup;
 			children = (
 				7B5E6C56260861C600C62974 /* GenericMarvelItemsCollectionReusableView.swift */,
-				7B8CD4052606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift */,
-				7B15732D26054B1D00FC138E /* StoriesWithAvatarCollectionReusableView.swift */,
+				7B8CD4052606B132008BAEB9 /* HomeFeedSupplementaryView.swift */,
+				7B15732D26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift */,
+				7B292AB02612C3710052BA22 /* UserProfileFeedSupplementaryView.swift */,
 			);
 			path = ReusableViews;
 			sourceTree = "<group>";
@@ -384,6 +389,7 @@
 			isa = PBXGroup;
 			children = (
 				7B8CD42126071490008BAEB9 /* FeedItemCell.swift */,
+				7B2ED9DD26145EB600EEE573 /* FeedItemCell.xib */,
 				7B292A9A2609517F0052BA22 /* NotificationItemCell.swift */,
 			);
 			path = Feeds;
@@ -653,6 +659,7 @@
 				7B1573642605729400FC138E /* ProfileInfoView.xib in Resources */,
 				7BA9BBBF25FE760D006E1C4F /* Assets.xcassets in Resources */,
 				7B15735D2605729400FC138E /* VerticalLabelsStackView.xib in Resources */,
+				7B2ED9DE26145EB600EEE573 /* FeedItemCell.xib in Resources */,
 				7B292AA626095EB30052BA22 /* Colors.xcassets in Resources */,
 				7B292A99260946B20052BA22 /* FeedItemHeaderView.xib in Resources */,
 				7BA9BBBD25FE760B006E1C4F /* Main.storyboard in Resources */,
@@ -681,7 +688,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B15735E2605729400FC138E /* ProfileInfoView.swift in Sources */,
-				7B15732E26054B1D00FC138E /* StoriesWithAvatarCollectionReusableView.swift in Sources */,
+				7B15732E26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift in Sources */,
 				7B15735F2605729400FC138E /* VerticalLabelsStackView.swift in Sources */,
 				7B5E6C3126083D4000C62974 /* FeedItemViewModel.swift in Sources */,
 				7B15733B26054BD000FC138E /* UserProfileViewController.swift in Sources */,
@@ -703,6 +710,7 @@
 				7B8CD43F26081289008BAEB9 /* BaseView.swift in Sources */,
 				7B8CD43A26080DB3008BAEB9 /* UICollectionView+CollectionReusableIdentifier.swift in Sources */,
 				7B292AA226095AEB0052BA22 /* SectionIdentifierViewModel.swift in Sources */,
+				7B292AB12612C3710052BA22 /* UserProfileFeedSupplementaryView.swift in Sources */,
 				7B292AA426095CE60052BA22 /* ViewModelInjection.swift in Sources */,
 				7B8CD4412608129E008BAEB9 /* CollectionViewCell.swift in Sources */,
 				7B8CD40A2606B28E008BAEB9 /* StorySnippeCell.swift in Sources */,
@@ -727,7 +735,7 @@
 				7B157320260541BF00FC138E /* MarvelRemote.swift in Sources */,
 				7B1572F72600649000FC138E /* ImageViewLoader.swift in Sources */,
 				7BA9BC1225FE81C0006E1C4F /* FeedItem.swift in Sources */,
-				7B8CD4062606B132008BAEB9 /* StoriesSnippetWithAvatarCollectionReusableView.swift in Sources */,
+				7B8CD4062606B132008BAEB9 /* HomeFeedSupplementaryView.swift in Sources */,
 				7B8CD43826080D3A008BAEB9 /* CollectionReusableIdentifier.swift in Sources */,
 				7B15734826054D2900FC138E /* Artwork.swift in Sources */,
 				7B292AA8260963270052BA22 /* RemoteObservableObject.swift in Sources */,

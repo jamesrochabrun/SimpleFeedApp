@@ -9,19 +9,13 @@ import UIKit
 import Combine
 import MarvelClient
 
-final class ArtworkCell: CollectionViewCell, ViewModelCellInjection {
-    
-    // MARK:- View Model injection
-    var viewModel: Artwork? {
-        didSet {
-            guard let viewModel = viewModel else { return }
-            setUpWith(viewModel)
-        }
-    }
+final class ArtworkCell: CollectionViewCell, ViewModelCellConfiguration {
+
     // MARK:- UI
     private lazy var imageViewLoader: ImageViewLoader = {
         ImageViewLoader()
     }()
+    
     // MARK:- Life Cycle
     override func setupSubviews() {
         contentView.addSubview(imageViewLoader)
@@ -33,8 +27,11 @@ final class ArtworkCell: CollectionViewCell, ViewModelCellInjection {
         imageViewLoader.cleanAndReuse()
     }
     
-    // MARK:- Configuration
-    private func setUpWith(_ artwork: Artwork) {
-        imageViewLoader.load(regularURL: artwork.imageURL, lowResURL: artwork.thumbnailURL, placeholder: UIImage(named: "photo"))
+    // MARK:- ViewModelCellConfiguration
+    func configureCell(with viewModel: Artwork) {
+        let regularURL = viewModel.imageURL
+        let lowResURL = viewModel.thumbnailURL
+        let placeholder = UIImage(named: "photo")
+        imageViewLoader.load(regularURL: regularURL, lowResURL: lowResURL, placeholder: placeholder)
     }
 }

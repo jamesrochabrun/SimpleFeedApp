@@ -8,19 +8,19 @@
 import UIKit
 
 /// PAT that allows inject a certain view model to a UIVIew
-protocol ViewModelViewInjection: UIView {
+protocol ViewModelViewConfiguration: UIView {
     associatedtype ViewModel
     var viewModel: ViewModel? { get set }
 }
 
 /// PAT that allows inject a certain view model to a UICollectionViewCell
-protocol ViewModelCellInjection: UICollectionViewCell {
+protocol ViewModelCellConfiguration: UICollectionViewCell {
     associatedtype ViewModel
-    var viewModel: ViewModel? { get set }
+    func configureCell(with viewModel: ViewModel)
 }
 
 /// PAT that allows inject a certain view model to a UICollectionReusableView
-protocol ViewModelReusableViewInjection: UICollectionReusableView {
+protocol ViewModelReusableViewConfiguration: UICollectionReusableView {
     associatedtype ViewModel
-    var viewModel: ViewModel? { get set }
+    func configureSupplementaryView(with viewModel: ViewModel)
 }

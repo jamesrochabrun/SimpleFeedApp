@@ -12,16 +12,18 @@ import UIKit
 
 
 // MARK:- Discover Feed Diffable Section Identifier
-enum DiscoverFeedSectionIdentifier: String {
-    case popular = "Popular"
+enum DiscoverFeedSectionIdentifier {
+    case popular
+    case adds
 }
 
-// MARK:- Section ViewModel
-/// - Typealias that describes the structure of a section in the Discovery feed.
-typealias DiscoverFeedSectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
-
-final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectionModel, ItunesRemote> {
+final class DiscoverViewController: GenericFeedViewController<DiscoverViewController.SectionModel, ItunesRemote> {
     
+    // MARK:- Section ViewModel
+    /// - Typealias that describes the structure of a section in the Discovery feed.
+    typealias SectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel>
+
+    // MARK:- Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -31,25 +33,38 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverFeedSectio
     }
     
     override func setUpUI() {
-        collectionView.assignHedearFooter { collectionView, model, kind, indexPath in
+        
+        collectionView.cellProvider { collectionView, indexPath, model in
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
+        }
+        
+        collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
+            guard let model = model else { return nil }
             switch model {
             case .popular:
-                collectionView.registerHeader(StoriesWithAvatarCollectionReusableView.self, kind: kind)
-                let header: StoriesWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
-                header.viewModel = .popular
+                let header: DiscoveryFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 120.0).layout
                 return header
-            default:
-                assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
-                return StoriesWithAvatarCollectionReusableView()
+            case .adds:
+                let header: DiscoveryFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
+                header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 120.0).layout
+                return header
             }
+        }
+        
+        collectionView.selectedContentAtIndexPath = { [weak self] viewModel, _ in
+            guard let self = self else { return }
+            self.collectionView.deleteItem(viewModel)
         }
     }
     
     override func updateUI() {
-        remote.$sectionFeedViewModels.sink { [weak self] in
-            let discoveryFeedSectionItems = [DiscoverFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: $0)]
-            self?.collectionView.applyInitialSnapshotWith(discoveryFeedSectionItems)
+        remote.$sectionFeedViewModels.sink { [weak self] models in
+            guard let self = self else { return }
+            let items = models.chunked(into: max(models.count / 2, 1))
+            self.collectionView.content {
+                SectionModel(sectionIdentifier: .popular, cellIdentifiers: items.last ?? [])
+            }
         }.store(in: &cancellables)
     }
 }
