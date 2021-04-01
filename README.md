@@ -22,6 +22,7 @@ Its main purpose is to build a project using some concepts from my personal
 [MarvelClient](https://github.com/jamesrochabrun/MarvelClient) a personal Swift Package that fetches data from Marvel API.
 - [X] Fetches data from [RSS Feed Generator](https://rss.itunes.apple.com/en-us/?country=ca) API's.
 - [X] Supports Dark mode.
+- [X] Supports insert/delete of sections and cell identifiers.
 
 # Technologies
 
@@ -40,63 +41,93 @@ Its main purpose is to build a project using some concepts from my personal
 
 ## Using Generics and Protocols to create Reusable UI
 
-The app Uses a Tab bar controller as main root, each of its tabs display a certain feed that follows the same pattern:
-
-1 - Create a Section Model, this object will represent a section in a collectionView. It must conform to `SectionIdentifierViewModel` e.g:
-
-```swift
-typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
-/// `GenericSectionIdentifierViewModel` is a generic object that avoids the creaton of a different class for every feed, it conforms to `SectionIdentifierViewModel`
-```
-
-2 - Sub Class `GenericFeedViewController` to create a view controller feed, the class looks like this:
+The app displays a feed of items from the RSS itunes API and uses the Marvel API to display content in headers.
+The app Uses a Tab bar controller as main root, each of its tabs display a view controller sub class of `GenericFeedViewController` the super class definition looks like this:
 
 ```swift
 class GenericFeedViewController<Content: SectionIdentifierViewModel, Remote: RemoteObservableObject>: ViewController {
 }
 ```
-It has two generic constraints:
+
+- This class inherits from `ViewController` which is in charge of the theming of the app.
+- This view controller contains a `DiffableCollectionView<SectionContentViewModel: SectionIdentifierViewModel>` view, which is the one that displays the items in a collectionview.
+- This class has two generic constraints, `RemoteObservableObject` which is an object that conforms to `ObservableObject` and its in charge of providing the updated content, and `SectionIdentifierViewModel` which is in charge of displaying the content.
+
+`SectionIdentifierViewModel` is a PAT that represents the structure of a section in a collectionview its definition looks like this...
 
 ```Swift
-/// 1 `SectionIdentifierViewModel` Represents a the declaration in a feed, it looks like this...
-
-protocol SectionIdentifierViewModel: AnyObject {
+protocol SectionIdentifierViewModel {
     
-    associatedtype SectionIdentifier: Hashable <- A Section in a collection view
-    associatedtype CellIdentifier: Hashable <- The object that will be displayed in a section
-    associatedtype CellType: ViewModelCellInjection <- A PAT that allows a cell be injected by a view model.
+    associatedtype SectionIdentifier: Hashable <- A section in a diffable Collection view.
+    associatedtype CellIdentifier: Hashable <- A model in a section.
     
     var sectionIdentifier: SectionIdentifier { get }
     var cellIdentifiers: [CellIdentifier] { get }
-    var cellIdentifierType: CellType.Type { get } 
 }
+``` 
 
-/// Note: By now we only support one type of cell for a collection view.
-/// Note2: By now we can use any kind of reusable view as header or footer.
-```
+`RemoteObservableObject` is a protocol that inherits from `ObservableObject` its definition looks like this...
 
-```swift 
-/// 2 `RemoteObservableObject` an object that conforms to `ObservableObject` and is responsible for fetching data, it looks like this...
+```swift
 protocol RemoteObservableObject : ObservableObject {
     init()
 }
-/// This allows to encapsulate the instantiation of a certain remote object inside a generic class.
 ```
 
-By using this two generic constraints we define the dependencies needed for a feed but also it let us create any kind of feed, lets see it in practice, this is how the home feed in the app looks like, less than 55 lines of code.
+## Crating a feed
+
+For Example, for the home feed view controller we will display a feed of items using the itunes music endpoint...
+
+1 - Create an instance that inherits from `GenericFeedViewController` and declare the types for the two generic constraints.
 
 ```swift
 /// A
-enum HomeFeedSectionIdentifier: String, CaseIterable {
-    case popular = "Popular"
+// MARK:- Home Feed Diffable Section Identifier
+enum HomeFeedSectionIdentifier {
+    case popular
+    case adds
 }
 
-/// B
-typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel, ArtworkCell>
+/// C
+final class HomeViewController: GenericFeedViewController<HomeViewController.SectionModel, ItunesRemote> {
+    
+    // MARK:- Section ViewModel
+    /// - Typealias that describes the structure of a section in the Home feed.
+    /// B
+    typealias SectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel>
+...
+}
+```
+- A) Define the section identifier, it can be anything as long it conforms to `Hashable`
+- B) Define the types of an object that conforms to `SectionIdentifierViewModel`, we can find a generic object in the repo that conforms to this protocol its definition looks like this...
+
+```swift
+struct GenericSectionIdentifierViewModel<SectionIdentifier: Hashable, CellIdentifier: Hashable>: SectionIdentifierViewModel {
+    /// The Hashable Section identifier in a Diffable CollectionView
+    public let sectionIdentifier: SectionIdentifier
+    /// The Hashable section items  in a Section in a  Diffable CollectionView
+    public var cellIdentifiers: [CellIdentifier]
+}
+```
+
+You can use it or create your own, the benefit of this approach is that you can reuse this type, it has 2 generic constraints and we need to fill those placeholders, with the types that we want to use, for example, for the `HomeViewController` we want `HomeFeedSectionIdentifier` as a section identifier and a `FeedItemViewModel` as a cell identifier.
+
+- C) Now that we have the type definition for the sections we can use it to define the types for the view controller, here we will use the section we defined in point B and also the `ItunesRemote` which provides different kind of data like apps, apple books, movies, podcasts etc.
+
+With the types defined we can now fetch the object from the remote, configure cells and supplementary views and display the data in the collection view, the full implementation of a simple feed looks like this...
+
+```swift
+/// A
+enum HomeFeedSectionIdentifier {
+    case popular 
+}
 
 /// C
-final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, ItunesRemote> {
+final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel.SectionModel, ItunesRemote> {
     
+    /// B
+    typealias SectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel>
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -107,16 +138,19 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
     }
     
     override func setUpUI() {
-    /// E
+    
+        /// E
+        collectionView.cellProvider { collectionView, indexPath, model in
+            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
+        }
+        /// F
         collectionView.assignHedearFooter { collectionView, model, kind, indexPath in
             switch model {
             case .popular:
-            /// F
-                collectionView.registerHeader(StoriesSnippetWithAvatarCollectionReusableView.self, kind: kind)
-                let header: StoriesSnippetWithAvatarCollectionReusableView = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
-                header.viewModel = model
-                header.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
-                return header
+            /// G
+                let reusableView: HomeFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
+                reusableView.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
+                return reusableView
             default:
                 assert(false, "Section identifier \(String(describing: model)) not implemented \(self)")
                 return UICollectionReusableView()
@@ -125,22 +159,27 @@ final class HomeViewController: GenericFeedViewController<HomeFeedSectionModel, 
     }
     
     override func updateUI() {
-        /// G
-        remote.$sectionFeedViewModels.sink { [weak self] in
-            let homeFeedSectionItems = [HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: $0)]
-            self?.collectionView.applyInitialSnapshotWith(homeFeedSectionItems)
+        /// H
+          remote.$sectionFeedViewModels.sink { [weak self] models in
+            guard let self = self else { return }
+            self.collectionView.content {
+            /// I
+                SectionModel(sectionIdentifier: .popular, cellIdentifiers: models)
+            }
         }.store(in: &cancellables)
     }
 }
 ```
 
 - A) Define the section identifier for a Diffable DataSource, it can be anything as long it conforms to `Hashable`
-- B) Define the Home section model, in this case `GenericSectionIdentifierViewModel` defines a <SectionIdentifier, CellIdentifier, CellType>
-- C) Subclass `GenericFeedViewController` and define the constraints, here it will use `HomeFeedSectionModel` as a section model, and the `ItunesRemote` object to fetch itunes feed data.
-- D) Call the remote fetch request, `ItunesRemote` uses the `ItunesClient` class that uses generics, protocols and meta types to avoid code duplication.
-- E) Here we define the headers, footers for the collection view, this must be defined in the layout level, means that we need to provide this implementation if our layout is defined to use headers or footers.
-- F) Use the section identifier to switch and provide a certain header or footer for a section.
-- G) Use the `Publisher` to update your UI.
+- B) Define the type that conforms to `SectionIdentifierViewModel` 
+- C) Subclass `GenericFeedViewController` and define the constraints, here it will use `HomeFeedSectionModel.SectionModel` as a section, and the `ItunesRemote` object to fetch itunes feed data.
+- D) Call the remote fetch request, `ItunesRemote` uses the `ItunesClient` class that uses generics, protocols and meta types to decode from apps to podcasts.
+- E) Here we define the cell, 
+- F) Here we define the headers, footers for the collection view, this will work based on the layout definition, if the layout asked for a footer the view returned here will be placed as a footer, to give an example.
+- G) Use the section identifier to switch and provide a certain header or footer for a section.
+- H) Use the `Publisher` to get the content for updating the UI.
+- I) DiffableCollectionView uses a function builder that expects `SectionModel` objects.
 
 For more about generic UI you can go to:
 
