@@ -1,5 +1,5 @@
 //
-//  FeedItemHeaderView.swift
+//  FeedItemAvatarView.swift
 //  SplitViewControllerTutorial
 //
 //  Created by james rochabrun on 4/4/20.
@@ -25,7 +25,7 @@ extension HorizontalFeedItemViewModel: Artwork {
     var thumbnailURL: String { "" }
 }
 
-final class FeedItemHeaderView: BaseXibView, ContentReusable {
+final class FeedItemAvatarView: BaseXibView, ContentReusable {
         
     @IBOutlet private var profileImageView: ImageViewLoader!
     @IBOutlet private var usernameLabel: Label!

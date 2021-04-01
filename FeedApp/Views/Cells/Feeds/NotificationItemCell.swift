@@ -10,8 +10,8 @@ import UIKit
 final class NotificationItemCell: CollectionViewCell, ViewModelCellConfiguration {
     
     // MARK:- UI
-    private lazy var feedItemHeaderView: FeedItemHeaderView = {
-        FeedItemHeaderView()
+    private lazy var feedItemHeaderView: FeedItemAvatarView = {
+        FeedItemAvatarView()
     }()
     
     // MARK:- Life Cycle

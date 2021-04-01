@@ -20,7 +20,7 @@
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bnr-Og-6uH">
                         <rect key="frame" x="0.0" y="0.0" width="261" height="333"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xBL-Ep-hjI" customClass="FeedItemHeaderView" customModule="FeedApp" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xBL-Ep-hjI" customClass="FeedItemAvatarView" customModule="FeedApp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="261" height="72"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>

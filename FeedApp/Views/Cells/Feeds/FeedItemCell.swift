@@ -10,7 +10,7 @@ import UIKit
 
 final class FeedItemCell: CollectionViewCell, ViewModelCellConfiguration {
     
-    @IBOutlet private var feedItemHeaderView: FeedItemHeaderView!
+    @IBOutlet private var feedItemHeaderView: FeedItemAvatarView!
     @IBOutlet private var imageViewLoader: ImageViewLoader!
 
     // MARK:- ViewModelCellConfiguration

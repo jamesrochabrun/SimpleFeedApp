@@ -10,7 +10,7 @@ import UIKit
 final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierViewModel>: UIView, UICollectionViewDelegate {
     
     // MARK:- UI
-    var collectionView: UICollectionView
+    private var collectionView: UICollectionView
     
     // MARK:- Type Aliases
     typealias SectionViewModelIdentifier = SectionContentViewModel.SectionIdentifier // represents a section in the data source
