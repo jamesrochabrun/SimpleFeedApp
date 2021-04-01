@@ -17,11 +17,11 @@ enum DiscoverFeedSectionIdentifier {
     case adds
 }
 
-final class DiscoverViewController: GenericFeedViewController<DiscoverViewController.DiscoverFeedSectionModel, ItunesRemote> {
+final class DiscoverViewController: GenericFeedViewController<DiscoverViewController.SectionModel, ItunesRemote> {
     
     // MARK:- Section ViewModel
     /// - Typealias that describes the structure of a section in the Discovery feed.
-    typealias DiscoverFeedSectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel>
+    typealias SectionModel = GenericSectionIdentifierViewModel<DiscoverFeedSectionIdentifier, FeedItemViewModel>
 
     // MARK:- Life Cycle
     override func viewDidLoad() {
@@ -51,6 +51,11 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverViewContro
                 return header
             }
         }
+        
+        collectionView.selectedContentAtIndexPath = { [weak self] viewModel, _ in
+            guard let self = self else { return }
+            self.collectionView.deleteItem(viewModel)
+        }
     }
     
     override func updateUI() {
@@ -58,7 +63,7 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverViewContro
             guard let self = self else { return }
             let items = models.chunked(into: max(models.count / 2, 1))
             self.collectionView.content {
-                DiscoverFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: items.last ?? [])
+                SectionModel(sectionIdentifier: .popular, cellIdentifiers: items.last ?? [])
             }
         }.store(in: &cancellables)
     }

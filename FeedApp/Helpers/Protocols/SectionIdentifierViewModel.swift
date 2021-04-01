@@ -10,7 +10,7 @@ import Foundation
 //class UICollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType> : NSObject where SectionIdentifierType : Hashable, ItemIdentifierType : Hashable
 
 /// PAT that defines the dependencies in a Section in a Deiffable DataSource
-protocol SectionIdentifierViewModel: Hashable {
+protocol SectionIdentifierViewModel {
     
     associatedtype SectionIdentifier: Hashable
     associatedtype CellIdentifier: Hashable

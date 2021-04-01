@@ -13,11 +13,11 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
     var collectionView: UICollectionView
     
     // MARK:- Type Aliases
-    typealias SectionViewModelIdentifier = SectionContentViewModel // represents a section in the data source
+    typealias SectionViewModelIdentifier = SectionContentViewModel.SectionIdentifier // represents a section in the data source
     typealias CellViewModelIdentifier = SectionContentViewModel.CellIdentifier // represents an item in a section
     
-    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier.SectionIdentifier?, String, IndexPath) -> UICollectionReusableView?
-    typealias CellProvider = (UICollectionView, IndexPath, SectionViewModelIdentifier.CellIdentifier) -> UICollectionViewCell
+    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> UICollectionReusableView?
+    typealias CellProvider = (UICollectionView, IndexPath, CellViewModelIdentifier) -> UICollectionViewCell
     
     typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
     typealias Snapshot = NSDiffableDataSourceSnapshot<SectionViewModelIdentifier, CellViewModelIdentifier>
@@ -30,7 +30,12 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
     private var currentSnapshot: Snapshot?
     
     // MARK:- Getters
-    var dataSourceSectionIdentifiers: [SectionContentViewModel] { dataSource?.snapshot().sectionIdentifiers ?? [] }
+    
+    /// returns the identifiers of all of the sections in the snapshot.
+    var dataSourceSectionIdentifiers: [SectionContentViewModel.SectionIdentifier] { dataSource?.snapshot().sectionIdentifiers ?? [] }
+    
+    /// returns the identifiers of all of the items in the snapshot.
+    var dataSourceFlatCellIdentifiers: [SectionContentViewModel.CellIdentifier] { dataSource?.snapshot().itemIdentifiers ?? [] }
     
     // MARK:- Life Cycle
     required init?(coder aDecoder: NSCoder) {
@@ -70,22 +75,22 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         let sectionItems = content()
         currentSnapshot = Snapshot()
         guard var currentSnapshot = currentSnapshot else { return }
-        currentSnapshot.appendSections(sectionItems)
-        sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0) }
-        dataSource?.apply(currentSnapshot, animatingDifferences: false) /// For a more responsive effect we set the `animatingDifferences` to false when app loads content 
+        currentSnapshot.appendSections(sectionItems.map { $0.sectionIdentifier })
+        sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
+        dataSource?.apply(currentSnapshot, animatingDifferences: false) /// For a more responsive effect we set the `animatingDifferences` to false when app loads content
     }
     
     /// Source of supplementary views that will be displayed in the `collectionView`
-    /// - parameter HeaderFooterProvider: closure of type `(UICollectionView, SectionViewModelIdentifier.SectionIdentifier?, String, IndexPath) -> UICollectionReusableView?`
+    /// - parameter HeaderFooterProvider: closure of type `(UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> UICollectionReusableView?`
     func supplementaryViewProvider(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
         dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
             let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section]
-            return headerFooterProvider(collectionView, sectionIdentifier?.sectionIdentifier, kind, indexPath)
+            return headerFooterProvider(collectionView, sectionIdentifier, kind, indexPath)
         }
     }
     
     /// Source of cells that will be displayed in the `collectionView`
-    /// - parameter cellProvider: closure of type `(UICollectionView, IndexPath, SectionViewModelIdentifier.CellIdentifier) -> UICollectionViewCell`
+    /// - parameter cellProvider: closure of type `(UICollectionView, IndexPath, CellViewModelIdentifier) -> UICollectionViewCell`
     func cellProvider(_ cellProvider: @escaping CellProvider)  {
         dataSource = DiffDataSource(collectionView: collectionView) { collectionView, indexPath, model in
             let cell = cellProvider(collectionView, indexPath, model)
@@ -99,9 +104,9 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         selectedContentAtIndexPath?(viewModel, indexPath)
     }
     
-    // MARK:- Hellpers
+    // MARK:- Helpers
     
-    /// Scrolls to a certain   `IndexPath`
+    /// Scrolls to a certain  `IndexPath`animated or not.
     /// - parameter indexPath: The indexPath to scroll to.
     /// - parameter animated: `Bool` if `true` the scrolling will be performed with `transitionCrossDissolve` animation with duration of `0.2`
     func scrollTo(_ indexPath: IndexPath, animated: Bool = true) {
@@ -126,35 +131,27 @@ extension DiffableCollectionView {
     /// Inserts sections in to the snapshot, after a defined section
     /// - parameter sections: The new sections to be inserted
     /// - parameter section: The section where new sections will be inserted after.
-    func insertSections(_ sections: [SectionContentViewModel], after section: SectionContentViewModel.SectionIdentifier) {
-        guard var snapshot = dataSource?.snapshot(),
-              let section = snapshot.sectionIdentifiers.first(where: { $0.sectionIdentifier == section })
-        else { return }
+    func insertSections(_ sections: [SectionContentViewModel.SectionIdentifier], after section: SectionContentViewModel.SectionIdentifier) {
+        guard var snapshot = dataSource?.snapshot() else { return }
         snapshot.insertSections(sections, afterSection: section)
-        sections.forEach { snapshot.appendItems($0.cellIdentifiers, toSection: $0) }
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
     /// Inserts sections in to the snapshot, before a defined section
     /// - parameter sections: The new sections to be inserted
     /// - parameter section: The section where new sections will be inserted before.
-    func insertSections(_ sections: [SectionContentViewModel], before section: SectionContentViewModel.SectionIdentifier) {
-        guard var snapshot = dataSource?.snapshot(),
-              let section = snapshot.sectionIdentifiers.first(where: { $0.sectionIdentifier == section })
-        else { return }
+    func insertSections(_ sections: [SectionContentViewModel.SectionIdentifier], before section: SectionContentViewModel.SectionIdentifier) {
+        guard var snapshot = dataSource?.snapshot() else { return }
         snapshot.insertSections(sections, beforeSection: section)
-        sections.forEach { snapshot.appendItems($0.cellIdentifiers, toSection: $0) }
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
     /// Deletes a section identifier from the snapshot using its hash value
     /// - parameter sectionIdentifier: The section identifier of the section that will be deleted
     func deleteSection(_ sectionIdentifier: SectionContentViewModel.SectionIdentifier) {
-        guard var snap = dataSource?.snapshot(),
-              let sectionToDelete = snap.sectionIdentifiers.first(where: { $0.sectionIdentifier == sectionIdentifier })
-        else { return }
-        snap.deleteSections([sectionToDelete])
-        dataSource?.apply(snap, animatingDifferences: true)
+        guard var snapshot = dataSource?.snapshot() else { return }
+        snapshot.deleteSections([sectionIdentifier])
+        dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
     /// Deletes a cell identifier from the snapshot using its hash value
@@ -166,10 +163,8 @@ extension DiffableCollectionView {
     }
     
     func insertItem(_ item: SectionContentViewModel.CellIdentifier, at section: SectionContentViewModel.SectionIdentifier) {
-        guard var snapshot = dataSource?.snapshot(),
-              let sectionToInsert = snapshot.sectionIdentifiers.first(where: { $0.sectionIdentifier == section })
-        else { return }
-        snapshot.appendItems([item], toSection: sectionToInsert)
+        guard var snapshot = dataSource?.snapshot() else { return }
+        snapshot.appendItems([item], toSection: section)
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
 }

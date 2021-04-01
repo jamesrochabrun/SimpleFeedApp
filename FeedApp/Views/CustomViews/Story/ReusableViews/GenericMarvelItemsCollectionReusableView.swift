@@ -15,8 +15,8 @@ class GenericMarvelItemsCollectionReusableView<Content: SectionIdentifierViewMod
 
     // MARK:- Combine
     var marvelProvider = MarvelRemote()
-    var cancellable: AnyCancellable?
-    
+    var cancellables: Set<AnyCancellable> = []
+
     // MARK:- UI
     var layout: UICollectionViewLayout = UICollectionViewFlowLayout() {
         didSet {

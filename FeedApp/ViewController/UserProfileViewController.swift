@@ -18,15 +18,15 @@ enum UserProfileFeedIdentifier: String, CaseIterable {
 // MARK:- Protocol
 protocol UserProfileViewControllerDelegate: AnyObject {
     func postSelectedAt(_ indexPath: IndexPath)
-    func updateFeed(with feed: [[FeedItemViewModel]]) // updates the current instantiated controller. // TODO:- consider using combine.
+    func updateFeed(with feed: [FeedItemViewModel]) // updates the current instantiated controller. // TODO:- consider using combine and using a data base layer to store feed urls.
 }
 
-// MARK:- Section ViewModel
-/// - Typealias that describes the structure of a section in the User Profile  feed.
-typealias UserProfileSectionModel = GenericSectionIdentifierViewModel<UserProfileFeedIdentifier, FeedItemViewModel>
-
-final class UserProfileViewController: GenericFeedViewController<UserProfileSectionModel, ItunesRemote> {
+final class UserProfileViewController: GenericFeedViewController<UserProfileViewController.SectionModel, ItunesRemote> {
     
+    // MARK:- Section ViewModel
+    /// - Typealias that describes the structure of a section in the User Profile  feed.
+    typealias SectionModel = GenericSectionIdentifierViewModel<UserProfileFeedIdentifier, FeedItemViewModel>
+
     lazy private var detailFeedViewController: FeedViewController = {
         let feedItems = userFeedItems
         let detailFeedViewController = FeedViewController(feed: feedItems)
@@ -35,7 +35,7 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
     }()
     
     /// - returns: an array of arrays of `FeedItemViewModel` objects
-    private var userFeedItems: [[FeedItemViewModel]] { collectionView.dataSourceSectionIdentifiers.map { $0.cellIdentifiers } }
+    private var userFeedItems: [FeedItemViewModel] { collectionView.dataSourceFlatCellIdentifiers }
     
     weak var delegate: UserProfileViewControllerDelegate?
     
@@ -75,28 +75,27 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileSect
         collectionView.selectedContentAtIndexPath = { [weak self] viewModel, indexPath in
             guard let self = self else { return }
             guard let secondaryContentNavigationController = self.splitViewController?.secondaryViewController as? NavigationController,
-                  let secondaryContentViewController = secondaryContentNavigationController.topViewController as? FeedViewController else {
+                  let _ = secondaryContentNavigationController.topViewController as? FeedViewController else {
                 /// Embeds a `FeedViewController` in a `NavigationController` and shows it if was not shown already.
                 let detailNavigationController = NavigationController(rootViewController: self.detailFeedViewController)
                 self.splitViewController?.showDetailInNavigationControllerIfNeeded(detailNavigationController, sender: self)
                 /// Scrolls the feed to the selected indexpath item.
+                self.delegate?.updateFeed(with: self.userFeedItems)
                 self.delegate?.postSelectedAt(indexPath)
                 return
             }
-            /// Optimization -> Shows the already instantiated `FeedViewController`
-            self.splitViewController?.showDetailInNavigationControllerIfNeeded(secondaryContentViewController, sender: self)
+            
             self.delegate?.updateFeed(with: self.userFeedItems)
             self.delegate?.postSelectedAt(indexPath)
         }
     }
     
     override func updateUI() {
-        
         remote.$sectionFeedViewModels.sink { [weak self] models in
             guard let self = self else { return }
             self.collectionView.content {
-                UserProfileSectionModel(sectionIdentifier: .headerInfo, cellIdentifiers: [])
-                UserProfileSectionModel(sectionIdentifier: .mainContent, cellIdentifiers: models)
+                SectionModel(sectionIdentifier: .headerInfo, cellIdentifiers: [])
+                SectionModel(sectionIdentifier: .mainContent, cellIdentifiers: models)
             }
         }.store(in: &cancellables)
     }

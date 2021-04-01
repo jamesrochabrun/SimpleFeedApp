@@ -13,12 +13,12 @@ enum UserProfileHeaderSectionIdentifier {
     case recent
 }
 
-// MARK:- Section ViewModel
-/// - Typealias that describes the structure of a section in the Stories feed.
-typealias UserProfileSupplementaryViewModel = GenericSectionIdentifierViewModel<UserProfileHeaderSectionIdentifier, CharacterViewModel>
-
-final class UserProfileFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<UserProfileSupplementaryViewModel, UserProfileFeedIdentifier>  {
+final class UserProfileFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<UserProfileFeedSupplementaryView.SectionModel, UserProfileFeedIdentifier>  {
     
+    // MARK:- Section ViewModel
+    /// - Typealias that describes the structure of a section in the Stories feed.
+    typealias SectionModel = GenericSectionIdentifierViewModel<UserProfileHeaderSectionIdentifier, CharacterViewModel>
+
     override func initialize() {
         super.initialize()
         marvelProvider.fetchCharacters()
@@ -30,11 +30,11 @@ final class UserProfileFeedSupplementaryView: GenericMarvelItemsCollectionReusab
     
     override func setupWith(_ viewModel: UserProfileFeedIdentifier) {
         // Note: Here we can also customize this collection view with headers, footer, accessories based on the `DiscoverFeedSectionIdentifier` case.
-        cancellable = marvelProvider.$characterViewModels.sink { [weak self] models in
+        marvelProvider.$characterViewModels.sink { [weak self] models in
             guard let self = self else { return }
             self.collectionView.content {
-                UserProfileSupplementaryViewModel(sectionIdentifier: .recent, cellIdentifiers: models)
+                SectionModel(sectionIdentifier: .recent, cellIdentifiers: models)
             }
-        }
+        }.store(in: &cancellables)
     }
 }

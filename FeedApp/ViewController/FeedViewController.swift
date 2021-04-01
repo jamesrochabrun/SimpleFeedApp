@@ -17,8 +17,14 @@ enum FeedSectionIdentifier: String {
 final class FeedViewController: ViewController {
     
     // MARK:- Data injection
-    private var feed: [[FeedItemViewModel]] = []
-    private var selectedIndexPath: IndexPath = IndexPath(item: 0, section: 0)
+    private var flatCellidentifiers: [FeedItemViewModel] = []
+    private var selectedIndexPath: IndexPath = IndexPath(item: 0, section: 0) {
+        didSet {
+            loadViewIfNeeded()
+            let animated = traitCollection.isRegularWidthRegularHeight
+            collectionView.scrollTo(selectedIndexPath, animated: animated)
+        }
+    }
 
     // MARK:- Section ViewModel
     private typealias FeedSectionModel = GenericSectionIdentifierViewModel<FeedSectionIdentifier, FeedItemViewModel>
@@ -32,9 +38,9 @@ final class FeedViewController: ViewController {
     }()
         
     // MARK:- Life Cycle
-    convenience init(feed: [[FeedItemViewModel]]) {
+    convenience init(feed: [FeedItemViewModel]) {
         self.init()
-        self.feed = feed
+        self.flatCellidentifiers = feed
     }
     
     override func viewDidLoad() {
@@ -42,17 +48,6 @@ final class FeedViewController: ViewController {
         setupNavigationItems()
         setUpUI()
         updateUI()
-    }
-    
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        updateUI()  /// TODO start making changes here only if values are nort the same !!!!!!!!
-        let animated = traitCollection.isRegularWidthRegularHeight
-        collectionView.scrollTo(selectedIndexPath, animated: animated)
     }
     
     private func setupNavigationItems() {
@@ -83,8 +78,6 @@ final class FeedViewController: ViewController {
     }
     
     private func updateUI() {
-        
-        let flatCellidentifiers = feed.reduce([], +) /// Making it flat to display just a list of items without any kind of section separation.
         collectionView.content {
             FeedSectionModel(sectionIdentifier: .recent, cellIdentifiers: flatCellidentifiers)
         }
@@ -95,16 +88,15 @@ final class FeedViewController: ViewController {
 extension FeedViewController: UserProfileViewControllerDelegate {
     
     func postSelectedAt(_ indexPath: IndexPath) {
-        /// As result of flatting the array we need to
+        /// As result of flatting the array we need to convert the indexPath section to 0.
         selectedIndexPath = .init(row: indexPath.item, section: 0)
     }
     
-    func updateFeed(with feed: [[FeedItemViewModel]]) {
-        
-        if self.feed == feed {
-            return
-        }
-        self.feed = feed
+    func updateFeed(with feed: [FeedItemViewModel]) {
+        // no need to update UI if no changes, consider using a set later, but this will be removed when using a better way to sync content between controllers
+        guard flatCellidentifiers != feed else { return }
+        flatCellidentifiers = feed
+        updateUI()
     }
 }
 

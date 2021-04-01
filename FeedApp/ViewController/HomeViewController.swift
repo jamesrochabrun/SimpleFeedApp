@@ -13,16 +13,33 @@ import MarvelClient
 // MARK:- Home Feed Diffable Section Identifier
 enum HomeFeedSectionIdentifier {
     case popular
+    case adds
 }
 
-final class HomeViewController: GenericFeedViewController<HomeViewController.HomeFeedSectionModel, ItunesRemote> {
+final class HomeViewController: GenericFeedViewController<HomeViewController.SectionModel, ItunesRemote> {
     
     // MARK:- Section ViewModel
     /// - Typealias that describes the structure of a section in the Home feed.
-    typealias HomeFeedSectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel>
+    typealias SectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel>
 
+    private lazy var leftBarButtonItem: UIBarButtonItem = {
+        let leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(toggleAddsHeaderDisplay))
+        leftBarButtonItem.tintColor = Theme.buttonTint.color
+        return leftBarButtonItem
+    }()
+    
+    private var isAddSectionInserted: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = leftBarButtonItem
+    }
+    
+    @objc
+    private func toggleAddsHeaderDisplay() {
+        isAddSectionInserted = !isAddSectionInserted
+        leftBarButtonItem.image = UIImage(systemName: isAddSectionInserted ? "minus" : "plus")
+        isAddSectionInserted ? collectionView.insertSections([.adds], before: .popular) : collectionView.deleteSection(.adds)
     }
     
     override func fetchData() {
@@ -42,6 +59,10 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Hom
                 let reusableView: HomeFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
                 reusableView.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
                 return reusableView
+            case .adds:
+                let reusableView: HomeFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
+                reusableView.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
+                return reusableView
             }
         }
     }
@@ -51,7 +72,7 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Hom
         remote.$sectionFeedViewModels.sink { [weak self] models in
             guard let self = self else { return }
             self.collectionView.content {
-                HomeFeedSectionModel(sectionIdentifier: .popular, cellIdentifiers: models)
+                SectionModel(sectionIdentifier: .popular, cellIdentifiers: models)
             }
         }.store(in: &cancellables)
     }

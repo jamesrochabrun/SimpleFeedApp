@@ -24,9 +24,9 @@ final class StorySnippeCell: CollectionViewCell, ViewModelCellConfiguration {
     }
     
     // MARK:- ViewModelCellConfiguration
-     func configureCell(with viewModel: ComicViewModel) {
-        let regularURL = viewModel.artwork.imagePathFor(variant: .portraitIncredible)
-        let lowResURL = viewModel.artwork.imagePathFor(variant: .portraitMedium)
+     func configureCell(with viewModel: ArtworkViewModel) {
+        let regularURL = viewModel.imagePathFor(variant: .portraitIncredible)
+        let lowResURL = viewModel.imagePathFor(variant: .portraitMedium)
         let placeholder = UIImage(named: "sparkles")
         imageViewLoader.load(regularURL: regularURL, lowResURL: lowResURL, placeholder: placeholder)
     }
