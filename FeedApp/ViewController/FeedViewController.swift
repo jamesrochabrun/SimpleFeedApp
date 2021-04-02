@@ -34,7 +34,7 @@ final class FeedViewController: ViewController {
     
     // MARK:- UI
     private lazy var collectionView: CollectionView = {
-        .init(layout: UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: splitViewController?.displayMode ?? .allVisible))
+        .init(layout: UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: splitViewController?.displayMode ?? .allVisible, traitCollection: traitCollection))
     }()
         
     // MARK:- Life Cycle
@@ -53,6 +53,12 @@ final class FeedViewController: ViewController {
     private func setupNavigationItems() {
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.isDifferentToPrevious(previousTraitCollection) else { return }
+        collectionView.overrideLayout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: splitViewController?.displayMode ?? .allVisible, traitCollection: traitCollection)
     }
     
     private func setUpUI() {
@@ -107,6 +113,6 @@ extension FeedViewController: DisplayModeUpdatable {
     }
     
     func displayModeWillChangeTo(_ displayMode: UISplitViewController.DisplayMode) {
-        collectionView.overrideLayout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: displayMode)
+        collectionView.overrideLayout = UICollectionViewCompositionalLayout.adaptiveFeedLayout(displayMode: displayMode, traitCollection: traitCollection)
     }
 }

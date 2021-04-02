@@ -184,9 +184,9 @@ extension UICollectionViewCompositionalLayout {
     }
     
     /// Adap
-    static func adaptiveFeedLayout(displayMode:  UISplitViewController.DisplayMode) -> UICollectionViewLayout {
+    static func adaptiveFeedLayout(displayMode:  UISplitViewController.DisplayMode, traitCollection: UITraitCollection) -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            let estimatedSize: NSCollectionLayoutDimension = displayMode == .allVisible ? .estimated(450) : .estimated(120)
+            let estimatedSize: NSCollectionLayoutDimension = displayMode == .allVisible || traitCollection.isRegularWidthRegularHeight ? .estimated(450) : .estimated(120)
             return .adaptiveFeedLayoutSection(displayMode: displayMode, heightGroupDimension: estimatedSize, headerHeightDimension: .estimated(100))
         }
     }

@@ -74,10 +74,12 @@ extension SplitViewController: UISplitViewControllerDelegate {
      - Remark: Called when App expands from `CompactWidth` to `RegularWidth` in a mulittasking enviromment.
      */
     func splitViewController(_ splitViewController: UISplitViewController, separateSecondaryFrom primaryViewController: UIViewController) -> UIViewController? {
+        /// "resets the primary controller"
         if let masterAsNavigation = primaryViewController as? UINavigationController,
             let masterFirstChild = masterAsNavigation.viewControllers.first {
             masterAsNavigation.setViewControllers([masterFirstChild], animated: false)
         }
+        // "returns the last shown detail controller" (this is more important for iOS 12, for above that 14 you can return nil.)
         guard let masterAsNavigation = primaryViewController as? UINavigationController,
             let lastShownDetailNavigationController = masterAsNavigation.viewControllers.last as? UINavigationController,
             let lastShownDetailContentViewController = lastShownDetailNavigationController.viewControllers.first else { return nil }

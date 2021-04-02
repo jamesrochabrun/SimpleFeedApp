@@ -15,7 +15,7 @@ enum StoriesSnippetSectionIdentifier {
     case past
 }
 
-final class HomeFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<HomeFeedSupplementaryView.SectionModel, HomeFeedSectionIdentifier>  {
+final class HomeFeedSupplementaryView: GenericFeedCollectionReusableView<HomeFeedSupplementaryView.SectionModel, MarvelRemote, HomeFeedSectionIdentifier>  {
     
     // MARK:- Section ViewModel
     /// - Typealias that describes the structure of a section in the Stories Snippet feed.
@@ -23,6 +23,7 @@ final class HomeFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<
     
     override func initialize() {
         super.initialize()
+        layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
         marvelProvider.fetchComics()
         marvelProvider.fetchSeries()
         collectionView.cellProvider { collectionView, indexPath, model in

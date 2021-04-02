@@ -13,7 +13,7 @@ enum UserProfileHeaderSectionIdentifier {
     case recent
 }
 
-final class UserProfileFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<UserProfileFeedSupplementaryView.SectionModel, UserProfileFeedIdentifier>  {
+final class UserProfileFeedSupplementaryView: GenericFeedCollectionReusableView<UserProfileFeedSupplementaryView.SectionModel, MarvelRemote, UserProfileFeedIdentifier>  {
     
     // MARK:- Section ViewModel
     /// - Typealias that describes the structure of a section in the Stories feed.

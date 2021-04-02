@@ -39,7 +39,7 @@
 		7B5E6C3126083D4000C62974 /* FeedItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */; };
 		7B5E6C3626083D7F00C62974 /* IdentifiableHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */; };
 		7B5E6C4C26085E8A00C62974 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */; };
-		7B5E6C57260861C600C62974 /* GenericMarvelItemsCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C56260861C600C62974 /* GenericMarvelItemsCollectionReusableView.swift */; };
+		7B5E6C57260861C600C62974 /* GenericFeedCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C56260861C600C62974 /* GenericFeedCollectionReusableView.swift */; };
 		7B5E6C6726092EBD00C62974 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 7B5E6C6626092EBD00C62974 /* SDWebImage */; };
 		7B5E6C6926092EBD00C62974 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7B5E6C6826092EBD00C62974 /* SDWebImageMapKit */; };
 		7B8CD4002605C06E008BAEB9 /* UITraitCollection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD3FF2605C06E008BAEB9 /* UITraitCollection+Extension.swift */; };
@@ -133,7 +133,7 @@
 		7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemViewModel.swift; sourceTree = "<group>"; };
 		7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableHashable.swift; sourceTree = "<group>"; };
 		7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
-		7B5E6C56260861C600C62974 /* GenericMarvelItemsCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericMarvelItemsCollectionReusableView.swift; sourceTree = "<group>"; };
+		7B5E6C56260861C600C62974 /* GenericFeedCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericFeedCollectionReusableView.swift; sourceTree = "<group>"; };
 		7B8CD3FF2605C06E008BAEB9 /* UITraitCollection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+Extension.swift"; sourceTree = "<group>"; };
 		7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISplitViewController+Extension.swift"; sourceTree = "<group>"; };
 		7B8CD4032605CE0D008BAEB9 /* StoryAvatarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryAvatarViewCell.swift; sourceTree = "<group>"; };
@@ -359,7 +359,7 @@
 		7B8CD4072606B220008BAEB9 /* ReusableViews */ = {
 			isa = PBXGroup;
 			children = (
-				7B5E6C56260861C600C62974 /* GenericMarvelItemsCollectionReusableView.swift */,
+				7B5E6C56260861C600C62974 /* GenericFeedCollectionReusableView.swift */,
 				7B8CD4052606B132008BAEB9 /* HomeFeedSupplementaryView.swift */,
 				7B15732D26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift */,
 				7B292AB02612C3710052BA22 /* UserProfileFeedSupplementaryView.swift */,
@@ -695,7 +695,7 @@
 				7B8CD41B260713C7008BAEB9 /* FeedViewController.swift in Sources */,
 				7B8CD43D26080E81008BAEB9 /* BaseXibView.swift in Sources */,
 				7B292AA026095A420052BA22 /* GenericSectionIdentifierViewModel.swift in Sources */,
-				7B5E6C57260861C600C62974 /* GenericMarvelItemsCollectionReusableView.swift in Sources */,
+				7B5E6C57260861C600C62974 /* GenericFeedCollectionReusableView.swift in Sources */,
 				7B5E6C3626083D7F00C62974 /* IdentifiableHashable.swift in Sources */,
 				7BA9BC2025FE9193006E1C4F /* NavigationController.swift in Sources */,
 				7B9223222605BB6A006B7C51 /* AvatarView.swift in Sources */,

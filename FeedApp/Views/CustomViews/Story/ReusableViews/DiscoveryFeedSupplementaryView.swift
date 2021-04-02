@@ -15,7 +15,7 @@ enum UserStoriesSectionIdentifier {
     case everyone
 }
 
-final class DiscoveryFeedSupplementaryView: GenericMarvelItemsCollectionReusableView<DiscoveryFeedSupplementaryView.SectionModel, DiscoverFeedSectionIdentifier>  {
+final class DiscoveryFeedSupplementaryView: GenericFeedCollectionReusableView<DiscoveryFeedSupplementaryView.SectionModel, MarvelRemote, DiscoverFeedSectionIdentifier>  {
     
     // MARK:- Section ViewModel
     /// - Typealias that describes the structure of a section in the Stories feed.

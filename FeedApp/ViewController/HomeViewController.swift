@@ -55,14 +55,8 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Sec
         collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
             guard let model = model else { return nil }
             switch model {
-            case .popular:
-                let reusableView: HomeFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
-                reusableView.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
-                return reusableView
-            case .adds:
-                let reusableView: HomeFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)
-                reusableView.layout = HorizontalLayoutKind.horizontalStorySnippetLayout.layout
-                return reusableView
+            case .popular, .adds:
+                return collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath) as HomeFeedSupplementaryView
             }
         }
     }
@@ -77,4 +71,3 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Sec
         }.store(in: &cancellables)
     }
 }
-
