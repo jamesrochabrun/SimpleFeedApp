@@ -10,7 +10,7 @@ import UIKit
 /// PAT that allows inject a certain view model to a UIVIew
 protocol ViewModelViewConfiguration: UIView {
     associatedtype ViewModel
-    var viewModel: ViewModel? { get set }
+    func configureView(with viewModel: ViewModel)
 }
 
 /// PAT that allows inject a certain view model to a UICollectionViewCell

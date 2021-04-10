@@ -79,11 +79,12 @@ extension SplitViewController: UISplitViewControllerDelegate {
             let masterFirstChild = masterAsNavigation.viewControllers.first {
             masterAsNavigation.setViewControllers([masterFirstChild], animated: false)
         }
+        return nil
         // "returns the last shown detail controller" (this is more important for iOS 12, for above that 14 you can return nil.)
-        guard let masterAsNavigation = primaryViewController as? UINavigationController,
-            let lastShownDetailNavigationController = masterAsNavigation.viewControllers.last as? UINavigationController,
-            let lastShownDetailContentViewController = lastShownDetailNavigationController.viewControllers.first else { return nil }
-        return type(of: lastShownDetailNavigationController).init(rootViewController: lastShownDetailContentViewController)
+//        guard let masterAsNavigation = primaryViewController as? UINavigationController,
+//            let lastShownDetailNavigationController = masterAsNavigation.viewControllers.last as? UINavigationController,
+//            let lastShownDetailContentViewController = lastShownDetailNavigationController.viewControllers.first else { return nil }
+//        return type(of: lastShownDetailNavigationController).init(rootViewController: lastShownDetailContentViewController)
     }
     
     /**

@@ -20,6 +20,12 @@ extension CharacterViewModel: Artwork {
     public var thumbnailURL: String { artwork?.imagePathFor(variant: .squareStandardSmall) ?? "" }
 }
 
+extension SerieViewModel: Artwork {
+    
+    public var imageURL: String { artwork.imagePathFor(variant: .squareStandardFantastic) }
+    public var thumbnailURL: String { artwork.imagePathFor(variant: .squareStandardSmall) }
+}
+
 final class MarvelRemote: ObservableObject {
 
     private let service = MarvelService(privateKey: "6905a8e2fb2033fdb10eea66645116669f1c4f04", publicKey: "27d25dbafd3ff80a9d448a19c11ace4d")

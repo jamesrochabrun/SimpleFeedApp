@@ -77,6 +77,7 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
         guard var currentSnapshot = currentSnapshot else { return }
         currentSnapshot.appendSections(sectionItems.map { $0.sectionIdentifier })
         sectionItems.forEach { currentSnapshot.appendItems($0.cellIdentifiers, toSection: $0.sectionIdentifier) }
+        self.currentSnapshot = currentSnapshot
         dataSource?.apply(currentSnapshot, animatingDifferences: false) /// For a more responsive effect we set the `animatingDifferences` to false when app loads content
     }
     
@@ -134,6 +135,7 @@ extension DiffableCollectionView {
     func insertSections(_ sections: [SectionContentViewModel.SectionIdentifier], after section: SectionContentViewModel.SectionIdentifier) {
         guard var snapshot = dataSource?.snapshot() else { return }
         snapshot.insertSections(sections, afterSection: section)
+        // currentSnapshot = snapshot
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
@@ -143,6 +145,7 @@ extension DiffableCollectionView {
     func insertSections(_ sections: [SectionContentViewModel.SectionIdentifier], before section: SectionContentViewModel.SectionIdentifier) {
         guard var snapshot = dataSource?.snapshot() else { return }
         snapshot.insertSections(sections, beforeSection: section)
+     //   currentSnapshot = snapshot
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
@@ -151,26 +154,57 @@ extension DiffableCollectionView {
     func deleteSection(_ sectionIdentifier: SectionContentViewModel.SectionIdentifier) {
         guard var snapshot = dataSource?.snapshot() else { return }
         snapshot.deleteSections([sectionIdentifier])
+  //      currentSnapshot = snapshot
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
     /// Deletes a cell identifier from the snapshot using its hash value
     /// - parameter item: The item identifier  that will be deleted
     func deleteItem(_ item: SectionContentViewModel.CellIdentifier) {
-        guard var snapshot = dataSource?.snapshot() else { return }
+        guard var snapshot = dataSource?.snapshot()  else { return }
         snapshot.deleteItems([item])
+        // When using filter actions we have to keep in sync 2 snapshots.
+        // - One can be the new filtered snaphot
+        // - The second is the `currentSnaphot`
+        currentSnapshot?.deleteItems([item])
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
     func insertItem(_ item: SectionContentViewModel.CellIdentifier, at section: SectionContentViewModel.SectionIdentifier) {
         guard var snapshot = dataSource?.snapshot() else { return }
         snapshot.appendItems([item], toSection: section)
+  //      currentSnapshot = snapshot
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
 }
 
+extension DiffableCollectionView {
+
+    func searchForKey(_ key: KeyPath<CellViewModelIdentifier, String>, isIncluded: (String) -> Bool)  {
+       
+        guard let localCurrentSnapshot = currentSnapshot else { return }
+        var filteredSnapshot = Snapshot()
+        filteredSnapshot.appendSections(localCurrentSnapshot.sectionIdentifiers)
+        for sectionIdentifier in localCurrentSnapshot.sectionIdentifiers {
+            let items = localCurrentSnapshot.itemIdentifiers(inSection: sectionIdentifier).filter {  isIncluded($0[keyPath: key]) }
+            filteredSnapshot.appendItems(items, toSection: sectionIdentifier)
+        }
+        dataSource?.apply(filteredSnapshot, animatingDifferences: false)
+    }
+}
 // MARK:- Function Builder
-@_functionBuilder
+@resultBuilder
 struct DiffableDataSourceBuilder<Section: SectionIdentifierViewModel>   {
     static func buildBlock(_ sections: Section...) -> [Section] { sections }
+}
+
+extension String {
+    /// Returns `true` if this string contains the provided substring,
+    /// or if the substring is empty. Otherwise, returns `false`.
+    ///
+    /// - Parameter substring: The substring to search for within
+    ///   this string.
+    func hasSubstring(_ substring: String) -> Bool {
+        substring.isEmpty || contains(substring)
+    }
 }

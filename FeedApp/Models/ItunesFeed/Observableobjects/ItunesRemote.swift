@@ -14,13 +14,23 @@ final class ItunesRemote: ObservableObject {
     private var cancellable: AnyCancellable?
 
     @Published var sectionFeedViewModels: [FeedItemViewModel] = []
+    @Published var artists: [ArtistViewModel] = []
 
     func fetch(_ mediaType: MediaType) {
         cancellable = service.fetch(Feed<ItunesResources<FeedItem>>.self, mediaType: mediaType).sink(receiveCompletion: { value in
         }, receiveValue: { [weak self] resource in
             guard let self = self else { return }
-            self.sectionFeedViewModels = resource.feed?.results?.compactMap { FeedItemViewModel(model: $0) } ?? []
+            self.sectionFeedViewModels = resource.feed?.results.compactMap { FeedItemViewModel(model: $0) } ?? []
          })
+    }
+    
+    func searchWithTerm(_ term: String) {
+        cancellable = service.searcForArtistWithTerm(ItunesSearchResult<Artist>.self, term).sink(receiveCompletion: { value in
+            dump(value)
+        }, receiveValue: { [weak self] resource in
+            guard let self = self else { return }
+            self.artists = resource.results.map { ArtistViewModel(artist: $0) }
+        })
     }
 }
 

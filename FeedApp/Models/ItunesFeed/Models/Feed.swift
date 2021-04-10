@@ -120,26 +120,26 @@ struct Author: Decodable {
 
 protocol ItunesResource: Decodable {
     associatedtype Model
-    var title: String? { get }
-    var id: String? { get }
-    var author: Author? { get }
-    var copyright: String? { get }
-    var country: String? { get }
-    var icon: String? { get }
-    var updated: String? { get }
-    var results: [Model]? { get }
+    var title: String { get }
+    var id: String { get }
+    var author: Author { get }
+    var copyright: String { get }
+    var country: String { get }
+    var icon: String { get }
+    var updated: String { get }
+    var results: [Model] { get }
 }
 
 struct ItunesResources<Model: Decodable>: ItunesResource {
     
-    public let title: String?
-    public let id: String?
-    public let author: Author?
-    public let copyright: String?
-    public let country: String?
-    public let icon: String?
-    public let updated: String?
-    public let results: [Model]?
+    public let title: String
+    public let id: String
+    public let author: Author
+    public let copyright: String
+    public let country: String
+    public let icon: String
+    public let updated: String
+    public let results: [Model]
 }
 
 protocol FeedProtocol: Decodable {

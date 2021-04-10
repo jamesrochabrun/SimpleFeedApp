@@ -25,6 +25,8 @@ enum TabBarViewModel: String, CaseIterable {
     case home
     case discover
     case profile
+    case marvel
+    case search
     
     /// Return:- the tab bar icon
     var icon: UIImage? {
@@ -32,6 +34,8 @@ enum TabBarViewModel: String, CaseIterable {
         case .home: return UIImage(systemName: "house.fill")
         case .discover: return UIImage(systemName: "magnifyingglass")
         case .profile: return UIImage(systemName: "person")
+        case .marvel: return UIImage(systemName: "scribble.variable")
+        case .search: return UIImage(systemName: "plus.magnifyingglass")
         }
     }
     /// Return:- the tab bar title
@@ -40,12 +44,11 @@ enum TabBarViewModel: String, CaseIterable {
     /// Return:-  the master/primary `topViewController`,  it instantiates a view controller using a convenient method for `UIStoryboards`.
     var masterViewController: UIViewController  {
         switch self {
-        case .home:
-            return HomeViewController(layout: layout)
-        case .discover:
-            return DiscoverViewController(layout: layout)
-        case .profile:
-            return UserProfileViewController(layout: layout)
+        case .home: return HomeViewController(layout: layout)
+        case .discover: return DiscoverViewController(layout: layout)
+        case .profile: return UserProfileViewController(layout: layout)
+        case .marvel: return MarvelFeedViewcontroller(layout: layout)
+        case .search: return SearchViewController(layout: layout)
         }
     }
     
@@ -54,6 +57,8 @@ enum TabBarViewModel: String, CaseIterable {
         case .home: return UICollectionViewCompositionalLayout.homeLayout()
         case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
         case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
+        case .marvel: return UICollectionViewCompositionalLayout.gridLayout(2)
+        case .search: return UICollectionViewCompositionalLayout.notificationsList(header: true)
         }
     }
     

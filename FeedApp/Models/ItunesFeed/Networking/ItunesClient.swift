@@ -25,9 +25,15 @@ final class ItunesClient: CombineAPI {
     // 3
     public func fetch<Feed: FeedProtocol>(_ feed: Feed.Type,
                                           mediaType: MediaType) -> AnyPublisher<Feed, Error> {
-        
         let itunes = Itunes(mediaTypePath: mediaType)
         print("PATH: \(String(describing: itunes.request.url?.absoluteString))")
         return execute(itunes.request, decodingType: feed)
+    }
+    
+    /// itunes Search
+    public func searcForArtistWithTerm<Result: Decodable>(_ type: Result.Type, _ term: String) -> AnyPublisher<Result, Error> {
+        let ituneSearch = ItunesSearch.search(term: term, media: .music(entity: .musicArtist, attribute: .artistTerm))
+        print("PATH: \(String(describing: ituneSearch.request.url?.absoluteString))")
+        return execute(ituneSearch.request, decodingType: type)
     }
 }

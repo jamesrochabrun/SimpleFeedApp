@@ -35,7 +35,15 @@
 		7B292AAF26099D7E0052BA22 /* PreviewLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AAE26099D7D0052BA22 /* PreviewLoaderView.swift */; };
 		7B292AB12612C3710052BA22 /* UserProfileFeedSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B292AB02612C3710052BA22 /* UserProfileFeedSupplementaryView.swift */; };
 		7B2ED9DE26145EB600EEE573 /* FeedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B2ED9DD26145EB600EEE573 /* FeedItemCell.xib */; };
+		7B448768261EC6DC008D644F /* ItunesSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B448767261EC6DC008D644F /* ItunesSearch.swift */; };
+		7B44876A261EC6F9008D644F /* ItunesMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B448769261EC6F9008D644F /* ItunesMedia.swift */; };
+		7B44876C261EC722008D644F /* ItunesEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B44876B261EC722008D644F /* ItunesEntity.swift */; };
+		7B44876E261EC767008D644F /* ItunesAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B44876D261EC767008D644F /* ItunesAttribute.swift */; };
+		7B448772261EC898008D644F /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B448771261EC898008D644F /* Artist.swift */; };
+		7B448774261ECAB7008D644F /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B448773261ECAB7008D644F /* SearchViewController.swift */; };
+		7B448777261ED874008D644F /* ArtistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B448776261ED874008D644F /* ArtistViewModel.swift */; };
 		7B5B493F2616906800F65A3D /* FeedItemAvatarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B5B493E2616906800F65A3D /* FeedItemAvatarView.xib */; };
+		7B5B49412617B77B00F65A3D /* MarvelFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5B49402617B77B00F65A3D /* MarvelFeedViewController.swift */; };
 		7B5E6C3126083D4000C62974 /* FeedItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */; };
 		7B5E6C3626083D7F00C62974 /* IdentifiableHashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */; };
 		7B5E6C4C26085E8A00C62974 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */; };
@@ -129,7 +137,15 @@
 		7B292AAE26099D7D0052BA22 /* PreviewLoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewLoaderView.swift; sourceTree = "<group>"; };
 		7B292AB02612C3710052BA22 /* UserProfileFeedSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileFeedSupplementaryView.swift; sourceTree = "<group>"; };
 		7B2ED9DD26145EB600EEE573 /* FeedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedItemCell.xib; sourceTree = "<group>"; };
+		7B448767261EC6DC008D644F /* ItunesSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItunesSearch.swift; sourceTree = "<group>"; };
+		7B448769261EC6F9008D644F /* ItunesMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItunesMedia.swift; sourceTree = "<group>"; };
+		7B44876B261EC722008D644F /* ItunesEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItunesEntity.swift; sourceTree = "<group>"; };
+		7B44876D261EC767008D644F /* ItunesAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItunesAttribute.swift; sourceTree = "<group>"; };
+		7B448771261EC898008D644F /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
+		7B448773261ECAB7008D644F /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		7B448776261ED874008D644F /* ArtistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistViewModel.swift; sourceTree = "<group>"; };
 		7B5B493E2616906800F65A3D /* FeedItemAvatarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FeedItemAvatarView.xib; sourceTree = "<group>"; };
+		7B5B49402617B77B00F65A3D /* MarvelFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelFeedViewController.swift; sourceTree = "<group>"; };
 		7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemViewModel.swift; sourceTree = "<group>"; };
 		7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableHashable.swift; sourceTree = "<group>"; };
 		7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
@@ -241,6 +257,7 @@
 		7B1572FB2600654900FC138E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7B448766261EC6A1008D644F /* ItunesSearch */,
 				7B292A9E26095A320052BA22 /* Generic */,
 				7B5E6C4726085E1A00C62974 /* UserInfo */,
 				7B1573252605420500FC138E /* ItunesFeed */,
@@ -338,6 +355,43 @@
 				7B292A9F26095A420052BA22 /* GenericSectionIdentifierViewModel.swift */,
 			);
 			path = Generic;
+			sourceTree = "<group>";
+		};
+		7B448766261EC6A1008D644F /* ItunesSearch */ = {
+			isa = PBXGroup;
+			children = (
+				7B448775261ED869008D644F /* ViewModels */,
+				7B448770261EC883008D644F /* Models */,
+				7B44876F261EC879008D644F /* Networking */,
+			);
+			path = ItunesSearch;
+			sourceTree = "<group>";
+		};
+		7B44876F261EC879008D644F /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				7B448767261EC6DC008D644F /* ItunesSearch.swift */,
+				7B448769261EC6F9008D644F /* ItunesMedia.swift */,
+				7B44876B261EC722008D644F /* ItunesEntity.swift */,
+				7B44876D261EC767008D644F /* ItunesAttribute.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		7B448770261EC883008D644F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7B448771261EC898008D644F /* Artist.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7B448775261ED869008D644F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				7B448776261ED874008D644F /* ArtistViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		7B5E6C2F26083D0F00C62974 /* ViewModels */ = {
@@ -533,6 +587,8 @@
 			children = (
 				7B8CD42C2607F218008BAEB9 /* BaseViewControllers */,
 				7BA9BC2F25FE922C006E1C4F /* HomeViewController.swift */,
+				7B5B49402617B77B00F65A3D /* MarvelFeedViewController.swift */,
+				7B448773261ECAB7008D644F /* SearchViewController.swift */,
 				7B1573132601BC8000FC138E /* DiscoverViewController.swift */,
 				7B15733526054B9400FC138E /* NotificationsViewController.swift */,
 				7B15733A26054BD000FC138E /* UserProfileViewController.swift */,
@@ -691,6 +747,7 @@
 				7B15732E26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift in Sources */,
 				7B15735F2605729400FC138E /* VerticalLabelsStackView.swift in Sources */,
 				7B5E6C3126083D4000C62974 /* FeedItemViewModel.swift in Sources */,
+				7B44876A261EC6F9008D644F /* ItunesMedia.swift in Sources */,
 				7B15733B26054BD000FC138E /* UserProfileViewController.swift in Sources */,
 				7B8CD41B260713C7008BAEB9 /* FeedViewController.swift in Sources */,
 				7B8CD43D26080E81008BAEB9 /* BaseXibView.swift in Sources */,
@@ -698,6 +755,7 @@
 				7B5E6C57260861C600C62974 /* GenericFeedCollectionReusableView.swift in Sources */,
 				7B5E6C3626083D7F00C62974 /* IdentifiableHashable.swift in Sources */,
 				7BA9BC2025FE9193006E1C4F /* NavigationController.swift in Sources */,
+				7B448777261ED874008D644F /* ArtistViewModel.swift in Sources */,
 				7B9223222605BB6A006B7C51 /* AvatarView.swift in Sources */,
 				7B8CD42B26072D88008BAEB9 /* Button.swift in Sources */,
 				7BA9BC3B25FE9381006E1C4F /* SplitViewController.swift in Sources */,
@@ -708,6 +766,7 @@
 				7BA9BC0D25FE81A8006E1C4F /* Feed.swift in Sources */,
 				7B8CD42E2607F239008BAEB9 /* GenericFeedViewController.swift in Sources */,
 				7B8CD43F26081289008BAEB9 /* BaseView.swift in Sources */,
+				7B44876E261EC767008D644F /* ItunesAttribute.swift in Sources */,
 				7B8CD43A26080DB3008BAEB9 /* UICollectionView+CollectionReusableIdentifier.swift in Sources */,
 				7B292AA226095AEB0052BA22 /* SectionIdentifierViewModel.swift in Sources */,
 				7B292AB12612C3710052BA22 /* UserProfileFeedSupplementaryView.swift in Sources */,
@@ -730,6 +789,7 @@
 				7B1573782605743D00FC138E /* Label.swift in Sources */,
 				7B8CD42226071490008BAEB9 /* FeedItemCell.swift in Sources */,
 				7BA9BBBA25FE760B006E1C4F /* ViewController.swift in Sources */,
+				7B5B49412617B77B00F65A3D /* MarvelFeedViewController.swift in Sources */,
 				7B1573702605738D00FC138E /* UIView+Extension.swift in Sources */,
 				7B1573602605729400FC138E /* ProfileDataView.swift in Sources */,
 				7B157320260541BF00FC138E /* MarvelRemote.swift in Sources */,
@@ -738,8 +798,11 @@
 				7B8CD4062606B132008BAEB9 /* HomeFeedSupplementaryView.swift in Sources */,
 				7B8CD43826080D3A008BAEB9 /* CollectionReusableIdentifier.swift in Sources */,
 				7B15734826054D2900FC138E /* Artwork.swift in Sources */,
+				7B448774261ECAB7008D644F /* SearchViewController.swift in Sources */,
 				7B292AA8260963270052BA22 /* RemoteObservableObject.swift in Sources */,
+				7B44876C261EC722008D644F /* ItunesEntity.swift in Sources */,
 				7BA9BBB625FE760B006E1C4F /* AppDelegate.swift in Sources */,
+				7B448772261EC898008D644F /* Artist.swift in Sources */,
 				7B292A9B2609517F0052BA22 /* NotificationItemCell.swift in Sources */,
 				7B292AAA2609647E0052BA22 /* ThemeColors.swift in Sources */,
 				7BA9BBF625FE8136006E1C4F /* CombineAPI.swift in Sources */,
@@ -748,6 +811,7 @@
 				7B8CD4002605C06E008BAEB9 /* UITraitCollection+Extension.swift in Sources */,
 				7BA9BBB825FE760B006E1C4F /* SceneDelegate.swift in Sources */,
 				7B292A9D260959C30052BA22 /* DiffableCollectionView.swift in Sources */,
+				7B448768261EC6DC008D644F /* ItunesSearch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
