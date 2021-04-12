@@ -193,7 +193,7 @@ extension DiffableCollectionView {
     }
 }
 // MARK:- Function Builder
-@resultBuilder
+@_functionBuilder
 struct DiffableDataSourceBuilder<Section: SectionIdentifierViewModel>   {
     static func buildBlock(_ sections: Section...) -> [Section] { sections }
 }

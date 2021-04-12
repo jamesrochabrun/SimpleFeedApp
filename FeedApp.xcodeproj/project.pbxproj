@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		7B1572EE2600642200FC138E /* ArtworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1572ED2600642200FC138E /* ArtworkCell.swift */; };
 		7B1572F72600649000FC138E /* ImageViewLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1572F62600649000FC138E /* ImageViewLoader.swift */; };
-		7B15730F2601780300FC138E /* MarvelClient in Frameworks */ = {isa = PBXBuildFile; productRef = 7B15730E2601780300FC138E /* MarvelClient */; };
 		7B1573142601BC8000FC138E /* DiscoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1573132601BC8000FC138E /* DiscoverViewController.swift */; };
 		7B157320260541BF00FC138E /* MarvelRemote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15731F260541BF00FC138E /* MarvelRemote.swift */; };
 		7B15732E26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B15732D26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift */; };
@@ -42,6 +41,7 @@
 		7B448772261EC898008D644F /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B448771261EC898008D644F /* Artist.swift */; };
 		7B448774261ECAB7008D644F /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B448773261ECAB7008D644F /* SearchViewController.swift */; };
 		7B448777261ED874008D644F /* ArtistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B448776261ED874008D644F /* ArtistViewModel.swift */; };
+		7B5066822623F72B00BD7502 /* MarvelClient in Frameworks */ = {isa = PBXBuildFile; productRef = 7B5066812623F72B00BD7502 /* MarvelClient */; };
 		7B5B493F2616906800F65A3D /* FeedItemAvatarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B5B493E2616906800F65A3D /* FeedItemAvatarView.xib */; };
 		7B5B49412617B77B00F65A3D /* MarvelFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5B49402617B77B00F65A3D /* MarvelFeedViewController.swift */; };
 		7B5E6C3126083D4000C62974 /* FeedItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C3026083D4000C62974 /* FeedItemViewModel.swift */; };
@@ -204,8 +204,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B5E6C6726092EBD00C62974 /* SDWebImage in Frameworks */,
+				7B5066822623F72B00BD7502 /* MarvelClient in Frameworks */,
 				7B5E6C6926092EBD00C62974 /* SDWebImageMapKit in Frameworks */,
-				7B15730F2601780300FC138E /* MarvelClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,9 +615,9 @@
 			);
 			name = FeedApp;
 			packageProductDependencies = (
-				7B15730E2601780300FC138E /* MarvelClient */,
 				7B5E6C6626092EBD00C62974 /* SDWebImage */,
 				7B5E6C6826092EBD00C62974 /* SDWebImageMapKit */,
+				7B5066812623F72B00BD7502 /* MarvelClient */,
 			);
 			productName = FeedApp;
 			productReference = 7BA9BBB225FE760A006E1C4F /* FeedApp.app */;
@@ -691,8 +691,8 @@
 			);
 			mainGroup = 7BA9BBA925FE760A006E1C4F;
 			packageReferences = (
-				7B15730D2601780300FC138E /* XCRemoteSwiftPackageReference "MarvelClient" */,
 				7B5E6C6526092EBD00C62974 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				7B5066802623F72B00BD7502 /* XCRemoteSwiftPackageReference "MarvelClient" */,
 			);
 			productRefGroup = 7BA9BBB325FE760A006E1C4F /* Products */;
 			projectDirPath = "";
@@ -1148,12 +1148,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7B15730D2601780300FC138E /* XCRemoteSwiftPackageReference "MarvelClient" */ = {
+		7B5066802623F72B00BD7502 /* XCRemoteSwiftPackageReference "MarvelClient" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jamesrochabrun/MarvelClient";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.3;
+				minimumVersion = 1.0.5;
 			};
 		};
 		7B5E6C6526092EBD00C62974 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
@@ -1167,9 +1167,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7B15730E2601780300FC138E /* MarvelClient */ = {
+		7B5066812623F72B00BD7502 /* MarvelClient */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7B15730D2601780300FC138E /* XCRemoteSwiftPackageReference "MarvelClient" */;
+			package = 7B5066802623F72B00BD7502 /* XCRemoteSwiftPackageReference "MarvelClient" */;
 			productName = MarvelClient;
 		};
 		7B5E6C6626092EBD00C62974 /* SDWebImage */ = {

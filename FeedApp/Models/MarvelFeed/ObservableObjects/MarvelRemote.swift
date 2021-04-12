@@ -46,7 +46,7 @@ final class MarvelRemote: ObservableObject {
     }
     
     func fetchCharacters() {
-        service.fetch(MarvelData<Resources<Character>>.self) { [weak self]  in
+        service.fetch(MarvelData<Resources<Character>>.self, offset: 2, limit: 100) { [weak self]  in
             switch $0 {
             case let .success(results):
                 self?.characterViewModels = results.map { CharacterViewModel(model: $0) }
@@ -57,7 +57,7 @@ final class MarvelRemote: ObservableObject {
     }
     
     func fetchSeries() {
-        service.fetch(MarvelData<Resources<Serie>>.self) { [weak self] in
+        service.fetch(MarvelData<Resources<Serie>>.self, offset: 2, limit: 100) { [weak self] in
             guard let self = self else { return }
             switch $0 {
             case let .success(results):
