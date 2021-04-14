@@ -54,7 +54,6 @@ final class UserProfileViewController: GenericFeedViewController<UserProfileView
         }
         
         collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
-            guard let model = model else { return  nil }
             switch model {
             case .headerInfo:
                 collectionView.registerHeader(CollectionReusableViewContainer<ProfileInfoView>.self, kind: kind)

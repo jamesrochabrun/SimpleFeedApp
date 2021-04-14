@@ -39,7 +39,6 @@ final class DiscoverViewController: GenericFeedViewController<DiscoverViewContro
         }
         
         collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
-            guard let model = model else { return nil }
             switch model {
             case .popular:
                 let header: DiscoveryFeedSupplementaryView = collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath)

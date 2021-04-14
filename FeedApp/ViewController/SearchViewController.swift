@@ -81,7 +81,6 @@ final class SearchViewController: GenericFeedViewController<SearchViewController
             collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as SearchResultCell
         }
         collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
-            guard let model = model else { return nil }
             collectionView.registerHeader(CollectionReusableViewContainer<SearchTitleHeader>.self, kind: kind)
             let header: CollectionReusableViewContainer<SearchTitleHeader> = collectionView.dequeueSuplementaryView(of: kind, at: indexPath)
             header.configureContent {

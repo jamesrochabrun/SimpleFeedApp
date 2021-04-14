@@ -16,7 +16,7 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
     typealias SectionViewModelIdentifier = SectionContentViewModel.SectionIdentifier // represents a section in the data source
     typealias CellViewModelIdentifier = SectionContentViewModel.CellIdentifier // represents an item in a section
     
-    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> UICollectionReusableView?
+    typealias HeaderFooterProvider = (UICollectionView, SectionViewModelIdentifier, String, IndexPath) -> UICollectionReusableView?
     typealias CellProvider = (UICollectionView, IndexPath, CellViewModelIdentifier) -> UICollectionViewCell
     
     typealias DiffDataSource = UICollectionViewDiffableDataSource<SectionViewModelIdentifier, CellViewModelIdentifier>
@@ -85,7 +85,7 @@ final class DiffableCollectionView<SectionContentViewModel: SectionIdentifierVie
     /// - parameter HeaderFooterProvider: closure of type `(UICollectionView, SectionViewModelIdentifier?, String, IndexPath) -> UICollectionReusableView?`
     func supplementaryViewProvider(_ headerFooterProvider: @escaping HeaderFooterProvider)  {
         dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
-            let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section]
+            guard let sectionIdentifier = self?.dataSource?.snapshot().sectionIdentifiers[indexPath.section] else { return nil }
             return headerFooterProvider(collectionView, sectionIdentifier, kind, indexPath)
         }
     }
@@ -196,6 +196,7 @@ extension DiffableCollectionView {
 @_functionBuilder
 struct DiffableDataSourceBuilder<Section: SectionIdentifierViewModel>   {
     static func buildBlock(_ sections: Section...) -> [Section] { sections }
+    static func buildBlock(_ components: [Section]...) -> [Section] { components.flatMap { $0 } }
 }
 
 extension String {
