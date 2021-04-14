@@ -188,6 +188,8 @@ extension DiffableCollectionView {
         for sectionIdentifier in localCurrentSnapshot.sectionIdentifiers {
             let items = localCurrentSnapshot.itemIdentifiers(inSection: sectionIdentifier).filter {  isIncluded($0[keyPath: key]) }
             filteredSnapshot.appendItems(items, toSection: sectionIdentifier)
+            // Remove the section to remove the header
+            if items.isEmpty { filteredSnapshot.deleteSections([sectionIdentifier]) }
         }
         dataSource?.apply(filteredSnapshot, animatingDifferences: false)
     }
