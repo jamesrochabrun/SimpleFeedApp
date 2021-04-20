@@ -19,7 +19,12 @@ final class PreviewLoaderView: UIView {
     private var previewLoaded = false
     
     // MARK: - Custom Getters/ Public
-    var previewImage: UIImage? { previewImageView.image }
+    var previewImage: UIImage? {
+        get { previewImageView.image }
+        set { previewImageView.image = newValue }
+    }
+    
+    
     var placeholderThumbnailImage: UIImage? { placeholderImageView.image }
     
     convenience init(transitionDuration: TimeInterval) {

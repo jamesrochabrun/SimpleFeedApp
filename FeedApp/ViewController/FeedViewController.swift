@@ -78,7 +78,6 @@ final class FeedViewController: ViewController {
                 header.layout = HorizontalLayoutKind.horizontalStoryUserCoverLayout(itemWidth: 100.0).layout
                 header.configureSupplementaryView(with: .popular)
                 return header
-            default: return UICollectionReusableView()
             }
         }
     }
