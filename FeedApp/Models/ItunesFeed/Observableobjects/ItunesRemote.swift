@@ -8,12 +8,13 @@
 import Foundation
 import Combine
 
-enum ItuneGroup: CaseIterable {
-    case apps
-    case books
-    case podcats
-    case tvShows
-    case movies
+enum ItuneGroup: String, CaseIterable {
+    
+    case apps = "Apps From the Appstore"
+    case books = "Books From Itunes"
+    case podcats = "Pdocasts"
+    case tvShows = "TV Shows"
+    case movies = "Movies"
     
     var mediaType: MediaType {
         switch self {

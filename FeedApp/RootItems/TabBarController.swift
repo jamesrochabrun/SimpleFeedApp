@@ -60,9 +60,13 @@ enum TabBarViewModel: String, CaseIterable {
         case .home: return UICollectionViewCompositionalLayout.homeLayout()
         case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
         case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
-     //   case .marvel: return UICollectionViewCompositionalLayout.gridLayout(2)
+        //   case .marvel: return UICollectionViewCompositionalLayout.gridLayout(2)
         case .search: return UICollectionViewCompositionalLayout.notificationsList(header: true)
-        case .itunesGroups: return UICollectionViewCompositionalLayout.gridLayout(3)
+        case .itunesGroups: return UICollectionViewCompositionalLayout.gridLayout(3, contentInsets: .zero, sectionInset: .zero, scrollAxis: .vertical) { _ in
+            let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                    heightDimension: .estimated(100))
+            return NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        }
         }
     }
     

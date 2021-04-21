@@ -662,7 +662,7 @@ extension NSCollectionLayoutSection {
                                                       heightDimension: headerHeightDimension) // <- estimated will dynamically adjust to less height if needed.
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerFooterSize,
-            elementKind:  UICollectionView.elementKindSectionHeader, alignment: .top)
+            elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
         let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerFooterSize,
             elementKind:  UICollectionView.elementKindSectionFooter, alignment: .bottom)
