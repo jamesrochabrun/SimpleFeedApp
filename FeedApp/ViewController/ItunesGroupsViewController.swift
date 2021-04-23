@@ -9,6 +9,24 @@ import UIKit
 
 final class ItunesGroupsViewController: GenericFeedViewController<ItunesGroupsViewController.SectionModel, ItunesRemote> {
     
+    class TitleView: BaseView, ContentReusable {
+        
+        func cleanAndReuse() {
+            label.text = ""
+        }
+        
+        lazy var label: UILabel = {
+            let label = UILabel()
+            label.font = UIFont.systemFont(ofSize: 30)
+            return label
+        }()
+        
+        override func setupViews() {
+            addSubview(label)
+            label.fillSuperview(withinSafeArea: true, padding: .init(top: 20, left: 20, bottom: 20, right: 20))
+        }
+    }
+
     typealias SectionModel = GenericSectionIdentifierViewModel<ItuneGroup, FeedItemViewModel>
     
     override func viewDidLoad() {
@@ -41,23 +59,5 @@ final class ItunesGroupsViewController: GenericFeedViewController<ItunesGroupsVi
                 groups
             }
         }.store(in: &cancellables)
-    }
-}
-
-class TitleView: BaseView, ContentReusable {
-    
-    func cleanAndReuse() {
-        label.text = ""
-    }
-    
-    lazy var label: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 30)
-        return label
-    }()
-    
-    override func setupViews() {
-        addSubview(label)
-        label.fillSuperview(withinSafeArea: true, padding: .init(top: 20, left: 20, bottom: 20, right: 20))
     }
 }

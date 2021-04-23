@@ -15,17 +15,16 @@ final class TabBarController: UITabBarController {
        /// we will see the implementation later.
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewControllers = TabBarViewModel.allCases.map { NavigationController(rootViewController: $0.masterViewController).inSplitViewControllerIfSupported(for: $0) }
+        viewControllers = TabBarFactory.allCases.map { NavigationController(rootViewController: $0.masterViewController).inSplitViewControllerIfSupported(for: $0) }
     }
 }
 
 // MARK:- ViewModel
-enum TabBarViewModel: String, CaseIterable {
+enum TabBarFactory: String, CaseIterable {
     
     case home
     case discover
     case profile
-  //  case marvel
     case search
     case itunesGroups
     
@@ -35,7 +34,6 @@ enum TabBarViewModel: String, CaseIterable {
         case .home: return UIImage(systemName: "house.fill")
         case .discover: return UIImage(systemName: "magnifyingglass")
         case .profile: return UIImage(systemName: "person")
-    //    case .marvel: return UIImage(systemName: "scribble.variable")
         case .search: return UIImage(systemName: "plus.magnifyingglass")
         case .itunesGroups: return UIImage(systemName: "scribble.variable")
         }
@@ -49,7 +47,6 @@ enum TabBarViewModel: String, CaseIterable {
         case .home: return HomeViewController(layout: layout)
         case .discover: return DiscoverViewController(layout: layout)
         case .profile: return UserProfileViewController(layout: layout)
-     //   case .marvel: return MarvelFeedViewcontroller(layout: layout)
         case .search: return SearchViewController(layout: layout)
         case .itunesGroups: return ItunesGroupsViewController(layout: layout)
         }
@@ -81,7 +78,7 @@ enum TabBarViewModel: String, CaseIterable {
 
 extension UINavigationController {
     /// - parameter viewModel: The `TabBarViewModel` element.
-    func inSplitViewControllerIfSupported(for viewModel: TabBarViewModel) -> UIViewController {
+    func inSplitViewControllerIfSupported(for viewModel: TabBarFactory) -> UIViewController {
         
         /// Use this if a certain tab needs a split view, here you can also introduce A/B testing if display a feed as a split or full width of screen.
         guard viewModel.inSplitViewController else {
