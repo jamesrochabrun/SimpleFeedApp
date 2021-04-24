@@ -16,7 +16,10 @@ enum HomeFeedSectionIdentifier {
     case adds
 }
 
-final class HomeViewController: GenericFeedViewController<HomeViewController.SectionModel, ItunesRemote> {
+final class HomeViewController: GenericFeedViewController<HomeViewController.SectionModel, ItunesRemote>, Coordinating {
+    
+    // MARK:- Coordinator
+    weak var coordinator: HomeCoordinator?
     
     // MARK:- Section ViewModel
     /// - Typealias that describes the structure of a section in the Home feed.

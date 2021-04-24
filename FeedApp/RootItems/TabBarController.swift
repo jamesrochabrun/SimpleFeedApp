@@ -10,83 +10,52 @@ import UIKit
 // MARK:- TabBarController
 final class TabBarController: UITabBarController {
     /// 1 - Set view Controllers using `TabBarViewModel`
-       /// 2 - This iteration will create a master veiw controller embedded in a navigation controller for each tab.
-       /// 3 - `inSplitViewControllerIfSupported` is a `UINavigationController` extension method that will embed it in a `UISplitViewController` if supported.
-       /// we will see the implementation later.
+    /// 2 - This iteration will create a master veiw controller embedded in a navigation controller for each tab.
+    /// 3 - `inSplitViewControllerIfSupported` is a `UINavigationController` extension method that will embed it in a `UISplitViewController` if supported.
+    /// we will see the implementation later.
+    
+    var coordinators: [Coordinator] = [] /// holds a reference to the coordinators, so then conformers can have the corrdinator set to `weak`
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewControllers = TabBarFactory.allCases.map { NavigationController(rootViewController: $0.masterViewController).inSplitViewControllerIfSupported(for: $0) }
-    }
-}
-
-// MARK:- ViewModel
-enum TabBarFactory: String, CaseIterable {
-    
-    case home
-    case discover
-    case profile
-    case search
-    case itunesGroups
-    
-    /// Return:- the tab bar icon
-    var icon: UIImage? {
-        switch self {
-        case .home: return UIImage(systemName: "house.fill")
-        case .discover: return UIImage(systemName: "magnifyingglass")
-        case .profile: return UIImage(systemName: "person")
-        case .search: return UIImage(systemName: "plus.magnifyingglass")
-        case .itunesGroups: return UIImage(systemName: "scribble.variable")
-        }
-    }
-    /// Return:- the tab bar title
-    var title: String { rawValue }
-    
-    /// Return:-  the master/primary `topViewController`,  it instantiates a view controller using a convenient method for `UIStoryboards`.
-    var masterViewController: UIViewController  {
-        switch self {
-        case .home: return HomeViewController(layout: layout)
-        case .discover: return DiscoverViewController(layout: layout)
-        case .profile: return UserProfileViewController(layout: layout)
-        case .search: return SearchViewController(layout: layout)
-        case .itunesGroups: return ItunesGroupsViewController(layout: layout)
-        }
-    }
-    
-    var layout: UICollectionViewLayout {
-        switch self {
-        case .home: return UICollectionViewCompositionalLayout.homeLayout()
-        case .discover: return UICollectionViewCompositionalLayout.discoverLayout()
-        case .profile: return UICollectionViewCompositionalLayout.gridProfileLayout(3)
-        //   case .marvel: return UICollectionViewCompositionalLayout.gridLayout(2)
-        case .search: return UICollectionViewCompositionalLayout.notificationsList(header: true)
-        case .itunesGroups: return UICollectionViewCompositionalLayout.gridLayout(3, contentInsets: .zero, sectionInset: .zero, scrollAxis: .vertical) { _ in
-            let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                    heightDimension: .estimated(100))
-            return NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        }
-        }
-    }
-    
-    /// - Return:-  It defines if a tab should use a `UISplitViewController` as root or not.
-    var inSplitViewController: Bool {
-        switch self {
-        case .profile: return true
-        default: return false
-        }
-    }
-}
-
-extension UINavigationController {
-    /// - parameter viewModel: The `TabBarViewModel` element.
-    func inSplitViewControllerIfSupported(for viewModel: TabBarFactory) -> UIViewController {
         
-        /// Use this if a certain tab needs a split view, here you can also introduce A/B testing if display a feed as a split or full width of screen.
-        guard viewModel.inSplitViewController else {
-            self.tabBarItem.image = viewModel.icon
-            return self
+        var coordinators: [Coordinator] = []
+        var topViewControllers: [UIViewController] = []
+        
+        for i in TabBarFactory.allCases.indices {
+            let factoryKind = TabBarFactory.allCases[i]
+            let coordinator = factoryKind.coordinator.init(rootViewController: NavigationController(rootViewController: factoryKind.masterViewController))
+            coordinators.append(coordinator)
+            let topViewController = coordinator.rootViewController.inSplitViewControllerIfSupported(for: factoryKind)
+            topViewControllers.append(topViewController)
         }
-        let splitViewController = SplitViewController(viewControllers: [self, EmptyDetailViewController()])
-        splitViewController.tabBarItem.image = viewModel.icon
-        return splitViewController
+
+        self.coordinators = coordinators
+        self.coordinators.forEach { $0.start() }
+    
+        viewControllers = topViewControllers
+    }
+}
+
+
+final class HomeCoordinator: Coordinator {
+    
+    var children: [Coordinator] = []
+    var rootViewController: UINavigationController
+    init(rootViewController: UINavigationController) {
+        self.rootViewController = rootViewController
+    }
+    func start() {
+        (self.rootViewController.topViewController as? HomeViewController)!.coordinator = self
+    }
+    
+    func showDetail() {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .green
+        
+        if let splitVC = rootViewController.splitViewController {
+            splitVC.showDetailInNavigationControllerIfNeeded(vc, sender: self)
+        } else {
+            rootViewController.pushViewController(vc, animated: true)
+        }
     }
 }

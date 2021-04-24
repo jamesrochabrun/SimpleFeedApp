@@ -50,6 +50,9 @@
 		7B5E6C57260861C600C62974 /* GenericFeedCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5E6C56260861C600C62974 /* GenericFeedCollectionReusableView.swift */; };
 		7B5E6C6726092EBD00C62974 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 7B5E6C6626092EBD00C62974 /* SDWebImage */; };
 		7B5E6C6926092EBD00C62974 /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 7B5E6C6826092EBD00C62974 /* SDWebImageMapKit */; };
+		7B677CA626337C6E00D277FF /* TabBarItemFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B677CA526337C6E00D277FF /* TabBarItemFactory.swift */; };
+		7B677CAA26337CA800D277FF /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B677CA926337CA800D277FF /* MainCoordinator.swift */; };
+		7B677CAC26337CCA00D277FF /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B677CAB26337CCA00D277FF /* Coordinator.swift */; };
 		7B6E1942262F88CF007CC75B /* ItunesGroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E1941262F88CF007CC75B /* ItunesGroupsViewController.swift */; };
 		7B8CD4002605C06E008BAEB9 /* UITraitCollection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD3FF2605C06E008BAEB9 /* UITraitCollection+Extension.swift */; };
 		7B8CD4022605C0A7008BAEB9 /* UISplitViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */; };
@@ -151,6 +154,9 @@
 		7B5E6C3526083D7F00C62974 /* IdentifiableHashable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableHashable.swift; sourceTree = "<group>"; };
 		7B5E6C4B26085E8A00C62974 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
 		7B5E6C56260861C600C62974 /* GenericFeedCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericFeedCollectionReusableView.swift; sourceTree = "<group>"; };
+		7B677CA526337C6E00D277FF /* TabBarItemFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemFactory.swift; sourceTree = "<group>"; };
+		7B677CA926337CA800D277FF /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		7B677CAB26337CCA00D277FF /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		7B6E1941262F88CF007CC75B /* ItunesGroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItunesGroupsViewController.swift; sourceTree = "<group>"; };
 		7B8CD3FF2605C06E008BAEB9 /* UITraitCollection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+Extension.swift"; sourceTree = "<group>"; };
 		7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISplitViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -412,6 +418,32 @@
 			path = UserInfo;
 			sourceTree = "<group>";
 		};
+		7B677CA426337C5C00D277FF /* DesignPatterns */ = {
+			isa = PBXGroup;
+			children = (
+				7B677CA826337C9800D277FF /* Coordinator */,
+				7B677CA726337C8900D277FF /* Factory */,
+			);
+			path = DesignPatterns;
+			sourceTree = "<group>";
+		};
+		7B677CA726337C8900D277FF /* Factory */ = {
+			isa = PBXGroup;
+			children = (
+				7B677CA526337C6E00D277FF /* TabBarItemFactory.swift */,
+			);
+			path = Factory;
+			sourceTree = "<group>";
+		};
+		7B677CA826337C9800D277FF /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				7B677CA926337CA800D277FF /* MainCoordinator.swift */,
+				7B677CAB26337CCA00D277FF /* Coordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
 		7B8CD4072606B220008BAEB9 /* ReusableViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -521,6 +553,7 @@
 		7BA9BBB425FE760A006E1C4F /* FeedApp */ = {
 			isa = PBXGroup;
 			children = (
+				7B677CA426337C5C00D277FF /* DesignPatterns */,
 				7B15736E2605736A00FC138E /* Helpers */,
 				7B1572FB2600654900FC138E /* Models */,
 				7B1572EB2600640C00FC138E /* Views */,
@@ -771,6 +804,7 @@
 				7B8CD42E2607F239008BAEB9 /* GenericFeedViewController.swift in Sources */,
 				7B8CD43F26081289008BAEB9 /* BaseView.swift in Sources */,
 				7B44876E261EC767008D644F /* ItunesAttribute.swift in Sources */,
+				7B677CAA26337CA800D277FF /* MainCoordinator.swift in Sources */,
 				7B8CD43A26080DB3008BAEB9 /* UICollectionView+CollectionReusableIdentifier.swift in Sources */,
 				7B292AA226095AEB0052BA22 /* SectionIdentifierViewModel.swift in Sources */,
 				7B292AB12612C3710052BA22 /* UserProfileFeedSupplementaryView.swift in Sources */,
@@ -785,8 +819,10 @@
 				7B8CD443260813DE008BAEB9 /* CollectionReusableViewContainer.swift in Sources */,
 				7B8CD4042605CE0D008BAEB9 /* StoryAvatarViewCell.swift in Sources */,
 				7B8CD43226080B15008BAEB9 /* ContentReusable.swift in Sources */,
+				7B677CA626337C6E00D277FF /* TabBarItemFactory.swift in Sources */,
 				7B8CD42826071CC1008BAEB9 /* FeedItemAvatarView.swift in Sources */,
 				7BA9BC1825FE917B006E1C4F /* TabBarController.swift in Sources */,
+				7B677CAC26337CCA00D277FF /* Coordinator.swift in Sources */,
 				7BA9BC0825FE818B006E1C4F /* ItunesRemote.swift in Sources */,
 				7BA9BC4425FE94A4006E1C4F /* EmptyDetailViewController.swift in Sources */,
 				7B1573142601BC8000FC138E /* DiscoverViewController.swift in Sources */,
