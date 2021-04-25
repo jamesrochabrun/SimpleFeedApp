@@ -30,32 +30,7 @@ final class TabBarController: UITabBarController {
         }
 
         self.coordinators = coordinators
-        self.coordinators.forEach { $0.start() }
-    
+        coordinators.forEach { $0.start() }
         viewControllers = topViewControllers
-    }
-}
-
-
-final class HomeCoordinator: Coordinator {
-    
-    var children: [Coordinator] = []
-    var rootViewController: UINavigationController
-    init(rootViewController: UINavigationController) {
-        self.rootViewController = rootViewController
-    }
-    func start() {
-        (self.rootViewController.topViewController as? HomeViewController)!.coordinator = self
-    }
-    
-    func showDetail() {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .green
-        
-        if let splitVC = rootViewController.splitViewController {
-            splitVC.showDetailInNavigationControllerIfNeeded(vc, sender: self)
-        } else {
-            rootViewController.pushViewController(vc, animated: true)
-        }
     }
 }

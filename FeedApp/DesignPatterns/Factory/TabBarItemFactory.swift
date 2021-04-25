@@ -58,7 +58,7 @@ enum TabBarFactory: String, CaseIterable {
     /// - Return:-  It defines if a tab should use a `UISplitViewController` as root or not.
     var inSplitViewController: Bool {
         switch self {
-        case .profile, .home: return true
+        case .profile: return true
         default: return false
         }
     }

@@ -40,9 +40,11 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Sec
     
     @objc
     private func toggleAddsHeaderDisplay() {
-        isAddSectionInserted = !isAddSectionInserted
-        leftBarButtonItem.image = UIImage(systemName: isAddSectionInserted ? "minus" : "plus")
-        isAddSectionInserted ? collectionView.insertSections([.adds], before: .popular) : collectionView.deleteSection(.adds)
+        coordinator?.showDetail()
+        
+//        isAddSectionInserted = !isAddSectionInserted
+//        leftBarButtonItem.image = UIImage(systemName: isAddSectionInserted ? "minus" : "plus")
+//        isAddSectionInserted ? collectionView.insertSections([.adds], before: .popular) : collectionView.deleteSection(.adds)
     }
     
     override func fetchData() {

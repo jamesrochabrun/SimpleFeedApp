@@ -53,6 +53,10 @@
 		7B677CA626337C6E00D277FF /* TabBarItemFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B677CA526337C6E00D277FF /* TabBarItemFactory.swift */; };
 		7B677CAA26337CA800D277FF /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B677CA926337CA800D277FF /* MainCoordinator.swift */; };
 		7B677CAC26337CCA00D277FF /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B677CAB26337CCA00D277FF /* Coordinator.swift */; };
+		7B677CAE2633A74400D277FF /* DimTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B677CAD2633A74400D277FF /* DimTransitionAnimator.swift */; };
+		7B6D5D292635FA3300449A7E /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6D5D282635FA3300449A7E /* HomeCoordinator.swift */; };
+		7B6D5D312635FA5300449A7E /* DetailPageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6D5D302635FA5300449A7E /* DetailPageCoordinator.swift */; };
+		7B6D5D362635FA9500449A7E /* DetailPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6D5D352635FA9500449A7E /* DetailPageViewController.swift */; };
 		7B6E1942262F88CF007CC75B /* ItunesGroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E1941262F88CF007CC75B /* ItunesGroupsViewController.swift */; };
 		7B8CD4002605C06E008BAEB9 /* UITraitCollection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD3FF2605C06E008BAEB9 /* UITraitCollection+Extension.swift */; };
 		7B8CD4022605C0A7008BAEB9 /* UISplitViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */; };
@@ -157,6 +161,10 @@
 		7B677CA526337C6E00D277FF /* TabBarItemFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemFactory.swift; sourceTree = "<group>"; };
 		7B677CA926337CA800D277FF /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		7B677CAB26337CCA00D277FF /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		7B677CAD2633A74400D277FF /* DimTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DimTransitionAnimator.swift; sourceTree = "<group>"; };
+		7B6D5D282635FA3300449A7E /* HomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
+		7B6D5D302635FA5300449A7E /* DetailPageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageCoordinator.swift; sourceTree = "<group>"; };
+		7B6D5D352635FA9500449A7E /* DetailPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPageViewController.swift; sourceTree = "<group>"; };
 		7B6E1941262F88CF007CC75B /* ItunesGroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItunesGroupsViewController.swift; sourceTree = "<group>"; };
 		7B8CD3FF2605C06E008BAEB9 /* UITraitCollection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+Extension.swift"; sourceTree = "<group>"; };
 		7B8CD4012605C0A7008BAEB9 /* UISplitViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISplitViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -438,10 +446,20 @@
 		7B677CA826337C9800D277FF /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
+				7B6D5D272635FA2500449A7E /* ChildCoordinators */,
 				7B677CA926337CA800D277FF /* MainCoordinator.swift */,
 				7B677CAB26337CCA00D277FF /* Coordinator.swift */,
 			);
 			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		7B6D5D272635FA2500449A7E /* ChildCoordinators */ = {
+			isa = PBXGroup;
+			children = (
+				7B6D5D282635FA3300449A7E /* HomeCoordinator.swift */,
+				7B6D5D302635FA5300449A7E /* DetailPageCoordinator.swift */,
+			);
+			path = ChildCoordinators;
 			sourceTree = "<group>";
 		};
 		7B8CD4072606B220008BAEB9 /* ReusableViews */ = {
@@ -512,6 +530,7 @@
 				7B292A9C260959C30052BA22 /* DiffableCollectionView.swift */,
 				7B292AA92609647E0052BA22 /* ThemeColors.swift */,
 				7B292AAE26099D7D0052BA22 /* PreviewLoaderView.swift */,
+				7B677CAD2633A74400D277FF /* DimTransitionAnimator.swift */,
 			);
 			path = ReusableTools;
 			sourceTree = "<group>";
@@ -630,6 +649,7 @@
 				7B15733A26054BD000FC138E /* UserProfileViewController.swift */,
 				7BA9BC4325FE94A4006E1C4F /* EmptyDetailViewController.swift */,
 				7B8CD41A260713C7008BAEB9 /* FeedViewController.swift */,
+				7B6D5D352635FA9500449A7E /* DetailPageViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -783,6 +803,7 @@
 				7B15732E26054B1D00FC138E /* DiscoveryFeedSupplementaryView.swift in Sources */,
 				7B15735F2605729400FC138E /* VerticalLabelsStackView.swift in Sources */,
 				7B5E6C3126083D4000C62974 /* FeedItemViewModel.swift in Sources */,
+				7B6D5D362635FA9500449A7E /* DetailPageViewController.swift in Sources */,
 				7B44876A261EC6F9008D644F /* ItunesMedia.swift in Sources */,
 				7B15733B26054BD000FC138E /* UserProfileViewController.swift in Sources */,
 				7B8CD41B260713C7008BAEB9 /* FeedViewController.swift in Sources */,
@@ -797,6 +818,7 @@
 				7B8CD42B26072D88008BAEB9 /* Button.swift in Sources */,
 				7BA9BC3B25FE9381006E1C4F /* SplitViewController.swift in Sources */,
 				7B5E6C4C26085E8A00C62974 /* UserProfileViewModel.swift in Sources */,
+				7B677CAE2633A74400D277FF /* DimTransitionAnimator.swift in Sources */,
 				7B8CD43626080C49008BAEB9 /* UIView+AutoLayout.swift in Sources */,
 				7BA9BC0325FE816C006E1C4F /* ItunesClient.swift in Sources */,
 				7BA9BC2625FE91CF006E1C4F /* UIStoryboard+Extension.swift in Sources */,
@@ -808,8 +830,10 @@
 				7B8CD43A26080DB3008BAEB9 /* UICollectionView+CollectionReusableIdentifier.swift in Sources */,
 				7B292AA226095AEB0052BA22 /* SectionIdentifierViewModel.swift in Sources */,
 				7B292AB12612C3710052BA22 /* UserProfileFeedSupplementaryView.swift in Sources */,
+				7B6D5D312635FA5300449A7E /* DetailPageCoordinator.swift in Sources */,
 				7B292AA426095CE60052BA22 /* ViewModelInjection.swift in Sources */,
 				7B8CD4412608129E008BAEB9 /* CollectionViewCell.swift in Sources */,
+				7B6D5D292635FA3300449A7E /* HomeCoordinator.swift in Sources */,
 				7B8CD40A2606B28E008BAEB9 /* StorySnippeCell.swift in Sources */,
 				7BA9BC4925FE96EA006E1C4F /* Layout.swift in Sources */,
 				7B15733626054B9400FC138E /* NotificationsViewController.swift in Sources */,

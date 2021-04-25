@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol Coordinator {
+protocol Coordinator: AnyObject {
     var topViewController: UIViewController? { get }
     var children: [Coordinator] { get set }
     var rootViewController: UINavigationController { get set }
@@ -18,7 +18,6 @@ protocol Coordinator {
 extension Coordinator {
     var topViewController: UIViewController? { rootViewController.topViewController }
 }
-
 
 protocol Coordinating {
     associatedtype CoordinatingType: Coordinator
