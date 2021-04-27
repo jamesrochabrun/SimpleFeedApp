@@ -21,10 +21,11 @@ final class HomeCoordinator: NSObject, Coordinator, UINavigationControllerDelega
         (self.rootViewController.topViewController as? HomeViewController)!.coordinator = self
     }
     
-    func showDetail() {
+    func showDetailArtwork(_ artworkImage: UIImage) {
         let child = DetailPageCoordinator(rootViewController: rootViewController)
         child.parentCoordinator = self
         children.append(child)
+        child.detailImage = artworkImage
         child.start()
     }
     

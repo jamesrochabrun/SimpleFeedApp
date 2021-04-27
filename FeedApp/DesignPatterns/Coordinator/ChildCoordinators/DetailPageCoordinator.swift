@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 final class DetailPageCoordinator: NSObject, Coordinator, UINavigationControllerDelegate, UIAdaptivePresentationControllerDelegate {
  
     weak var parentCoordinator: HomeCoordinator?
@@ -19,12 +20,15 @@ final class DetailPageCoordinator: NSObject, Coordinator, UINavigationController
         self.rootViewController = rootViewController
     }
     
+    var detailImage: UIImage?
+    
     func start() {
         // if pushed from `rootViewController` the work of removing child coordinatora can be done from the `UINavigationControllerDelegate`
         // if presented, the wotk can be done from `UIAdaptivePresentationControllerDelegate` and you must implement something also for the case where the vc is not dragged.
         // if custom presented we can do the work inside the `UIViewControllerTransitioningDelegate
         
         let vc = DetailPageViewController()
+        vc.detailImage = detailImage
         vc.coordinator = self
         let nav = UINavigationController(rootViewController: vc)
         /// setting this property will result in implementing a presentation with and aditional animation , (not ideal)

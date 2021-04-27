@@ -180,7 +180,7 @@ extension DiffableCollectionView {
 
 extension DiffableCollectionView {
 
-    func searchForKey(_ key: KeyPath<CellViewModelIdentifier, String>, isIncluded: (String) -> Bool)  {
+    func searchForKeyPathValue<Value>(_ key: KeyPath<CellViewModelIdentifier, Value>, isIncluded: (Value) -> Bool)  {
        
         guard let localCurrentSnapshot = currentSnapshot else { return }
         var filteredSnapshot = Snapshot()

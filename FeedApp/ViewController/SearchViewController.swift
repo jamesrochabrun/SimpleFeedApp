@@ -12,7 +12,7 @@ final class SearchResultCell: CollectionViewCell, ViewModelCellConfiguration {
     
     private lazy var titleLabel: UILabel = {
        let label = UILabel()
-        label.textColor = .white
+        label.textColor = .label
         return label
     }()
     
@@ -110,8 +110,8 @@ final class SearchViewController: GenericFeedViewController<SearchViewController
 extension SearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         let query = searchController.searchBar.text ?? ""
-        // remote.searchWithTerm(query)
-        collectionView.searchForKey(\.name) { text in
+//         remote.searchWithTerm(query)
+        collectionView.searchForKeyPathValue(\.name) { text in
             text.hasSubstring(query)
         }
     }

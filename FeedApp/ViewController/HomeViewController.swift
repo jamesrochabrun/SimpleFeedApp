@@ -25,26 +25,24 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Sec
     /// - Typealias that describes the structure of a section in the Home feed.
     typealias SectionModel = GenericSectionIdentifierViewModel<HomeFeedSectionIdentifier, FeedItemViewModel>
 
-    private lazy var leftBarButtonItem: UIBarButtonItem = {
+    private lazy var showMoreButtonItem: UIBarButtonItem = {
         let leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(toggleAddsHeaderDisplay))
         leftBarButtonItem.tintColor = Theme.buttonTint.color
         return leftBarButtonItem
     }()
-    
+
     private var isAddSectionInserted: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = leftBarButtonItem
+        navigationItem.rightBarButtonItem = showMoreButtonItem
     }
     
     @objc
     private func toggleAddsHeaderDisplay() {
-        coordinator?.showDetail()
-        
-//        isAddSectionInserted = !isAddSectionInserted
-//        leftBarButtonItem.image = UIImage(systemName: isAddSectionInserted ? "minus" : "plus")
-//        isAddSectionInserted ? collectionView.insertSections([.adds], before: .popular) : collectionView.deleteSection(.adds)
+        isAddSectionInserted = !isAddSectionInserted
+        showMoreButtonItem.image = UIImage(systemName: isAddSectionInserted ? "minus" : "plus")
+        isAddSectionInserted ? collectionView.insertSections([.adds], before: .popular) : collectionView.deleteSection(.adds)
     }
     
     override func fetchData() {
@@ -62,6 +60,10 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Sec
             case .popular, .adds:
                 return collectionView.dequeueAndConfigureSuplementaryView(with: model, of: kind, at: indexPath) as HomeFeedSupplementaryView
             }
+        }
+        
+        collectionView.selectedContentAtIndexPath = { [weak self] viewModel, _ in
+            /// Pas an image?
         }
     }
     
