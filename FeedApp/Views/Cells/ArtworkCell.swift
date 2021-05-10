@@ -9,12 +9,21 @@ import UIKit
 import Combine
 import MarvelClient
 
-final class ArtworkCell: CollectionViewCell, ViewModelCellConfiguration {
+protocol ArtworkCellChildDragable: AnyObject {
+    var target: UIView { get }
+}
+
+
+final class ArtworkCell: CollectionViewCell, ViewModelCellConfiguration  {
 
     // MARK:- UI
     private lazy var imageViewLoader: ImageViewLoader = {
-        ImageViewLoader()
+        let loader = ImageViewLoader()
+        loader.delegate = self
+        return loader
     }()
+    
+    weak var delegate: ArtworkCellChildDragable?
     
     // MARK:- Life Cycle
     override func setupSubviews() {
@@ -32,6 +41,14 @@ final class ArtworkCell: CollectionViewCell, ViewModelCellConfiguration {
         let regularURL = viewModel.imageURL
         let lowResURL = viewModel.thumbnailURL
         let placeholder = UIImage(named: "photo")
+        imageViewLoader.delegate = self
         imageViewLoader.load(regularURL: regularURL, lowResURL: lowResURL, placeholder: placeholder)
+    }
+}
+
+extension ArtworkCell: ImageViewLoaderDraggable {
+    var target: UIView {
+        delegate!.target
+        
     }
 }

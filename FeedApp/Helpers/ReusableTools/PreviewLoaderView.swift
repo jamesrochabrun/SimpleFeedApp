@@ -5,12 +5,13 @@
 //  Created by James Rochabrun on 3/22/21.
 //
 
-import Foundation
+import UIKit
 import SDWebImage
 
 /**
   Loads a low res image and waits until the
  */
+
 
 final class PreviewLoaderView: UIView {
     
@@ -116,3 +117,4 @@ final class PreviewLoaderView: UIView {
         }
     }
 }
+

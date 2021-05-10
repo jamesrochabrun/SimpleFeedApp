@@ -8,11 +8,13 @@
 import Combine
 import Foundation
 
+
 final class ItunesClient: CombineAPI {
     
     // 1
     let session: URLSession
     
+    var cancellables: Set<AnyCancellable> = []
     // 2
     init(configuration: URLSessionConfiguration) {
         self.session = URLSession(configuration: configuration)
@@ -24,8 +26,7 @@ final class ItunesClient: CombineAPI {
     
     // 3
     public func fetch<Feed: FeedProtocol>(_ feed: Feed.Type,
-                                          mediaType: MediaType) -> AnyPublisher<Feed, Error> {
-        let itunes = Itunes(mediaTypePath: mediaType)
+                                          itunes: Itunes) -> AnyPublisher<Feed, Error> {
         print("PATH: \(String(describing: itunes.request.url?.absoluteString))")
         return execute(itunes.request, decodingType: feed)
     }

@@ -52,7 +52,9 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Sec
     override func setUpUI() {
         
         collectionView.cellProvider { collectionView, indexPath, model in
-            collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
+            let cell = collectionView.dequeueAndConfigureReusableCell(with: model, at: indexPath) as ArtworkCell
+            cell.delegate = self
+            return cell
         }
         
         collectionView.supplementaryViewProvider { collectionView, model, kind, indexPath in
@@ -75,5 +77,11 @@ final class HomeViewController: GenericFeedViewController<HomeViewController.Sec
                 SectionModel(sectionIdentifier: .popular, cellIdentifiers: models)
             }
         }.store(in: &cancellables)
+    }
+}
+
+extension HomeViewController: ArtworkCellChildDragable {
+    var target: UIView {
+        self.navigationController!.navigationBar
     }
 }

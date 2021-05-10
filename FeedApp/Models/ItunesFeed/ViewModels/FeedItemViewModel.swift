@@ -19,7 +19,7 @@ final class FeedItemViewModel: IdentifiableHashable {
     let artistURL: String?
     let artworkURL: String
     let artworkURLThumbnail: String
-    let genres: [GenreViewModel]
+  //  let genres: [GenreViewModel]
     let url: URL
     
     init(model: FeedItem) {
@@ -31,10 +31,10 @@ final class FeedItemViewModel: IdentifiableHashable {
         copyright = model.copyright
         artistId = model.artistId
         artistURL = model.artistUrl
-        artworkURL = model.artWorkURL
-        genres = model.genres.map { GenreViewModel(model: $0) }
+        artworkURL = model.artworkUrl100
+      //  genres = model.genres.map { GenreViewModel(model: $0) }
         url = URL(string: model.url)!
-        artworkURLThumbnail = model.artWorkURL.replacingOccurrences(of: "200x200bb.png", with: "100x100bb.png")
+        artworkURLThumbnail = model.artworkUrl100.replacingOccurrences(of: "200x200bb.png", with: "100x100bb.png")
     }
 }
 

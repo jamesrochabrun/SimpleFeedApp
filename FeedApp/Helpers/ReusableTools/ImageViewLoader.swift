@@ -6,14 +6,36 @@
 //
 
 import UIKit
-import SDWebImage
+//import SDWebImage
 import MobileCoreServices
+import Combine
+
+
+protocol ImageViewLoaderDraggable: AnyObject {
+    var target: UIView { get }
+}
+
 
 final class ImageViewLoader: BaseView, ContentReusable {
+
+    /// MARK:- approach with preview loader and SDWEbImage
+//    private lazy var imageView: PreviewLoaderView = {
+//        var imageView = PreviewLoaderView(transitionDuration: 0.3)
+//        imageView.isUserInteractionEnabled = true
+//        return imageView
+//    }()
+//
+    /// MARK:- approach with custom image loader
+    let imageLoader = ImageLoader()
+    private var cancellables: Set<AnyCancellable> = []
+    weak var delegate: ImageViewLoaderDraggable?
     
-    private lazy var imageView: PreviewLoaderView = {
-        var imageView = PreviewLoaderView(transitionDuration: 0.3)
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView(frame: .zero)
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         imageView.isUserInteractionEnabled = true
+        imageView.accessibilityIgnoresInvertColors = true
         return imageView
     }()
     
@@ -39,12 +61,17 @@ final class ImageViewLoader: BaseView, ContentReusable {
     }
     
     func load(regularURL: String, lowResURL: String, placeholder: UIImage?) {
-        self.imageView.alpha = 0
-        imageView.loadPreviewWith(thumbnailURL: URL(string: lowResURL), previewImageURL: URL(string: regularURL), placeholder: placeholder) { [weak self] _ in
-            UIView.animate(withDuration: 0.2) {
-                self?.imageView.alpha = 1.0
-            }
-        }
+        imageLoader.load(URL(string: regularURL))
+        imageLoader.$image.sink { [weak self] image in
+            self?.imageView.image = image
+        }.store(in: &cancellables)
+        
+//        self.imageView.alpha = 0
+//        imageView.loadPreviewWith(thumbnailURL: URL(string: lowResURL), previewImageURL: URL(string: regularURL), placeholder: placeholder) { [weak self] _ in
+//            UIView.animate(withDuration: 0.2) {
+//                self?.imageView.alpha = 1.0
+//            }
+//        }
     }
     
     func cleanAndReuse() {
@@ -66,7 +93,7 @@ extension ImageViewLoader: UIDragInteractionDelegate {
          to implement for allowing dragging from a view.
     */
     func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
-        guard let image = imageView.previewImage else { return [] }
+        guard let image = imageView.image else { return [] }
 
         let provider = NSItemProvider(object: image)
         let item = UIDragItem(itemProvider: provider)
@@ -172,7 +199,7 @@ extension ImageViewLoader: UIDropInteractionDelegate {
                  the main thread, explicitly dispatch UI work to the main thread.
                  For example, you can use `DispatchQueue.main.async` method.
             */
-            self.imageView.previewImage = images.first
+            self.imageView.image = images.first
         }
 
         // Perform additional UI updates as needed.
@@ -189,17 +216,24 @@ extension ImageViewLoader: UIDropInteractionDelegate {
     // Update UI and model, as needed, when drop session ends.
     func dropInteraction(_ interaction: UIDropInteraction, sessionDidEnd session: UIDropSession) {
         let dropLocation = session.location(in: self)
+        
         updateLayers(forDropLocation: dropLocation)
     }
 
     // MARK: - Helpers
 
     func updateLayers(forDropLocation dropLocation: CGPoint) {
-        if imageView.frame.contains(dropLocation) {
+        
+        
+        let target = imageView
+        // target is imageView
+        print("the delegate is nil!!")
+        if target.frame.contains(dropLocation) {
             layer.borderWidth = 0.0
             layer.borderColor = UIColor.blue.cgColor
             imageView.layer.borderWidth = 2.0
             imageView.layer.borderColor = UIColor.red.cgColor
+            print("the target is coming!!")
         } else if frame.contains(dropLocation) {
             layer.borderWidth = 5.0
             imageView.layer.borderWidth = 0.0
